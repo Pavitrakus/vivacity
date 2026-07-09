@@ -1270,7 +1270,7 @@ details[open] .faq-chevron { transform: rotate(180deg); }
 
 .footer-logo {
   font-family: var(--font-pixel);
-  font-size: 20px;
+  font-size: 28px;
   color: var(--t-1);
   margin-bottom: 12px;
   letter-spacing: -0.02em;
