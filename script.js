@@ -104,3 +104,50 @@ if (cbAccept && cookieBanner) {
     // In a real app, set localStorage or a cookie here
   });
 }
+
+// ══════════════════════════════════════════
+// MOBILE MENU
+// ══════════════════════════════════════════
+const navBurger = document.getElementById('navBurger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (navBurger && mobileMenu) {
+  navBurger.addEventListener('click', () => {
+    const isActive = mobileMenu.classList.contains('active');
+    if (isActive) {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    } else {
+      mobileMenu.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scroll
+    }
+  });
+
+  // Close menu when clicking a link
+  const mmLinks = mobileMenu.querySelectorAll('.mm-link');
+  mmLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+}
+
+// ══════════════════════════════════════════
+// HERO PROMPT REDIRECT
+// ══════════════════════════════════════════
+const promptInput = document.getElementById('promptInput');
+if (promptInput) {
+  promptInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = promptInput.value.trim();
+      if (val) {
+        // Redirect to signup with prompt as URL param
+        window.location.href = `signup.html?prompt=${encodeURIComponent(val)}`;
+      } else {
+        window.location.href = 'signup.html';
+      }
+    }
+  });
+}
