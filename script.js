@@ -3,15 +3,7 @@
    ══════════════════════════════════════════ */
 
 /* ── Mobile nav toggle ── */
-const navBurger = document.getElementById('navBurger');
-const navLinks  = document.getElementById('navLinks');
-
-if (navBurger && navLinks) {
-  navBurger.addEventListener('click', () => navLinks.classList.toggle('open'));
-  navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => navLinks.classList.remove('open'));
-  });
-}
+// Old toggle logic removed in favor of new fullscreen mobile menu at bottom of file
 
 /* ── Hero textarea auto-resize ── */
 const heroInput = document.getElementById('heroInput');
@@ -96,13 +88,20 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 // COOKIE BANNER
 // ══════════════════════════════════════════
 const cbAccept = document.getElementById('cbAccept');
+const cbDeny = document.getElementById('cbDeny');
 const cookieBanner = document.getElementById('cookieBanner');
 
-if (cbAccept && cookieBanner) {
-  cbAccept.addEventListener('click', () => {
-    cookieBanner.classList.add('hidden');
-    // In a real app, set localStorage or a cookie here
-  });
+if (cookieBanner) {
+  if (cbAccept) {
+    cbAccept.addEventListener('click', () => {
+      cookieBanner.classList.add('hidden');
+    });
+  }
+  if (cbDeny) {
+    cbDeny.addEventListener('click', () => {
+      cookieBanner.classList.add('hidden');
+    });
+  }
 }
 
 // ══════════════════════════════════════════

@@ -264,7 +264,7 @@
             </div>
           </div>
           <div class="video-wrap">
-            <video class="vc-video" src="demo-vid1.mp4" autoplay muted loop playsinline preload="metadata"></video>
+            <video class="vc-video" src="demo-vid1.mp4" autoplay muted loop playsinline preload="auto"></video>
           </div>
           <div class="video-card-bottom">
             <span class="vc-prompt-label">prompt —</span>
@@ -284,7 +284,7 @@
             </div>
           </div>
           <div class="video-wrap">
-            <video class="vc-video" src="demo-vid2.mp4" autoplay muted loop playsinline preload="metadata"></video>
+            <video class="vc-video" src="demo-vid2.mp4" autoplay muted loop playsinline preload="auto"></video>
           </div>
           <div class="video-card-bottom">
             <span class="vc-prompt-label">prompt —</span>
@@ -737,7 +737,10 @@ video <span class="c-op">=</span> client<span class="c-op">.</span>generate(
         We use essential cookies to manage your sessions and performance cookies to understand how researchers use our
         platform. By continuing to use Vivacity, you agree to our <a href="privacy.html">Privacy Policy</a>.
       </div>
-      <button class="cb-btn" id="cbAccept">Accept & Close</button>
+      <div class="cb-actions">
+        <button class="cb-btn cb-btn-secondary" id="cbDeny">Deny</button>
+        <button class="cb-btn" id="cbAccept">Accept & Close</button>
+      </div>
     </div>
   </div>
 

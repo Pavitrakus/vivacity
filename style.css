@@ -1450,6 +1450,22 @@ details[open] .faq-chevron { transform: rotate(180deg); }
   white-space: nowrap;
 }
 
+.cb-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cb-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--t-2);
+}
+
+.cb-btn-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--t-1);
+}
+
 @keyframes marqueeScroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(calc(-50% - 48px)); }
@@ -1533,4 +1549,31 @@ details[open] .faq-chevron { transform: rotate(180deg); }
     box-shadow: 0 0 20px rgba(0, 195, 255, 0.6), 0 0 40px rgba(0, 140, 255, 0.4), inset 0 0 20px rgba(0, 195, 255, 0.4);
     border-color: rgba(0, 195, 255, 1);
   }
+}
+
+/* Video Loading Shimmer */
+.video-wrap {
+  position: relative;
+  background: var(--bg-1);
+  overflow: hidden;
+}
+
+.video-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  z-index: 1;
+}
+
+.vc-video, .ex-svg {
+  position: relative;
+  z-index: 2; /* Overlaps shimmer once painted */
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
