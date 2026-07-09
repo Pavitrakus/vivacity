@@ -1082,19 +1082,19 @@ body {
 .panel-ctrls span:not(.ctrl-sep):hover { color: var(--t-1); }
 
 
-/* ═══════════════════════════════════════
+/* ══════════════════════════════════════════
    PRICING
-═══════════════════════════════════════ */
+══════════════════════════════════════════ */
 .pricing-section {
-  padding: 96px 0;
-  border-top: 1px solid var(--border);
+  padding: 120px 0;
 }
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-top: 48px;
+  grid-template-columns: repeat(3, 340px);
+  gap: 48px;
+  justify-content: center;
+  margin-top: 64px;
 }
 
 .plan-card {
