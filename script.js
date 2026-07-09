@@ -135,18 +135,30 @@ if (navBurger && mobileMenu) {
 // ══════════════════════════════════════════
 // HERO PROMPT REDIRECT
 // ══════════════════════════════════════════
-const promptInput = document.getElementById('promptInput');
+const promptInput = document.getElementById('heroInput') || document.getElementById('promptInput');
+const heroSubmit = document.getElementById('heroSubmit');
+
 if (promptInput) {
+  const triggerRedirect = () => {
+    const val = promptInput.value.trim();
+    if (val) {
+      window.location.href = `signup.html?prompt=${encodeURIComponent(val)}`;
+    } else {
+      window.location.href = 'signup.html';
+    }
+  };
+
   promptInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const val = promptInput.value.trim();
-      if (val) {
-        // Redirect to signup with prompt as URL param
-        window.location.href = `signup.html?prompt=${encodeURIComponent(val)}`;
-      } else {
-        window.location.href = 'signup.html';
-      }
+      triggerRedirect();
     }
   });
+
+  if (heroSubmit) {
+    heroSubmit.addEventListener('click', (e) => {
+      e.preventDefault();
+      triggerRedirect();
+    });
+  }
 }

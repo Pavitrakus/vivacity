@@ -9,63 +9,145 @@
   <style>
     body {
       display: flex;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
       background: var(--bg);
       margin: 0;
+      font-family: var(--font-sans);
     }
     
-    .auth-container {
+    /* Left side: Visuals */
+    .auth-visual {
+      flex: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
       background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 48px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+    @media(min-width: 900px) {
+      .auth-visual { display: flex; }
+    }
+
+    .auth-bg-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(0, 140, 255, 0.1) 0%, transparent 60%);
+      transform: translate(-50%, -50%);
+      z-index: 1; pointer-events: none;
+    }
+
+    .fake-svg-container {
       position: relative;
       z-index: 2;
-    }
-    
-    .auth-logo {
-      font-family: var(--font-pixel);
-      font-size: 42px;
-      color: var(--t-1);
-      text-decoration: none;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .auth-sub {
-      font-family: var(--font-sans);
-      color: var(--t-2);
-      font-size: 14px;
-      margin-bottom: 32px;
-    }
-
-    .prompt-carryover {
-      background: rgba(255, 255, 255, 0.03);
+      width: 80%;
+      max-width: 500px;
+      aspect-ratio: 16/9;
+      background: rgba(0,0,0,0.5);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 16px;
-      margin-bottom: 32px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--t-2);
-      text-align: left;
-      display: none; /* Hidden by default unless URL param exists */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      padding: 32px;
     }
 
+    .auth-svg { width: 100%; height: 100%; }
+
+    /* Right side: Form */
+    .auth-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .auth-header { margin-bottom: 40px; }
+    .auth-logo {
+      font-family: var(--font-pixel);
+      font-size: 32px;
+      color: var(--t-1);
+      text-decoration: none;
+    }
+    .auth-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--t-1);
+      margin-top: 16px;
+    }
+    .auth-sub { color: var(--t-2); font-size: 14px; margin-top: 8px; }
+
+    .prompt-carryover {
+      background: rgba(0, 140, 255, 0.05);
+      border: 1px solid rgba(0, 140, 255, 0.2);
+      border-radius: var(--r-sm);
+      padding: 16px;
+      margin-bottom: 32px;
+      display: none;
+    }
     .prompt-label {
       display: block;
-      color: var(--t-1);
+      color: #00c3ff;
       margin-bottom: 8px;
       font-size: 10px;
+      font-family: var(--font-mono);
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
+    .prompt-text { font-family: var(--font-mono); font-size: 12px; color: var(--t-1); line-height: 1.5; }
+
+    /* Form Elements */
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 12px; color: var(--t-2); margin-bottom: 8px; font-weight: 500; }
+    .input-group input {
+      width: 100%;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      color: var(--t-1);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus { border-color: #00c3ff; }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--t-1);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--r-sm);
+      padding: 14px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: var(--t-3);
+      font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .divider:not(:empty)::before { margin-right: 16px; }
+    .divider:not(:empty)::after { margin-left: 16px; }
 
     .google-btn {
       display: flex;
@@ -73,47 +155,92 @@
       justify-content: center;
       gap: 12px;
       width: 100%;
-      background: #fff;
-      color: #000;
-      border: none;
-      border-radius: var(--r-md);
-      padding: 12px 24px;
-      font-family: var(--font-sans);
+      background: transparent;
+      color: var(--t-1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
       transition: background 0.2s;
     }
-
-    .google-btn:hover { background: #f0f0f0; }
-    
+    .google-btn:hover { background: rgba(255,255,255,0.05); }
     .google-icon { width: 18px; height: 18px; }
 
-    .auth-bg-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(0, 140, 255, 0.15) 0%, transparent 70%);
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      pointer-events: none;
+    .auth-switch {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--t-2);
     }
+    .auth-switch a { color: #00c3ff; text-decoration: none; font-weight: 500; cursor: pointer; }
+    .auth-switch a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="auth-bg-glow"></div>
-  
-  <div class="auth-container">
-    <a href="index.html" class="auth-logo">Vivacity.</a>
-    <div class="auth-sub">Create your account to start rendering.</div>
+  <!-- Left Visual Column -->
+  <div class="auth-visual">
+    <div class="auth-bg-glow"></div>
+    <div class="fake-svg-container">
+      <svg class="auth-svg" viewBox="0 0 400 300">
+        <!-- Abstract glowing matrix / vector space visual -->
+        <defs>
+          <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00c3ff" />
+            <stop offset="100%" stop-color="#0055ff" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g opacity="0.3" stroke="var(--border)" stroke-width="1">
+          <line x1="0" y1="150" x2="400" y2="150" />
+          <line x1="200" y1="0" x2="200" y2="300" />
+          <circle cx="200" cy="150" r="100" fill="none" />
+          <circle cx="200" cy="150" r="50" fill="none" />
+        </g>
+        <path d="M 200 150 Q 250 50 350 100" fill="none" stroke="url(#neonGradient)" stroke-width="3" filter="url(#glow)"/>
+        <path d="M 50 200 Q 150 250 200 150" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4,4"/>
+        <circle cx="350" cy="100" r="4" fill="#00c3ff" filter="url(#glow)"/>
+        <text x="350" y="90" fill="#fff" font-size="12" font-family="monospace">v(t)</text>
+      </svg>
+    </div>
+  </div>
 
+  <!-- Right Form Column -->
+  <div class="auth-panel">
+    <div class="auth-header">
+      <a href="index.html" class="auth-logo">Vivacity.</a>
+      <h1 class="auth-title" id="formTitle">Create an account</h1>
+      <p class="auth-sub" id="formSub">Start rendering your concepts in seconds.</p>
+    </div>
+
+    <!-- Carried over prompt -->
     <div class="prompt-carryover" id="promptCarryover">
       <span class="prompt-label">Your Prompt</span>
-      <span id="promptText"></span>
+      <div class="prompt-text" id="promptText"></div>
     </div>
+
+    <!-- Auth Form -->
+    <form id="authForm" onsubmit="event.preventDefault();">
+      <div class="input-group">
+        <label for="email">Email or Phone Number</label>
+        <input type="text" id="email" placeholder="name@company.com" required />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">Sign Up</button>
+    </form>
+
+    <div class="divider">or</div>
 
     <button class="google-btn" id="googleSignInBtn">
       <svg class="google-icon" viewBox="0 0 24 24">
@@ -124,14 +251,18 @@
       </svg>
       Continue with Google
     </button>
+
+    <div class="auth-switch">
+      <span id="switchText">Already have an account?</span> 
+      <a id="switchBtn">Log in</a>
+    </div>
   </div>
 
-  <!-- Firebase Web SDK Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    // TODO: Replace with actual Firebase config from Firebase Console
+    // Firebase Placeholder Config
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "your-project.firebaseapp.com",
@@ -141,12 +272,11 @@
       appId: "1:123456789:web:abcdef"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Check for carried-over prompt from hero section
+    // Catch prompt param
     const urlParams = new URLSearchParams(window.location.search);
     const prompt = urlParams.get('prompt');
     if (prompt) {
@@ -154,24 +284,31 @@
       document.getElementById('promptText').textContent = `"${prompt}"`;
     }
 
-    // Handle Sign In
+    // Toggle Login / Signup State
+    let isLogin = false;
+    document.getElementById('switchBtn').addEventListener('click', () => {
+      isLogin = !isLogin;
+      document.getElementById('formTitle').textContent = isLogin ? "Welcome back" : "Create an account";
+      document.getElementById('formSub').textContent = isLogin ? "Log in to continue rendering." : "Start rendering your concepts in seconds.";
+      document.getElementById('submitBtn').textContent = isLogin ? "Log In" : "Sign Up";
+      document.getElementById('switchText').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
+      document.getElementById('switchBtn').textContent = isLogin ? "Sign up" : "Log in";
+    });
+
+    // Form Submit (Email/Phone)
+    document.getElementById('authForm').addEventListener('submit', () => {
+      alert('Email/Password logic would trigger Firebase Auth here.');
+    });
+
+    // Google Sign In
     document.getElementById('googleSignInBtn').addEventListener('click', () => {
-      // If config is placeholder, alert user to update it
       if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-        alert("Firebase Auth requires a valid configuration. Please update the firebaseConfig object in signup.html with your actual Firebase project keys.");
+        alert("Firebase Auth requires a valid configuration. Please update the firebaseConfig in signup.html.");
         return;
       }
-
       signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          console.log("Successfully logged in:", user);
-          // Redirect to app dashboard
-          // window.location.href = 'dashboard.html';
-        }).catch((error) => {
-          console.error("Auth error:", error);
-          alert(error.message);
-        });
+        .then((result) => console.log("Logged in:", result.user))
+        .catch((err) => alert(err.message));
     });
   </script>
 </body>
