@@ -162,3 +162,48 @@ if (promptInput) {
     });
   }
 }
+
+// ══════════════════════════════════════════
+// VIDEO LIGHTBOX (FULLSCREEN AUDIO)
+// ══════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  const lightbox = document.createElement('div');
+  lightbox.id = 'lightbox';
+  
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'close-lightbox';
+  closeBtn.innerHTML = '&times;';
+  
+  const lightboxVideo = document.createElement('video');
+  lightboxVideo.controls = true;
+  lightboxVideo.autoplay = true;
+  
+  lightbox.appendChild(closeBtn);
+  lightbox.appendChild(lightboxVideo);
+  document.body.appendChild(lightbox);
+  
+  const openLightbox = (src) => {
+    lightboxVideo.src = src;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  
+  const closeLightbox = () => {
+    lightbox.classList.remove('active');
+    lightboxVideo.pause();
+    lightboxVideo.src = '';
+    document.body.style.overflow = '';
+  };
+  
+  closeBtn.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  
+  document.querySelectorAll('.h-video, .vc-video').forEach(vid => {
+    vid.addEventListener('click', (e) => {
+      e.preventDefault();
+      openLightbox(vid.getAttribute('src'));
+    });
+  });
+});
