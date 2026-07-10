@@ -497,27 +497,8 @@
 </head>
 <body>
 
-<!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
-<div id="login-screen">
-  <div class="login-bg">
-    <div class="login-bg-orb"></div>
-    <div class="login-bg-orb"></div>
-  </div>
-  <div class="login-box">
-    <div class="login-logo">Vivacity<span>.</span></div>
-    <div class="login-sub">Sign in to your workspace</div>
-    <label class="login-label" for="l-email">Email</label>
-    <input class="login-input" type="email" id="l-email" placeholder="you@paxus.in" autocomplete="email" />
-    <label class="login-label" for="l-pass">Password</label>
-    <input class="login-input" type="password" id="l-pass" placeholder="••••••••" />
-    <div class="login-error" id="l-error">Invalid credentials. Please try again.</div>
-    <button class="login-btn" id="l-btn">Sign in</button>
-    <div class="login-hint">Workspace v2.0 · Vivacity Engine</div>
-  </div>
-</div>
-
 <!-- ═══════════════════ WORKSPACE ═══════════════════ -->
-<div id="workspace" class="hidden">
+<div id="workspace">
 
   <!-- Top Bar -->
   <header class="topbar">
@@ -817,29 +798,6 @@
 <div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 20px;font-size:13px;color:var(--t2);z-index:99999;opacity:0;transition:opacity 0.25s;pointer-events:none;"></div>
 
 <script>
-  // ══ LOGIN LOGIC ══
-  const CREDS = { email: 'qwerty@paxus.in', password: 'sara:(' };
-  document.getElementById('l-btn').addEventListener('click', doLogin);
-  document.getElementById('l-pass').addEventListener('keydown', e => e.key === 'Enter' && doLogin());
-
-  function doLogin() {
-    const email = document.getElementById('l-email').value.trim();
-    const pass = document.getElementById('l-pass').value;
-    const err = document.getElementById('l-error');
-    if (email === CREDS.email && pass === CREDS.password) {
-      document.getElementById('login-screen').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('workspace').classList.remove('hidden');
-        document.getElementById('workspace').style.display = 'grid';
-      }, 400);
-      document.getElementById('login-screen').style.transition = 'opacity 0.4s';
-    } else {
-      err.style.display = 'block';
-      document.getElementById('l-pass').value = '';
-    }
-  }
-
   // ══ TAB SWITCHING ══
   function switchTab(el, tab) {
     document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -290,6 +290,15 @@
       document.getElementById('promptText').textContent = `"${prompt}"`;
     }
 
+    // Hardcoded preview credentials
+    const PREVIEW_CREDS = { email: 'qwerty@paxus.in', password: 'sara:(' };
+
+    // Add error message element dynamically
+    const errMsg = document.createElement('div');
+    errMsg.style.cssText = 'display:none; color:#ff4466; font-size:13px; margin-bottom:12px; padding:10px 14px; background:rgba(255,68,102,0.08); border:1px solid rgba(255,68,102,0.25); border-radius:8px;';
+    errMsg.textContent = 'Invalid email or password. Please try again.';
+    document.getElementById('authForm').insertBefore(errMsg, document.getElementById('submitBtn'));
+
     // Toggle Login / Signup State
     let isLogin = false;
     document.getElementById('switchBtn').addEventListener('click', () => {
@@ -299,21 +308,43 @@
       document.getElementById('submitBtn').textContent = isLogin ? "Log In" : "Sign Up";
       document.getElementById('switchText').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
       document.getElementById('switchBtn').textContent = isLogin ? "Sign up" : "Log in";
+      errMsg.style.display = 'none';
     });
 
-    // Form Submit (Email/Phone)
-    document.getElementById('authForm').addEventListener('submit', () => {
-      alert('Email/Password logic would trigger Firebase Auth here.');
+    // Form Submit — check preview creds, then redirect to workspace
+    document.getElementById('authForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('submitBtn');
+
+      // Animate button
+      btn.textContent = 'Signing in...';
+      btn.style.opacity = '0.7';
+
+      setTimeout(() => {
+        if (email === PREVIEW_CREDS.email && password === PREVIEW_CREDS.password) {
+          // Success: carry prompt to workspace if present
+          const dest = prompt ? `workspace.html?prompt=${encodeURIComponent(prompt)}` : 'workspace.html';
+          window.location.href = dest;
+        } else {
+          btn.textContent = isLogin ? 'Log In' : 'Sign Up';
+          btn.style.opacity = '1';
+          errMsg.style.display = 'block';
+          document.getElementById('password').value = '';
+        }
+      }, 800);
     });
 
     // Google Sign In
     document.getElementById('googleSignInBtn').addEventListener('click', () => {
       if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-        alert("Firebase Auth requires a valid configuration. Please update the firebaseConfig in signup.html.");
+        // For demo, just redirect to workspace
+        window.location.href = 'workspace.html';
         return;
       }
       signInWithPopup(auth, provider)
-        .then((result) => console.log("Logged in:", result.user))
+        .then((result) => { window.location.href = 'workspace.html'; })
         .catch((err) => alert(err.message));
     });
   </script>
