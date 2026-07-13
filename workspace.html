@@ -704,11 +704,21 @@
 <script>
   // ══════════════════════════════════════════════════════
   //  VIVACITY WORKSPACE — Real Backend Integration
-  //  Backend: FastAPI @ http://localhost:8000
+  //  Backend: FastAPI deployed on Railway
   //  API: POST /generate  |  GET /status/{id}  |  GET /video/{id}
   // ══════════════════════════════════════════════════════
 
-  const BASE_URL = 'http://localhost:8000';
+  // Auto-detect backend URL:
+  // 1. If window.__BACKEND_URL__ is set by a config script → use that
+  // 2. If running on localhost → use localhost:8000
+  // 3. Otherwise → use the Railway production URL (set after deploy)
+  const RAILWAY_URL = 'RAILWAY_BACKEND_URL_PLACEHOLDER'; // ← replaced after first Railway deploy
+  const BASE_URL = (window.__BACKEND_URL__)
+    ? window.__BACKEND_URL__
+    : (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:8000'
+      : RAILWAY_URL;
+
   const STEPS = ['scripting', 'audio', 'coding', 'rendering', 'stitching'];
   const STEP_LABELS = { scripting: 'Writing script', audio: 'Generating voice', coding: 'Coding animations', rendering: 'Rendering scenes', stitching: 'Final cut & audio mix' };
 

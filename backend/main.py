@@ -35,7 +35,7 @@ from prompts import (
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 OPENAI_API_KEY    = os.getenv("OPENAI_API_KEY")
-CLAUDE_MODEL      = "claude-opus-4-7"
+CLAUDE_MODEL      = os.getenv("CLAUDE_MODEL", "claude-opus-4-7")
 
 OUTPUT_DIR = Path("outputs")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -48,36 +48,61 @@ def _find_exe(name: str) -> str:
     found = shutil.which(name)
     if found:
         return found
-    scripts = Path(sys.executable).parent
-    for c in [scripts / f"{name}.exe", scripts / name]:
-        if c.exists():
-            return str(c)
-    for base in [
-        Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WinGet" / "Links",
-        Path("C:/Windows/System32"),
-    ]:
-        for c in [base / f"{name}.exe", base / name]:
+    # Windows-specific fallbacks
+    if sys.platform == "win32":
+        scripts = Path(sys.executable).parent
+        for c in [scripts / f"{name}.exe", scripts / name]:
             if c.exists():
                 return str(c)
+        for base in [
+            Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WinGet" / "Links",
+            Path("C:/Windows/System32"),
+        ]:
+            for c in [base / f"{name}.exe", base / name]:
+                if c.exists():
+                    return str(c)
     raise FileNotFoundError(f"Cannot find '{name}'. Install it and add to PATH.")
 
 PYTHON_EXE  = sys.executable
 FFMPEG_EXE  = _find_exe("ffmpeg")
 FFPROBE_EXE = _find_exe("ffprobe")
-MIKTEX_BIN  = r"C:\Users\kushw\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
 
-def _configure_miktex():
-    exe = Path(MIKTEX_BIN) / "initexmf.exe"
-    if exe.exists():
-        subprocess.run([str(exe), "--set-config-value", "[MPM]AutoInstall=1"],
-                       capture_output=True, timeout=15)
-
-_configure_miktex()
+# MiKTeX only needed on Windows; TeX Live handles LaTeX on Linux automatically
+if sys.platform == "win32":
+    MIKTEX_BIN = os.getenv(
+        "MIKTEX_BIN",
+        r"C:\Users\kushw\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
+    )
+    def _configure_miktex():
+        exe = Path(MIKTEX_BIN) / "initexmf.exe"
+        if exe.exists():
+            subprocess.run([str(exe), "--set-config-value", "[MPM]AutoInstall=1"],
+                           capture_output=True, timeout=15)
+    _configure_miktex()
+else:
+    MIKTEX_BIN = ""
 
 # ─── App ──────────────────────────────────────────────────────────────────────
 
-app = FastAPI(title="Manim Video Generator")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+# Allow the Vercel frontend and any localhost ports
+ALLOWED_ORIGINS = [
+    "https://vivacity-five.vercel.app",
+    "https://*.vercel.app",
+    "http://localhost",
+    "http://localhost:8000",
+    "http://127.0.0.1",
+    "http://127.0.0.1:8000",
+    "null",  # for file:// opened pages
+]
+
+app = FastAPI(title="Vivacity — Manim Video Generator")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # open for now; restrict to ALLOWED_ORIGINS in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class GenerateRequest(BaseModel):
@@ -288,7 +313,8 @@ Generate classes: Scene01 through Scene{len(script["scenes"]):02d}
 
 def _build_env() -> dict:
     env = os.environ.copy()
-    env["PATH"] = f"{MIKTEX_BIN};{Path(FFMPEG_EXE).parent};" + env.get("PATH", "")
+    if sys.platform == "win32" and MIKTEX_BIN:
+        env["PATH"] = f"{MIKTEX_BIN};{Path(FFMPEG_EXE).parent};" + env.get("PATH", "")
     return env
 
 
