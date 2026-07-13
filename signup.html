@@ -46,7 +46,7 @@
       z-index: 1; pointer-events: none;
     }
 
-    .auth-intro-video {
+    .auth-video-wrapper {
       position: relative;
       z-index: 2;
       width: 80%;
@@ -56,8 +56,30 @@
       border: 1px solid var(--border);
       border-radius: var(--r-md);
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      object-fit: cover;
+      overflow: hidden;
     }
+
+    .auth-intro-video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .auth-mute-btn {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--border);
+      color: #fff;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: background 0.2s;
+    }
+    .auth-mute-btn:hover { background: rgba(0,0,0,0.8); }
+    .auth-mute-btn svg { width: 16px; height: 16px; }
 
     /* Right side: Form */
     .auth-panel {
@@ -167,7 +189,16 @@
   <!-- Left Visual Column -->
   <div class="auth-visual">
     <div class="auth-bg-glow"></div>
-    <video class="auth-intro-video" src="assets/videos/video.mp4" autoplay muted loop playsinline></video>
+    <div class="auth-video-wrapper">
+      <video class="auth-intro-video" id="authVideo" src="assets/videos/video.mp4" autoplay muted loop playsinline></video>
+      <button class="auth-mute-btn" id="authMuteBtn" aria-label="Toggle mute">
+        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Right Form Column -->
@@ -295,6 +326,22 @@
         { theme: "filled_black", size: "large", width: 340, shape: "rectangular" }
       );
       google.accounts.id.prompt(); 
+    }
+
+    // Video Mute/Unmute Toggle
+    const authVideo = document.getElementById('authVideo');
+    const authMuteBtn = document.getElementById('authMuteBtn');
+    const muteIcon = document.getElementById('muteIcon');
+    
+    if (authMuteBtn && authVideo) {
+      authMuteBtn.addEventListener('click', () => {
+        authVideo.muted = !authVideo.muted;
+        if (authVideo.muted) {
+          muteIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+        } else {
+          muteIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+        }
+      });
     }
   </script>
 </body>
