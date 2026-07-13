@@ -259,6 +259,7 @@
     .rp-toolbar {
       display: flex; align-items: center; gap: 4px;
       padding: 6px 12px 10px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
     }
     .rp-tool-btn {
       width: 28px; height: 28px; border-radius: 6px;
@@ -269,6 +270,63 @@
     .rp-tool-btn:hover { background: var(--bg-3); color: var(--t2); }
     .rp-tool-btn svg { width: 14px; height: 14px; }
     .rp-hint { font-size: 10px; color: var(--t3); font-family: var(--mono); margin-left: auto; }
+    /* Format / Language toggle pills in toolbar */
+    .toolbar-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+    .toggle-pill {
+      padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); background: var(--bg-3);
+      color: var(--t3); font-family: var(--mono); transition: all 0.15s;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .toggle-pill.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    /* Progress steps inside preview area */
+    .progress-overlay {
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-width: 560px; gap: 24px;
+    }
+    .progress-overlay.visible { display: flex; }
+    .prog-bar-wrap { width: 100%; }
+    .prog-bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .prog-bar-title { font-size: 14px; font-weight: 600; color: var(--t1); }
+    .prog-bar-pct { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+    .prog-bar-track { width: 100%; height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.6s ease; width: 0%; }
+    .prog-steps { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .prog-step { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--t3); }
+    .prog-step.active { color: var(--t1); }
+    .prog-step.done { color: #00ff88; }
+    .prog-step-icon {
+      width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;
+    }
+    .prog-step.active .prog-step-icon { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); animation: ringPulse 1.4s infinite; }
+    .prog-step.done .prog-step-icon { border-color: #00ff88; background: rgba(0,255,136,0.08); color: #00ff88; }
+    @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,195,255,0.5)} 50%{box-shadow:0 0 0 5px rgba(0,195,255,0)} }
+    .prog-msg { font-size: 12px; color: var(--t3); font-family: var(--mono); font-style: italic; text-align: center; }
+    /* Script preview cards */
+    .script-preview { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .script-title { font-size: 14px; font-weight: 700; color: var(--t1); margin-bottom: 4px; }
+    .scene-card {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-sm);
+      padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .scene-card.sc-active { border-color: var(--accent); background: var(--accent-dim); }
+    .scene-card.sc-done { border-color: rgba(0,255,136,0.3); }
+    .scene-num {
+      width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+      background: var(--bg-3); border: 1px solid var(--border);
+      font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      color: var(--t3);
+    }
+    .scene-card.sc-done .scene-num { color: #00ff88; border-color: rgba(0,255,136,0.3); }
+    .scene-card.sc-active .scene-num { color: var(--accent); border-color: var(--accent); }
+    .scene-body { flex: 1; }
+    .scene-stitle { font-size: 12px; font-weight: 600; color: var(--t1); margin-bottom: 2px; }
+    .scene-narr { font-size: 11px; color: var(--t3); line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    /* Error card */
+    .err-banner { display:none; background: rgba(255,50,100,0.06); border: 1px solid rgba(255,50,100,0.2); border-radius: var(--r-sm); padding: 14px 18px; color: #ff8aaa; font-size: 13px; max-width: 560px; width: 100%; }
+    .err-banner.visible { display: block; }
+    .err-banner code { font-family: var(--mono); font-size: 11px; display: block; margin-top: 6px; opacity: 0.8; white-space: pre-wrap; word-break: break-word; }
 
     /* ── Main Workspace ── */
     .main-workspace {
@@ -506,55 +564,13 @@
         <div class="msg-avatar" style="background:linear-gradient(135deg, #00c3ff22, #0055ff22); border-color:rgba(0,195,255,0.3); color:var(--accent);">V</div>
         <div>
           <div class="msg-bubble">
-            Hello Kushwah! I'm ready to generate mathematical animations. Describe any concept and I'll render a Manim animation in seconds.<br><br>Your last render is loaded in the preview. Want to modify it?
+            Ready to generate. Describe any mathematical concept and I'll script, narrate, and animate it using Manim. Choose your format and language below, then hit send.
           </div>
-          <div class="msg-time">09:12</div>
+          <div class="msg-time" id="greeting-time"></div>
         </div>
       </div>
 
-      <!-- User message -->
-      <div class="msg user">
-        <div class="msg-avatar">K</div>
-        <div>
-          <div class="msg-bubble">Show the geometric derivation of sine and cosine on the unit circle</div>
-          <div class="msg-time">09:13</div>
-        </div>
-      </div>
-
-      <!-- AI response -->
-      <div class="msg ai">
-        <div class="msg-avatar" style="background:linear-gradient(135deg, #00c3ff22, #0055ff22); border-color:rgba(0,195,255,0.3); color:var(--accent);">V</div>
-        <div>
-          <div class="msg-bubble">
-            Generating a full animation of the unit circle trigonometry. I'll show the angle theta sweeping from 0 to 2pi, with sine and cosine values traced dynamically.
-          </div>
-          <div class="render-pill" onclick="focusPreview()">
-            <div class="render-pill-header">
-              <div class="render-pill-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-              <div class="render-pill-info">
-                <div class="render-pill-name">UnitCircleTrigonometry.mp4</div>
-                <div class="render-pill-meta">38s · 1080p · Manim CE 0.18</div>
-              </div>
-              <div class="render-pill-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
-            </div>
-            <div class="render-pill-video">
-              <video src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
-            </div>
-          </div>
-          <div class="msg-time">09:14</div>
-        </div>
-      </div>
-
-      <!-- User follow-up -->
-      <div class="msg user">
-        <div class="msg-avatar">K</div>
-        <div>
-          <div class="msg-bubble">Make the sine wave trace in neon blue and add a label showing the formula</div>
-          <div class="msg-time">09:16</div>
-        </div>
-      </div>
-
-      <!-- Thinking -->
+      <!-- Thinking indicator (hidden by default) -->
       <div class="msg ai" id="thinking-msg" style="display:none">
         <div class="msg-avatar" style="background:linear-gradient(135deg, #00c3ff22, #0055ff22); border-color:rgba(0,195,255,0.3); color:var(--accent);">V</div>
         <div>
@@ -562,38 +578,28 @@
             <div class="think-dot"></div>
             <div class="think-dot"></div>
             <div class="think-dot"></div>
-            <span class="think-label">Generating Manim code...</span>
+            <span class="think-label" id="think-label-text">Starting pipeline...</span>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Suggestions -->
-    <div class="rp-suggestions" id="suggestions-area">
-      <div class="rp-suggestion-label">Try asking</div>
-      <div class="suggestion-pill" onclick="fillSuggestion(this)">Add a phase shift of pi/4 and show the difference</div>
-      <div class="suggestion-pill" onclick="fillSuggestion(this)">Extend to show the tangent function as well</div>
-      <div class="suggestion-pill" onclick="fillSuggestion(this)">Export as a loop-able 4 second clip</div>
     </div>
 
     <!-- Input -->
     <div class="rp-input-area">
       <div class="rp-input-box">
         <div class="rp-toolbar">
-          <button class="rp-tool-btn" title="Attach file">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
-          </button>
-          <button class="rp-tool-btn" title="LaTeX input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
-          </button>
-          <button class="rp-tool-btn" title="Style presets">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8"/></svg>
-          </button>
+          <!-- Format toggles -->
+          <button class="toggle-pill active" id="fmt-portrait" onclick="setFmt('portrait')">📱 Portrait</button>
+          <button class="toggle-pill" id="fmt-landscape" onclick="setFmt('landscape')">🖥 Landscape</button>
+          <div class="toolbar-sep"></div>
+          <!-- Language toggles -->
+          <button class="toggle-pill active" id="lang-english" onclick="setLang('english')">🇬🇧 EN</button>
+          <button class="toggle-pill" id="lang-hinglish" onclick="setLang('hinglish')">🇮🇳 HI</button>
           <div class="rp-hint">Enter to send · Shift+Enter for newline</div>
         </div>
         <div class="rp-input-row">
-          <textarea class="rp-textarea" id="chat-input" placeholder="Describe your animation..." rows="2" onkeydown="handleChatKey(event)"></textarea>
-          <button class="rp-send" onclick="sendMessage()">
+          <textarea class="rp-textarea" id="chat-input" placeholder="Describe your animation... e.g. 'Prove the divergence theorem'" rows="2" onkeydown="handleChatKey(event)"></textarea>
+          <button class="rp-send" id="send-btn" onclick="sendMessage()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
@@ -612,7 +618,7 @@
 
     <!-- Viewer Header -->
     <div class="viewer-header">
-      <div class="viewer-filename" id="viewer-filename">UnitCircleTrigonometry.mp4</div>
+      <div class="viewer-filename" id="viewer-filename">No video yet</div>
       <div class="viewer-actions">
         <div class="va-btn" onclick="copyLink()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
@@ -631,8 +637,34 @@
 
     <!-- Preview Tab Content -->
     <div class="video-preview-area" id="tab-preview">
-      <div class="video-container" id="main-video-container">
-        <video id="main-video" src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
+      <!-- Progress overlay (shown while generating) -->
+      <div class="progress-overlay" id="progress-overlay">
+        <div class="prog-bar-wrap">
+          <div class="prog-bar-label">
+            <div class="prog-bar-title">Generating your video</div>
+            <div class="prog-bar-pct" id="prog-pct">0%</div>
+          </div>
+          <div class="prog-bar-track"><div class="prog-bar-fill" id="prog-bar"></div></div>
+        </div>
+        <div class="prog-steps">
+          <div class="prog-step" id="pstep-scripting"><div class="prog-step-icon">✍</div><span>Writing script</span></div>
+          <div class="prog-step" id="pstep-audio"><div class="prog-step-icon">🎙</div><span>Generating voice (OpenAI TTS)</span></div>
+          <div class="prog-step" id="pstep-coding"><div class="prog-step-icon">⚡</div><span>Coding animations</span></div>
+          <div class="prog-step" id="pstep-rendering"><div class="prog-step-icon">🎬</div><span>Rendering scenes (parallel)</span></div>
+          <div class="prog-step" id="pstep-stitching"><div class="prog-step-icon">✂</div><span>Final cut &amp; audio mix</span></div>
+        </div>
+        <div class="prog-msg" id="prog-msg">Starting...</div>
+        <!-- Script preview (populated as backend sends it) -->
+        <div class="script-preview" id="script-preview" style="display:none">
+          <div class="script-title" id="script-title"></div>
+          <div id="scene-list"></div>
+        </div>
+      </div>
+      <!-- Error banner -->
+      <div class="err-banner" id="err-banner"><strong>Something went wrong.</strong><code id="err-text"></code></div>
+      <!-- Video player (hidden until done) -->
+      <div class="video-container" id="main-video-container" style="display:none">
+        <video id="main-video" loop playsinline controls></video>
         <div class="video-overlay-ui">
           <div class="video-controls">
             <div class="video-play-btn" onclick="toggleVideoPlay()">
@@ -670,14 +702,45 @@
 <div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 20px;font-size:13px;color:var(--t2);z-index:99999;opacity:0;transition:opacity 0.25s;pointer-events:none;"></div>
 
 <script>
-  // ══ TAB SWITCHING ══
+  // ══════════════════════════════════════════════════════
+  //  VIVACITY WORKSPACE — Real Backend Integration
+  //  Backend: FastAPI @ http://localhost:8000
+  //  API: POST /generate  |  GET /status/{id}  |  GET /video/{id}
+  // ══════════════════════════════════════════════════════
+
+  const BASE_URL = 'http://localhost:8000';
+  const STEPS = ['scripting', 'audio', 'coding', 'rendering', 'stitching'];
+  const STEP_LABELS = { scripting: 'Writing script', audio: 'Generating voice', coding: 'Coding animations', rendering: 'Rendering scenes', stitching: 'Final cut & audio mix' };
+
+  let pollInterval = null;
+  let currentFormat = 'portrait';
+  let currentLang = 'english';
+  let currentJobId = null;
+  let currentVideoUrl = null;
+  let currentManimCode = null;
+
+  // ── Format / Language toggles ──────────────────────────
+  function setFmt(f) {
+    currentFormat = f;
+    document.querySelectorAll('[id^="fmt-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('fmt-' + f).classList.add('active');
+  }
+  function setLang(l) {
+    currentLang = l;
+    document.querySelectorAll('[id^="lang-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('lang-' + l).classList.add('active');
+    document.getElementById('chat-input').placeholder =
+      l === 'hinglish' ? 'Animation describe karo... e.g. "Euler ka formula prove karo"'
+                       : 'Describe your animation... e.g. \'Prove the divergence theorem\'';
+  }
+
+  // ── Tab Switching ──────────────────────────────────────
   function switchTab(el, tab) {
     document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
-    ['preview','code','logs'].forEach(t => {
-      const el2 = document.getElementById('tab-' + t);
-      if (el2) el2.classList.remove('visible');
-    });
+    document.getElementById('tab-preview').style.display = 'none';
+    document.getElementById('tab-code').classList.remove('visible');
+    document.getElementById('tab-logs').classList.remove('visible');
     if (tab === 'preview') {
       document.getElementById('tab-preview').style.display = 'flex';
     } else if (tab === 'code') {
@@ -689,110 +752,238 @@
     }
   }
 
-  // ══ CODE VIEW ══
-  const manimCodeSamples = {
-    'unit-circle': `<span class="code-cm"># Vivacity Engine — Generated Code</span>
-<span class="code-cm"># Prompt: Show the geometric derivation of sine and cosine on the unit circle</span>
-<span class="code-cm"># Model: Vivacity-v2-pro · Render Time: 14.2s</span>
-
-<span class="code-kw">from</span> manim <span class="code-kw">import</span> *
-
-<span class="code-kw">class</span> <span class="code-fn">UnitCircleTrigonometry</span>(Scene):
-    <span class="code-kw">def</span> <span class="code-fn">construct</span>(self):
-        <span class="code-cm"># Background and axes setup</span>
-        axes = Axes(
-            x_range=[<span class="code-num">-1.5</span>, <span class="code-num">1.5</span>],
-            y_range=[<span class="code-num">-1.5</span>, <span class="code-num">1.5</span>],
-            axis_config={<span class="code-str">"color"</span>: GREY},
-        ).scale(<span class="code-num">2</span>)
-
-        <span class="code-cm"># Unit circle</span>
-        circle = Circle(radius=<span class="code-num">2</span>, color=WHITE, stroke_opacity=<span class="code-num">0.4</span>)
-
-        <span class="code-cm"># Angle tracker</span>
-        theta = ValueTracker(<span class="code-num">0</span>)
-
-        <span class="code-cm"># Moving dot on circle</span>
-        dot = always_redraw(<span class="code-kw">lambda</span>:
-            Dot(color=YELLOW).move_to(
-                circle.point_at_angle(theta.get_value())
-            )
-        )
-
-        <span class="code-cm"># Cosine line (horizontal)</span>
-        cos_line = always_redraw(<span class="code-kw">lambda</span>:
-            Line(
-                start=ORIGIN,
-                end=[np.cos(theta.get_value()) * <span class="code-num">2</span>, <span class="code-num">0</span>, <span class="code-num">0</span>],
-                color=BLUE, stroke_width=<span class="code-num">3</span>
-            )
-        )
-
-        <span class="code-cm"># Sine line (vertical)</span>
-        sin_line = always_redraw(<span class="code-kw">lambda</span>:
-            Line(
-                start=[np.cos(theta.get_value()) * <span class="code-num">2</span>, <span class="code-num">0</span>, <span class="code-num">0</span>],
-                end=[np.cos(theta.get_value()) * <span class="code-num">2</span>, np.sin(theta.get_value()) * <span class="code-num">2</span>, <span class="code-num">0</span>],
-                color=RED, stroke_width=<span class="code-num">3</span>
-            )
-        )
-
-        self.add(axes, circle, cos_line, sin_line, dot)
-        self.play(theta.animate.set_value(TAU), run_time=<span class="code-num">8</span>, rate_func=linear)
-        self.wait()`,
-    'matrix': `<span class="code-cm"># Vivacity Engine — Generated Code</span>
-<span class="code-cm"># Prompt: Visualize matrix vector multiplication step by step</span>
-
-<span class="code-kw">from</span> manim <span class="code-kw">import</span> *
-
-<span class="code-kw">class</span> <span class="code-fn">MatrixVectorMult</span>(Scene):
-    <span class="code-kw">def</span> <span class="code-fn">construct</span>(self):
-        matrix = Matrix([[<span class="code-num">1</span>, <span class="code-num">2</span>], [<span class="code-num">3</span>, <span class="code-num">4</span>]])
-        vector = Matrix([[<span class="code-str">"x"</span>], [<span class="code-str">"y"</span>]])
-        equals = MathTex(<span class="code-str">r"="</span>)
-        result = Matrix([[<span class="code-str">"x+2y"</span>], [<span class="code-str">"3x+4y"</span>]])
-
-        group = VGroup(matrix, MathTex(<span class="code-str">r"\cdot"</span>), vector, equals, result).arrange(RIGHT)
-        self.play(Write(group))
-        self.wait(<span class="code-num">2</span>)`
-  };
-
-  let currentSession = 'unit-circle';
-
+  // ── Code / Logs view ──────────────────────────────────
   function loadCodeView() {
-    const code = manimCodeSamples[currentSession] || manimCodeSamples['unit-circle'];
-    document.getElementById('code-display').innerHTML = code;
+    const el = document.getElementById('code-display');
+    if (currentManimCode) {
+      el.textContent = currentManimCode;
+    } else {
+      el.innerHTML = '<span style="color:var(--t3);font-family:var(--mono);font-size:12px;">No code yet — generate a video to see the Manim source here.</span>';
+    }
   }
 
   function loadLogsView() {
-    const logEl = document.getElementById('log-display');
-    const logs = [
-      '$ vivacity render --quality 1080p --fps 60',
-      '  [Engine] Initializing Vivacity-v2-pro...',
-      '  [Parser] Parsing natural language prompt...',
-      '  [Codegen] Generating Manim CE 0.18.0 code...',
-      '  [Codegen] Code generated. 87 lines.',
-      '  [Render] Starting render pipeline...',
-      '  [Render] Executing Manim animation...',
-      '  [Render] Frame 0/2280...',
-      '  [Render] Frame 500/2280...',
-      '  [Render] Frame 1000/2280...',
-      '  [Render] Frame 1500/2280...',
-      '  [Render] Frame 2280/2280 DONE',
-      '  [Post] Encoding to H.264 1080p...',
-      '  [Post] Output: UnitCircleTrigonometry.mp4 (14.2MB)',
-      '  [Done] Render completed in 14.2s.',
-    ];
-    logEl.innerHTML = '';
-    logs.forEach((line, i) => {
-      setTimeout(() => {
-        logEl.innerHTML += line + '\n';
-        logEl.parentElement.scrollTop = logEl.parentElement.scrollHeight;
-      }, i * 60);
-    });
+    const el = document.getElementById('log-display');
+    if (!el.textContent.trim()) {
+      el.innerHTML = '<span style="color:var(--t3);">No logs yet. Generate a video to see the build log.</span>';
+    }
   }
 
-  // ══ VIDEO CONTROLS ══
+  function appendLog(line) {
+    const el = document.getElementById('log-display');
+    el.textContent += line + '\n';
+    el.parentElement.scrollTop = el.parentElement.scrollHeight;
+  }
+
+  // ── Send message / start generation ───────────────────
+  function sendMessage() {
+    const inp = document.getElementById('chat-input');
+    const text = inp.value.trim();
+    if (!text) return;
+    if (pollInterval) { toast('A render is already in progress...'); return; }
+    inp.value = '';
+    addUserMessage(text);
+    startGeneration(text);
+  }
+
+  function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  async function startGeneration(question) {
+    // Show thinking
+    const thinkEl = document.getElementById('thinking-msg');
+    document.getElementById('think-label-text').textContent = 'Connecting to Vivacity engine...';
+    thinkEl.style.display = 'flex';
+    scrollChat();
+
+    // Lock send button
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '0.4';
+
+    // Show progress overlay in preview panel
+    showProgressOverlay();
+
+    // Clear previous state
+    document.getElementById('log-display').textContent = '';
+    appendLog(`$ vivacity generate --format ${currentFormat} --lang ${currentLang}`);
+    appendLog(`  [Prompt] ${question}`);
+    currentManimCode = null;
+    currentVideoUrl = null;
+
+    try {
+      const res = await fetch(`${BASE_URL}/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, format: currentFormat, language: currentLang }),
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`Server ${res.status}: ${err}`);
+      }
+      const { job_id } = await res.json();
+      currentJobId = job_id;
+      appendLog(`  [Job] Started job: ${job_id}`);
+      thinkEl.style.display = 'none';
+      pollJob(job_id);
+    } catch (err) {
+      thinkEl.style.display = 'none';
+      sendBtn.disabled = false;
+      sendBtn.style.opacity = '1';
+      showError(err.message);
+      addAiMessage(`❌ Could not connect to the Vivacity backend.\n\nMake sure the backend is running:\n  cd backend && python main.py`, false);
+    }
+  }
+
+  // ── Job polling ────────────────────────────────────────
+  function pollJob(job_id) {
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/status/${job_id}`);
+        if (!res.ok) return;
+        const job = await res.json();
+        updateProgress(job);
+        if (job.status === 'done') {
+          clearInterval(pollInterval); pollInterval = null;
+          onJobDone(job);
+        } else if (job.status === 'error') {
+          clearInterval(pollInterval); pollInterval = null;
+          onJobError(job);
+        }
+      } catch (_) {}
+    }, 1500);
+  }
+
+  // ── Progress update UI ────────────────────────────────
+  function updateProgress(job) {
+    document.getElementById('prog-bar').style.width = `${job.progress || 0}%`;
+    document.getElementById('prog-pct').textContent = `${job.progress || 0}%`;
+    document.getElementById('prog-msg').textContent = job.message || '';
+    appendLog(`  [${(job.status||'').toUpperCase()}] ${job.message || ''}`);
+
+    // Update step states
+    const idx = STEPS.indexOf(job.status);
+    STEPS.forEach((s, i) => {
+      const el = document.getElementById('pstep-' + s);
+      if (!el) return;
+      el.className = 'prog-step';
+      const icon = el.querySelector('.prog-step-icon');
+      const iconMap = { scripting:'✍', audio:'🎙', coding:'⚡', rendering:'🎬', stitching:'✂' };
+      icon.textContent = iconMap[s];
+      if (job.status === 'done') { el.classList.add('done'); icon.textContent = '✓'; }
+      else if (i < idx) { el.classList.add('done'); icon.textContent = '✓'; }
+      else if (i === idx) { el.classList.add('active'); icon.textContent = '●'; }
+    });
+
+    // Script preview
+    if (job.script_preview) {
+      const sp = job.script_preview;
+      const previewEl = document.getElementById('script-preview');
+      previewEl.style.display = 'flex';
+      document.getElementById('script-title').textContent = sp.title || '';
+      const list = document.getElementById('scene-list');
+      if (list.children.length !== (sp.scenes || []).length) {
+        list.innerHTML = '';
+        (sp.scenes || []).forEach((sc, i) => {
+          const d = document.createElement('div');
+          d.className = 'scene-card'; d.id = 'scard-' + i;
+          d.innerHTML = `<div class="scene-num" id="snum-${i}">${i+1}</div><div class="scene-body"><div class="scene-stitle">${escHtml(sc.title)}</div><div class="scene-narr">${escHtml(sc.narration)}</div></div>`;
+          list.appendChild(d);
+        });
+      }
+      const cur = job.current_scene || 0;
+      (sp.scenes || []).forEach((_, i) => {
+        const card = document.getElementById('scard-' + i);
+        const num  = document.getElementById('snum-' + i);
+        if (!card) return;
+        card.classList.remove('sc-active','sc-done');
+        if (job.status === 'done') { card.classList.add('sc-done'); num.textContent = '✓'; }
+        else if (cur > 0) {
+          if (i + 1 < cur) { card.classList.add('sc-done'); num.textContent = '✓'; }
+          else if (i + 1 === cur) { card.classList.add('sc-active'); num.textContent = i + 1; }
+        }
+      });
+    }
+  }
+
+  // ── Job done ──────────────────────────────────────────
+  function onJobDone(job) {
+    const videoUrl = `${BASE_URL}${job.video_url}`;
+    currentVideoUrl = videoUrl;
+
+    appendLog('  [Done] Video is ready!');
+    appendLog(`  [URL] ${videoUrl}`);
+
+    // Update viewer header
+    const fname = `render_${currentJobId.slice(0,8)}.mp4`;
+    document.getElementById('viewer-filename').textContent = fname;
+
+    // Hide progress, show video
+    document.getElementById('progress-overlay').classList.remove('visible');
+    const container = document.getElementById('main-video-container');
+    container.style.display = 'block';
+    // Adjust aspect ratio based on format
+    container.style.aspectRatio = currentFormat === 'portrait' ? '9/16' : '16/9';
+    container.style.maxWidth = currentFormat === 'portrait' ? '360px' : '100%';
+
+    const vid = document.getElementById('main-video');
+    vid.src = videoUrl;
+    vid.load();
+    vid.play().catch(() => {});
+
+    // Wire download button
+    document.getElementById('viewer-filename').title = fname;
+
+    // Unlock send button
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = false;
+    sendBtn.style.opacity = '1';
+
+    // Add success message in chat with render pill
+    addAiMessage(`✅ Done! Your animation is ready — <strong>${fname}</strong>. Click the pill below to open the preview.`, job.job_id || currentJobId, fname);
+
+    toast('Video ready! 🎬');
+  }
+
+  // ── Job error ─────────────────────────────────────────
+  function onJobError(job) {
+    appendLog(`  [ERROR] ${job.error || 'Unknown error'}`);
+    showError(job.error || 'Unknown error');
+    addAiMessage(`❌ The render failed. Check the Build Logs tab for details. Error: ${job.error || 'Unknown'}`, null, null);
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = false;
+    sendBtn.style.opacity = '1';
+  }
+
+  // ── Progress overlay ──────────────────────────────────
+  function showProgressOverlay() {
+    document.getElementById('main-video-container').style.display = 'none';
+    document.getElementById('err-banner').classList.remove('visible');
+    document.getElementById('script-preview').style.display = 'none';
+    document.getElementById('scene-list').innerHTML = '';
+    document.getElementById('prog-bar').style.width = '0%';
+    document.getElementById('prog-pct').textContent = '0%';
+    document.getElementById('prog-msg').textContent = 'Starting...';
+    STEPS.forEach(s => {
+      const el = document.getElementById('pstep-' + s);
+      if (el) { el.className = 'prog-step'; }
+    });
+    const po = document.getElementById('progress-overlay');
+    po.classList.add('visible');
+    // Switch to preview tab
+    document.querySelectorAll('.vtab')[0].click();
+  }
+
+  function showError(msg) {
+    const b = document.getElementById('err-banner');
+    b.classList.add('visible');
+    document.getElementById('err-text').textContent = msg;
+    document.getElementById('progress-overlay').classList.remove('visible');
+  }
+
+  // ── Video controls ────────────────────────────────────
   const vid = document.getElementById('main-video');
   vid.addEventListener('timeupdate', () => {
     const pct = (vid.currentTime / vid.duration) * 100 || 0;
@@ -800,113 +991,56 @@
     const fmt = t => `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
     document.getElementById('vid-time').textContent = `${fmt(vid.currentTime)} / ${fmt(vid.duration || 0)}`;
   });
-  function toggleVideoPlay() {
-    if (vid.paused) vid.play(); else vid.pause();
-  }
+  function toggleVideoPlay() { if (vid.paused) vid.play(); else vid.pause(); }
   function seekVideo(e) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    vid.currentTime = pct * vid.duration;
+    vid.currentTime = ((e.clientX - rect.left) / rect.width) * vid.duration;
   }
-  let muted = true;
+  let muted = false;
   function toggleMute() {
-    muted = !muted;
-    vid.muted = muted;
-    const x1 = document.getElementById('mute-x'), x2 = document.getElementById('mute-x2');
-    x1.style.display = muted ? 'block' : 'none';
-    x2.style.display = muted ? 'block' : 'none';
+    muted = !muted; vid.muted = muted;
+    document.getElementById('mute-x').style.display = muted ? 'block' : 'none';
+    document.getElementById('mute-x2').style.display = muted ? 'block' : 'none';
   }
   function fullscreenVideo() {
     const v = document.getElementById('main-video');
     if (v.requestFullscreen) v.requestFullscreen();
   }
 
-  // ══ RENDER SIMULATION ══
-  function triggerRender() {
-    const btn = document.getElementById('render-btn');
-    btn.textContent = 'Rendering...';
-    btn.style.opacity = '0.7';
-
-    // Show thinking in chat
-    const thinkEl = document.getElementById('thinking-msg');
-    thinkEl.style.display = 'flex';
-    scrollChat();
-
-    setTimeout(() => {
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg> Render`;
-      btn.style.opacity = '1';
-      thinkEl.style.display = 'none';
-      toast('Render complete! 1080p 60fps ready.');
-      addAiMessage('Done! Your animation is ready. It\'s 38 seconds at 1080p 60fps. Want me to make any tweaks?', true);
-    }, 4500);
-  }
-
-  // ══ CHAT ══
-  function sendMessage() {
-    const inp = document.getElementById('chat-input');
-    const text = inp.value.trim();
-    if (!text) return;
-    inp.value = '';
-    addUserMessage(text);
-    const think = document.getElementById('thinking-msg');
-    think.style.display = 'flex';
-    document.getElementById('suggestions-area').style.display = 'none';
-    scrollChat();
-    const responses = [
-      "I'm updating the animation with the neon blue sine trace and adding the formula label sin(θ) = opposite/hypotenuse. Rendering now...",
-      "Adjusting the scene. I'll add a dynamic LaTeX label that follows the point on the circle and traces the sine wave in real-time.",
-      "That's a great modification! I'll re-render the sequence with those parameters.",
-      "Got it. Generating an enhanced version with your specifications now.",
-    ];
-    setTimeout(() => {
-      think.style.display = 'none';
-      addAiMessage(responses[Math.floor(Math.random() * responses.length)], true);
-      document.getElementById('suggestions-area').style.display = 'flex';
-    }, 2000);
-  }
-
-  function handleChatKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  }
-
+  // ── Chat helpers ──────────────────────────────────────
   function addUserMessage(text) {
     const msgs = document.getElementById('rp-msgs');
-    const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const time = nowTime();
+    const storedUser = sessionStorage.getItem('googleUser');
+    let initials = 'U';
+    try { const u = JSON.parse(storedUser); if (u && u.name) initials = u.name.charAt(0).toUpperCase(); } catch(_) {}
     msgs.innerHTML += `
       <div class="msg user">
-        <div class="msg-avatar">K</div>
-        <div>
-          <div class="msg-bubble">${escHtml(text)}</div>
-          <div class="msg-time">${time}</div>
-        </div>
+        <div class="msg-avatar">${initials}</div>
+        <div><div class="msg-bubble">${escHtml(text)}</div><div class="msg-time">${time}</div></div>
       </div>`;
     scrollChat();
   }
 
-  function addAiMessage(text, withRender) {
+  function addAiMessage(html, jobId, filename) {
     const msgs = document.getElementById('rp-msgs');
-    const now = new Date();
-    const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-    const renderPill = withRender ? `
-      <div class="render-pill" onclick="focusPreview()">
+    const time = nowTime();
+    const pill = jobId ? `
+      <div class="render-pill" onclick="focusPreview()" style="margin-top:10px;">
         <div class="render-pill-header">
           <div class="render-pill-icon"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
           <div class="render-pill-info">
-            <div class="render-pill-name">Updated_UnitCircle.mp4</div>
-            <div class="render-pill-meta">38s · 1080p · just now</div>
+            <div class="render-pill-name">${escHtml(filename || 'render.mp4')}</div>
+            <div class="render-pill-meta">Ready · ${currentFormat} · just now</div>
           </div>
           <div class="render-pill-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
-        </div>
-        <div class="render-pill-video">
-          <video src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
         </div>
       </div>` : '';
     msgs.innerHTML += `
       <div class="msg ai">
-        <div class="msg-avatar" style="background:linear-gradient(135deg, #00c3ff22, #0055ff22); border-color:rgba(0,195,255,0.3); color:var(--accent);">V</div>
+        <div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div>
         <div>
-          <div class="msg-bubble">${escHtml(text)}${renderPill}</div>
+          <div class="msg-bubble">${html}${pill}</div>
           <div class="msg-time">${time}</div>
         </div>
       </div>`;
@@ -918,66 +1052,101 @@
     setTimeout(() => msgs.scrollTop = msgs.scrollHeight, 50);
   }
 
-  function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escHtml(t) {
+    if (!t) return '';
+    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 
-  function fillSuggestion(el) {
-    document.getElementById('chat-input').value = el.textContent;
-    document.getElementById('chat-input').focus();
+  function nowTime() {
+    const n = new Date();
+    return `${n.getHours()}:${String(n.getMinutes()).padStart(2,'0')}`;
+  }
+
+  // ── Topbar buttons ─────────────────────────────────────
+  function triggerRender() {
+    const txt = document.getElementById('chat-input').value.trim();
+    if (txt) { sendMessage(); return; }
+    toast('Type a prompt in the chat to generate a video.');
   }
 
   function newChat() {
+    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
     document.getElementById('rp-msgs').innerHTML = `
       <div class="msg ai">
-        <div class="msg-avatar" style="background:linear-gradient(135deg, #00c3ff22, #0055ff22); border-color:rgba(0,195,255,0.3); color:var(--accent);">V</div>
+        <div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div>
         <div>
-          <div class="msg-bubble">New session started. What mathematical concept would you like to visualize?</div>
-          <div class="msg-time">Now</div>
+          <div class="msg-bubble">New session. What would you like to visualize?</div>
+          <div class="msg-time">${nowTime()}</div>
         </div>
       </div>`;
-    document.getElementById('viewer-filename').textContent = 'Untitled.mp4';
-    toast('Started a new chat session');
+    showProgressOverlay();
+    document.getElementById('progress-overlay').classList.remove('visible');
+    document.getElementById('main-video-container').style.display = 'none';
+    document.getElementById('viewer-filename').textContent = 'No video yet';
+    document.getElementById('log-display').textContent = '';
+    currentJobId = null; currentVideoUrl = null; currentManimCode = null;
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = false; sendBtn.style.opacity = '1';
+    toast('New session started.');
   }
 
-  // ══ ICON SIDEBAR ══
   function setIconView(el, view) {
     document.querySelectorAll('.icon-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
     if (view === 'settings') toast('Settings panel coming soon.');
-    else if (view === 'templates') toast('Opening template library...');
-    else if (view === 'files') toast('File manager loading...');
-    else if (view === 'history') toast('Render history loaded.');
+    else if (view === 'templates') toast('Template library coming soon.');
+    else if (view === 'files') toast('File manager coming soon.');
+    else if (view === 'history') toast('Render history coming soon.');
   }
 
-  // ══ MISC ══
-  function focusPreview() {
-    document.querySelectorAll('.vtab')[0].click();
-    toast('Switched to preview');
-  }
+  function focusPreview() { document.querySelectorAll('.vtab')[0].click(); }
   function renameProject() {
     const name = prompt('Project name:', document.getElementById('proj-name').textContent);
     if (name) document.getElementById('proj-name').textContent = name;
   }
-  function showExport() { toast('Preparing export package...'); }
+  function showExport() {
+    if (currentVideoUrl) {
+      const a = document.createElement('a');
+      a.href = currentVideoUrl;
+      a.download = document.getElementById('viewer-filename').textContent || 'render.mp4';
+      a.click();
+    } else { toast('No video to export yet.'); }
+  }
   function shareWorkspace() {
     navigator.clipboard?.writeText(window.location.href).catch(() => {});
-    toast('Workspace link copied to clipboard!');
+    toast('Workspace link copied!');
   }
-  function downloadVideo() { toast('Downloading UnitCircleTrigonometry.mp4...'); }
+  function downloadVideo() { showExport(); }
   function copyLink() {
-    navigator.clipboard?.writeText('https://vivacity-five.vercel.app').catch(() => {});
-    toast('Link copied!');
+    if (currentVideoUrl) {
+      navigator.clipboard?.writeText(currentVideoUrl).catch(() => {});
+      toast('Video URL copied!');
+    } else { toast('No video available yet.'); }
   }
   function switchModel() {
-    const models = ['v2-pro','v2-fast','v1-legacy'];
-    const cur = document.querySelector('.rp-model-badge').textContent.replace(' ▾','').trim();
+    const models = ['claude-opus-4-7', 'claude-sonnet', 'claude-haiku'];
+    const badge = document.querySelector('.rp-model-badge');
+    const cur = badge.textContent.replace(' ▾','').trim();
     const next = models[(models.indexOf(cur)+1) % models.length];
-    document.querySelector('.rp-model-badge').textContent = next + ' ▾';
-    toast(`Switched to model: ${next}`);
+    badge.textContent = next + ' ▾';
+    toast(`Model: ${next}`);
   }
 
-  // Pick up prompt carryover if present, and handle Google Auth Profile
+  // ── Toast ─────────────────────────────────────────────
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.style.opacity = '0', 3200);
+  }
+
+  // ── Init ──────────────────────────────────────────────
   window.addEventListener('DOMContentLoaded', () => {
-    // 1. Google Auth Profile
+    // Greeting time
+    const gt = document.getElementById('greeting-time');
+    if (gt) gt.textContent = nowTime();
+
+    // Google Auth Profile
     const storedUser = sessionStorage.getItem('googleUser');
     if (storedUser) {
       try {
@@ -993,12 +1162,10 @@
             avatarEl.textContent = user.name.charAt(0).toUpperCase();
           }
         }
-      } catch (e) {
-        console.error('Failed to parse googleUser', e);
-      }
+      } catch (e) {}
     }
 
-    // 2. Prompt carryover
+    // Prompt carryover
     const urlParams = new URLSearchParams(window.location.search);
     const prompt = urlParams.get('prompt');
     if (prompt) {
@@ -1006,14 +1173,6 @@
       sendMessage();
     }
   });
-
-  // ══ TOAST ══
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.style.opacity = '1';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.style.opacity = '0', 3000);
-  }
 </script>
 </body>
 </html>
