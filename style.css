@@ -342,71 +342,38 @@ body {
 .hero-submit:hover { color: var(--t-1); }
 .hero-submit svg { width: 18px; height: 18px; }
 
-.hero-hint {
+.hero-suggestions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.suggestion-label {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--t-3);
-  margin-top: 12px;
-  padding-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-/* Prompt Ticker */
-.prompt-ticker {
-  margin-top: 64px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  opacity: 0;
-  animation: fadeIn 1s 0.5s forwards;
-}
-
-@keyframes fadeIn { to { opacity: 1; } }
-
-.ticker-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--t-3);
-  flex-shrink: 0;
-}
-
-.ticker-mask {
-  flex: 1;
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-}
-
-.ticker-track {
-  width: 100%;
-  overflow: hidden;
-}
-
-.ticker-inner {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  animation: marqueeScroll 60s linear infinite;
-  gap: 16px;
-}
-
-.ticker-inner:hover { animation-play-state: paused; }
-
-.tick-item {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--t-2);
+.suggestion-pill {
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: var(--r-pill);
-  padding: 4px 12px;
-  white-space: nowrap;
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--t-2);
   cursor: pointer;
-  transition: border-color 120ms, color 120ms;
+  transition: all 120ms;
 }
 
-.tick-item:hover {
-  border-color: var(--border-2);
+.suggestion-pill:hover {
+  background: var(--bg-2);
   color: var(--t-1);
+  border-color: rgba(255,255,255,0.2);
 }
 
 /* ═══════════════════════════════════════
@@ -1541,44 +1508,7 @@ details[open] .faq-chevron { transform: rotate(180deg); }
 
 .mm-link:hover { color: var(--t-1); }
 
-/* Neon Blue Flame Effect */
-.nav-btn-neon, .mm-neon {
-  position: relative;
-  border-radius: 8px; /* Rounded square */
-  background: rgba(0, 140, 255, 0.1);
-  color: #fff !important;
-  border: 1px solid rgba(0, 140, 255, 0.5);
-  box-shadow: 0 0 10px rgba(0, 140, 255, 0.2), inset 0 0 15px rgba(0, 140, 255, 0.1);
-  animation: neonFlame 2s infinite alternate;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-}
 
-.nav-btn-neon {
-  padding: 8px 16px;
-}
-
-.mm-neon {
-  padding: 16px 32px;
-  font-size: 20px;
-  margin-top: 16px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  animation: none !important;
-  color: #00c3ff !important;
-  text-shadow: 0 0 15px rgba(0, 195, 255, 0.8) !important;
-}
-
-@keyframes neonFlame {
-  0% {
-    box-shadow: 0 0 10px rgba(0, 140, 255, 0.2), inset 0 0 15px rgba(0, 140, 255, 0.1);
-    border-color: rgba(0, 140, 255, 0.5);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(0, 195, 255, 0.6), 0 0 40px rgba(0, 140, 255, 0.4), inset 0 0 20px rgba(0, 195, 255, 0.4);
-    border-color: rgba(0, 195, 255, 1);
-  }
-}
 
 /* Video Loading Shimmer */
 .video-wrap {

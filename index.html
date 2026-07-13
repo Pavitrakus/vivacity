@@ -47,7 +47,7 @@
         <span class="nav-sep">·</span>
         <a href="signup.html">sign in</a>
       </div>
-      <a href="signup.html" class="nav-cta nav-btn-neon" id="navCta">start building</a>
+      <a href="signup.html" class="nav-cta" id="navCta">start building</a>
       <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
         <span></span><span></span>
       </button>
@@ -62,7 +62,7 @@
       <a href="index.html#examples" class="mm-link">examples</a>
       <a href="index.html#faq" class="mm-link">faq</a>
       <a href="signup.html" class="mm-link">sign in</a>
-      <a href="signup.html" class="mm-link mm-neon">start building</a>
+      <a href="signup.html" class="mm-link">start building</a>
     </div>
   </div>
 
@@ -98,7 +98,11 @@
                 </svg>
               </button>
             </div>
-            <div class="hero-hint">⌘ + Enter to generate &nbsp;·&nbsp; no account needed &nbsp;·&nbsp; first render free
+            <div class="hero-suggestions">
+              <span class="suggestion-label">Suggested:</span>
+              <button class="suggestion-pill" onclick="document.getElementById('heroInput').value=this.innerText; document.getElementById('heroInput').focus();">Stokes' theorem visual proof</button>
+              <button class="suggestion-pill" onclick="document.getElementById('heroInput').value=this.innerText; document.getElementById('heroInput').focus();">Maxwell's equations animated</button>
+              <button class="suggestion-pill" onclick="document.getElementById('heroInput').value=this.innerText; document.getElementById('heroInput').focus();">Eigenvalue decomposition</button>
             </div>
           </div>
         </div>
@@ -114,34 +118,7 @@
         </div>
       </div>
 
-      <!-- Prompt ticker -->
-      <div class="prompt-ticker" aria-hidden="true">
-        <span class="ticker-label">try -</span>
-        <div class="ticker-mask">
-          <div class="ticker-track" id="tickerTrack">
-            <div class="ticker-inner">
-              <span class="tick-item">"Stokes' theorem visual proof"</span>
-              <span class="tick-item">"Eigenvalue decomposition step by step"</span>
-              <span class="tick-item">"Maxwell's equations animated"</span>
-              <span class="tick-item">"Fourier series from scratch"</span>
-              <span class="tick-item">"Newton's laws free body diagram"</span>
-              <span class="tick-item">"Cauchy-Schwarz inequality"</span>
-              <span class="tick-item">"Riemann sum to integral"</span>
-              <span class="tick-item">"DNA replication mechanism"</span>
-              <span class="tick-item">"Gradient descent visualization"</span>
-              <span class="tick-item">"Stokes' theorem visual proof"</span>
-              <span class="tick-item">"Eigenvalue decomposition step by step"</span>
-              <span class="tick-item">"Maxwell's equations animated"</span>
-              <span class="tick-item">"Fourier series from scratch"</span>
-              <span class="tick-item">"Newton's laws free body diagram"</span>
-              <span class="tick-item">"Cauchy-Schwarz inequality"</span>
-              <span class="tick-item">"Riemann sum to integral"</span>
-              <span class="tick-item">"DNA replication mechanism"</span>
-              <span class="tick-item">"Gradient descent visualization"</span>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
     </div>
   </section>
