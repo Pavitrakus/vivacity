@@ -538,7 +538,7 @@
               <div class="render-pill-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
             </div>
             <div class="render-pill-video">
-              <video src="demo-537.mp4" loop muted playsinline autoplay></video>
+              <video src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
             </div>
           </div>
           <div class="msg-time">09:14</div>
@@ -632,7 +632,7 @@
     <!-- Preview Tab Content -->
     <div class="video-preview-area" id="tab-preview">
       <div class="video-container" id="main-video-container">
-        <video id="main-video" src="demo-537.mp4" loop muted playsinline autoplay></video>
+        <video id="main-video" src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
         <div class="video-overlay-ui">
           <div class="video-controls">
             <div class="video-play-btn" onclick="toggleVideoPlay()">
@@ -899,7 +899,7 @@
           <div class="render-pill-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
         </div>
         <div class="render-pill-video">
-          <video src="demo-537.mp4" loop muted playsinline autoplay></video>
+          <video src="assets/videos/demo-537.mp4" loop muted playsinline autoplay></video>
         </div>
       </div>` : '';
     msgs.innerHTML += `
@@ -975,8 +975,30 @@
     toast(`Switched to model: ${next}`);
   }
 
-  // Pick up prompt carryover if present
+  // Pick up prompt carryover if present, and handle Google Auth Profile
   window.addEventListener('DOMContentLoaded', () => {
+    // 1. Google Auth Profile
+    const storedUser = sessionStorage.getItem('googleUser');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        const avatarEl = document.querySelector('.topbar-avatar');
+        if (avatarEl && user) {
+          avatarEl.title = user.email || user.name;
+          if (user.picture) {
+            avatarEl.style.backgroundImage = `url(${user.picture})`;
+            avatarEl.style.backgroundSize = 'cover';
+            avatarEl.textContent = '';
+          } else if (user.name) {
+            avatarEl.textContent = user.name.charAt(0).toUpperCase();
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse googleUser', e);
+      }
+    }
+
+    // 2. Prompt carryover
     const urlParams = new URLSearchParams(window.location.search);
     const prompt = urlParams.get('prompt');
     if (prompt) {
