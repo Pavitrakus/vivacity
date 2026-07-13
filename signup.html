@@ -46,23 +46,18 @@
       z-index: 1; pointer-events: none;
     }
 
-    .fake-svg-container {
+    .auth-intro-video {
       position: relative;
       z-index: 2;
       width: 80%;
-      max-width: 500px;
+      max-width: 600px;
       aspect-ratio: 16/9;
-      background: rgba(0,0,0,0.5);
+      background: #000;
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      padding: 32px;
+      object-fit: cover;
     }
-
-    .auth-svg { width: 100%; height: 100%; }
 
     /* Right side: Form */
     .auth-panel {
@@ -172,34 +167,7 @@
   <!-- Left Visual Column -->
   <div class="auth-visual">
     <div class="auth-bg-glow"></div>
-    <div class="fake-svg-container">
-      <svg class="auth-svg" viewBox="0 0 400 300">
-        <!-- Abstract glowing matrix / vector space visual -->
-        <defs>
-          <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00c3ff" />
-            <stop offset="100%" stop-color="#0055ff" />
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <g opacity="0.3" stroke="var(--border)" stroke-width="1">
-          <line x1="0" y1="150" x2="400" y2="150" />
-          <line x1="200" y1="0" x2="200" y2="300" />
-          <circle cx="200" cy="150" r="100" fill="none" />
-          <circle cx="200" cy="150" r="50" fill="none" />
-        </g>
-        <path d="M 200 150 Q 250 50 350 100" fill="none" stroke="url(#neonGradient)" stroke-width="3" filter="url(#glow)"/>
-        <path d="M 50 200 Q 150 250 200 150" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4,4"/>
-        <circle cx="350" cy="100" r="4" fill="#00c3ff" filter="url(#glow)"/>
-        <text x="350" y="90" fill="#fff" font-size="12" font-family="monospace">v(t)</text>
-      </svg>
-    </div>
+    <video class="auth-intro-video" src="assets/videos/video.mp4" autoplay muted loop playsinline></video>
   </div>
 
   <!-- Right Form Column -->
