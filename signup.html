@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — Vivacity</title>
   <script src="https://accounts.google.com/gsi/client" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta property="og:title" content="Vivacity - Mathematical reasoning, made visible." />
   <meta property="og:description" content="Type a concept. Get a Manim animation. Built for researchers, not presentations." />
   <meta property="og:image" content="https://vivacity-five.vercel.app/assets/images/og-image.png" />
@@ -223,10 +224,23 @@
       </div>
       <div class="input-group">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••" required />
+        <div style="position: relative;">
+          <input type="password" id="password" placeholder="••••••••" required style="width: 100%; padding-right: 40px;" />
+          <button type="button" id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #888;">
+            <svg id="eyeIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div style="text-align: right; margin-top: 4px;">
+          <a href="#" id="forgotBtn" style="font-size: 12px; color: var(--accent); display: none;">Forgot password?</a>
+        </div>
       </div>
       <button type="submit" class="submit-btn" id="submitBtn">Sign Up</button>
     </form>
+
+    <div id="msgContainer" style="display:none; color:#00e572; font-size:13px; margin-top:12px; padding:10px 14px; background:rgba(0,229,114,0.08); border:1px solid rgba(0,229,114,0.25); border-radius:8px;"></div>
 
     <div class="divider">or</div>
 
@@ -249,12 +263,34 @@
 
     // Hardcoded preview credentials
     const PREVIEW_CREDS = { email: 'qwerty@paxus.in', password: 'sara:(' };
-
     // Add error message element dynamically
     const errMsg = document.createElement('div');
     errMsg.style.cssText = 'display:none; color:#ff4466; font-size:13px; margin-bottom:12px; padding:10px 14px; background:rgba(255,68,102,0.08); border:1px solid rgba(255,68,102,0.25); border-radius:8px;';
     errMsg.textContent = 'Invalid email or password. Please try again.';
     document.getElementById('authForm').insertBefore(errMsg, document.getElementById('submitBtn'));
+
+    const RAILWAY_URL = 'RAILWAY_BACKEND_URL_PLACEHOLDER';
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
+    const BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
+
+    // Initialize Supabase
+    const SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Check if we are handling a password reset flow
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        const newPassword = prompt("What would you like your new password to be?");
+        if (newPassword) {
+            const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+            if (data) alert("Password updated successfully!");
+            if (error) alert("There was an error updating your password.");
+        }
+      }
+    });
+
+    const msgContainer = document.getElementById('msgContainer');
 
     // Toggle Login / Signup State
     let isLogin = false;
@@ -265,55 +301,125 @@
       document.getElementById('submitBtn').textContent = isLogin ? "Log In" : "Sign Up";
       document.getElementById('switchText').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
       document.getElementById('switchBtn').textContent = isLogin ? "Sign up" : "Log in";
+      document.getElementById('forgotBtn').style.display = isLogin ? "inline" : "none";
       errMsg.style.display = 'none';
+      msgContainer.style.display = 'none';
     });
 
-    // Form Submit — check preview creds, then redirect to workspace
-    document.getElementById('authForm').addEventListener('submit', (e) => {
+    // Forgot Password Flow
+    document.getElementById('forgotBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (!email) {
+        errMsg.textContent = 'Please enter your email to reset password.';
+        errMsg.style.display = 'block';
+        return;
+      }
+      errMsg.style.display = 'none';
+      msgContainer.style.display = 'none';
+      
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname,
+      });
+
+      if (error) {
+        errMsg.textContent = error.message;
+        errMsg.style.display = 'block';
+      } else {
+        msgContainer.textContent = 'Password reset link sent! Check your email.';
+        msgContainer.style.display = 'block';
+      }
+    });
+
+    // Toggle Password Visibility
+    document.getElementById('togglePassword').addEventListener('click', () => {
+      const pwd = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        pwd.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    });
+
+    // Form Submit — Talk to Backend
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('submitBtn');
 
-      // Animate button
-      btn.textContent = 'Signing in...';
+      btn.textContent = isLogin ? 'Logging in...' : 'Signing up...';
       btn.style.opacity = '0.7';
+      errMsg.style.display = 'none';
+      msgContainer.style.display = 'none';
 
-      setTimeout(() => {
-        if (email === PREVIEW_CREDS.email && password === PREVIEW_CREDS.password) {
-          // Success: carry prompt to workspace if present
-          const dest = promptText ? `workspace.html?prompt=${encodeURIComponent(promptText)}` : 'workspace.html';
-          window.location.href = dest;
+      try {
+        let authRes;
+        if (isLogin) {
+          authRes = await supabase.auth.signInWithPassword({ email, password });
         } else {
-          btn.textContent = isLogin ? 'Log In' : 'Sign Up';
-          btn.style.opacity = '1';
-          errMsg.style.display = 'block';
-          document.getElementById('password').value = '';
+          authRes = await supabase.auth.signUp({ 
+            email, 
+            password,
+            options: {
+              data: {
+                display_name: email.split('@')[0]
+              }
+            }
+          });
         }
-      }, 800);
+        
+        if (authRes.error) {
+          throw new Error(authRes.error.message);
+        }
+
+        if (!isLogin && authRes.data.user && authRes.data.user.identities && authRes.data.user.identities.length === 0) {
+           throw new Error("This email is already registered. Please log in.");
+        }
+
+        if (!isLogin && authRes.data.session === null) {
+          // Supabase requires email confirmation
+          msgContainer.textContent = "Check your email for the confirmation link or OTP!";
+          msgContainer.style.display = 'block';
+          btn.textContent = 'Sign Up';
+          btn.style.opacity = '1';
+          return;
+        }
+
+        const dest = promptText ? `workspace.html?prompt=${encodeURIComponent(promptText)}` : 'workspace.html';
+        window.location.href = dest;
+
+      } catch (err) {
+        btn.textContent = isLogin ? 'Log In' : 'Sign Up';
+        btn.style.opacity = '1';
+        errMsg.style.display = 'block';
+        errMsg.textContent = err.message;
+        document.getElementById('password').value = '';
+      }
     });
 
-    // Google Sign In (Google Identity Services)
-    function decodeJwtResponse(token) {
-      let base64Url = token.split('.')[1];
-      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    }
+    // Google Sign In (Google Identity Services -> Supabase)
+    async function handleCredentialResponse(response) {
+      try {
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: response.credential,
+        });
+        
+        if (error) {
+          throw new Error(error.message);
+        }
 
-    function handleCredentialResponse(response) {
-      const payload = decodeJwtResponse(response.credential);
-      // Store user info in sessionStorage for the workspace to use
-      sessionStorage.setItem('googleUser', JSON.stringify({
-        name: payload.name,
-        email: payload.email,
-        picture: payload.picture
-      }));
-      // Redirect to workspace
-      const dest = promptText ? `workspace.html?prompt=${encodeURIComponent(promptText)}` : 'workspace.html';
-      window.location.href = dest;
+        // Redirect to workspace
+        const dest = promptText ? `workspace.html?prompt=${encodeURIComponent(promptText)}` : 'workspace.html';
+        window.location.href = dest;
+      } catch (err) {
+        errMsg.style.display = 'block';
+        errMsg.textContent = err.message;
+      }
     }
 
     window.onload = function () {

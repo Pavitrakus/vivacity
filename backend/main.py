@@ -13,12 +13,16 @@ from typing import Optional
 import anthropic
 from openai import AsyncOpenAI
 import httpx
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+
+import auth
+import db
+import storage
 
 load_dotenv()
 
@@ -105,7 +109,10 @@ app.add_middleware(
 )
 
 
+app.include_router(auth.router)
+
 class GenerateRequest(BaseModel):
+    session_id: str
     question: str
     format: str = "portrait"    # "portrait" | "landscape"
     language: str = "english"   # "english" | "hinglish"
@@ -117,27 +124,65 @@ class GenerateRequest(BaseModel):
 async def root():
     return FileResponse("frontend/index.html")
 
+# ─── API Routes ───────────────────────────────────────────────────────────────
+
+@app.get("/sessions")
+async def get_sessions(current_user: dict = Depends(auth.get_current_user)):
+    return db.get_user_sessions(current_user["id"])
+
+@app.post("/sessions")
+async def create_session_route(title: str = "New Session", current_user: dict = Depends(auth.get_current_user)):
+    return db.create_session(current_user["id"], title)
+
+@app.get("/sessions/{session_id}/messages")
+async def get_messages(session_id: str, current_user: dict = Depends(auth.get_current_user)):
+    return db.get_session_messages(session_id, current_user["id"])
+
+@app.post("/sessions/{session_id}/messages")
+async def add_message(session_id: str, role: str, content: str, current_user: dict = Depends(auth.get_current_user)):
+    return db.save_message(session_id, current_user["id"], role, content)
+
+@app.get("/settings")
+async def get_settings(current_user: dict = Depends(auth.get_current_user)):
+    return db.get_user_settings(current_user["id"])
+
+@app.post("/settings")
+async def update_settings(settings: dict, current_user: dict = Depends(auth.get_current_user)):
+    db.save_user_settings(current_user["id"], **settings)
+    return {"success": True}
+
+# ─── Generation Routes ────────────────────────────────────────────────────────
 
 @app.post("/generate")
-async def generate(req: GenerateRequest, background_tasks: BackgroundTasks):
+async def generate(req: GenerateRequest, background_tasks: BackgroundTasks, current_user: dict = Depends(auth.get_current_user)):
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
-    job_id = str(uuid.uuid4())
+    
+    # Store initial generation row in DB
+    gen_row = db.create_generation(
+        user_id=current_user["id"],
+        session_id=req.session_id,
+        prompt=req.question.strip(),
+        fmt=req.format,
+        lang=req.language
+    )
+    job_id = str(gen_row["id"])
+    
     _set_job(job_id, "queued", 0, "Starting...")
     background_tasks.add_task(_pipeline, job_id, req.question.strip(),
-                               req.format, req.language)
+                               req.format, req.language, current_user["id"])
     return {"job_id": job_id}
 
 
 @app.get("/status/{job_id}")
-async def status(job_id: str):
+async def status(job_id: str, current_user: dict = Depends(auth.get_current_user)):
     if job_id not in JOBS:
         raise HTTPException(status_code=404, detail="Job not found")
     return JOBS[job_id]
 
 
 @app.get("/video/{job_id}")
-async def video(job_id: str):
+async def video(job_id: str, current_user: dict = Depends(auth.get_current_user)):
     path = OUTPUT_DIR / f"{job_id}.mp4"
     if not path.exists():
         raise HTTPException(status_code=404, detail="Video not ready")
@@ -160,9 +205,10 @@ def _set_job(job_id, status, progress, message, video_url=None, error=None):
 
 # ─── Pipeline ─────────────────────────────────────────────────────────────────
 
-async def _pipeline(job_id: str, question: str, fmt: str, lang: str):
+async def _pipeline(job_id: str, question: str, fmt: str, lang: str, user_id: str):
     work_dir = Path(tempfile.mkdtemp(prefix=f"manim_{job_id[:8]}_"))
     try:
+        db.update_generation(job_id, status="running")
         # 1. Script
         _set_job(job_id, "scripting", 8, "Writing the script...")
         script = await _generate_script(question, lang)
@@ -184,6 +230,7 @@ async def _pipeline(job_id: str, question: str, fmt: str, lang: str):
         code = await _generate_manim_code(question, script, durations, fmt)
         scene_py = work_dir / "scene.py"
         scene_py.write_text(code, encoding="utf-8")
+        db.update_generation(job_id, manim_code=code)
 
         # 4. Render all scenes in parallel
         _set_job(job_id, "rendering", 42, f"Rendering {n} scenes in parallel...")
@@ -209,11 +256,16 @@ async def _pipeline(job_id: str, question: str, fmt: str, lang: str):
 
         # 6. Concat
         final = await _concat(work_dir, merged)
-        out = OUTPUT_DIR / f"{job_id}.mp4"
-        shutil.copy(final, out)
-        _set_job(job_id, "done", 100, "Your video is ready!", video_url=f"/video/{job_id}")
+        
+        # Upload to Supabase Storage
+        _set_job(job_id, "done", 95, "Uploading to cloud...")
+        public_url = storage.upload_video(str(final), user_id, job_id)
+        db.update_generation(job_id, status="done", video_url=public_url)
+        
+        _set_job(job_id, "done", 100, "Your video is ready!", video_url=public_url)
 
     except Exception as exc:
+        db.update_generation(job_id, status="error", error_msg=str(exc))
         _set_job(job_id, "error", 0, "Something went wrong", error=str(exc))
         raise
     finally:

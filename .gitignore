@@ -14,3 +14,4 @@ backend/outputs/
 backend/__pycache__/
 backend/**/__pycache__/
 *.pyc
+backend/node_modules/
