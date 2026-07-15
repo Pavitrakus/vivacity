@@ -183,6 +183,14 @@
     }
     .auth-switch a { color: #00c3ff; text-decoration: none; font-weight: 500; cursor: pointer; }
     .auth-switch a:hover { text-decoration: underline; }
+
+    /* OTP CSS */
+    .otp-inputs { display: flex; gap: 8px; justify-content: center; margin: 24px 0; }
+    .otp-input { width: 42px; height: 50px; text-align: center; font-size: 20px; font-weight: 600; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--r-sm); color: var(--t-1); transition: border-color 0.2s; }
+    .otp-input:focus { border-color: #00c3ff; outline: none; }
+    .resend-btn { font-size: 13px; color: var(--t-2); background: none; border: none; cursor: pointer; display: block; margin: 16px auto 0; font-family: var(--font-sans); }
+    .resend-btn:hover:not(:disabled) { color: var(--accent); text-decoration: underline; }
+    .resend-btn:disabled { cursor: not-allowed; opacity: 0.5; }
   </style>
 </head>
 <body>
@@ -216,8 +224,9 @@
       <div class="prompt-text" id="promptText"></div>
     </div>
 
-    <!-- Auth Form -->
-    <form id="authForm" onsubmit="event.preventDefault();">
+    <div id="signupView">
+      <!-- Auth Form -->
+      <form id="authForm" onsubmit="event.preventDefault();">
       <div class="input-group">
         <label for="email">Email or Phone Number</label>
         <input type="text" id="email" placeholder="name@company.com" required />
@@ -250,6 +259,24 @@
       <span id="switchText">Already have an account?</span> 
       <a id="switchBtn">Log in</a>
     </div>
+    </div> <!-- end signupView -->
+
+    <!-- OTP Verification View -->
+    <div id="otpView" style="display:none; text-align: center;">
+      <p style="color: var(--t-2); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">Enter the 6-digit code sent to <br><b id="otpEmailDisplay" style="color:var(--t-1)"></b></p>
+      <div class="otp-inputs" id="otpContainer">
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+        <input class="otp-input" type="text" maxlength="1" pattern="\d" />
+      </div>
+      <button class="submit-btn" id="verifyOtpBtn">Verify Code</button>
+      <button class="resend-btn" id="resendOtpBtn" disabled>Resend Code (60s)</button>
+      <a href="#" id="backToSignupBtn" style="display:inline-block; margin-top:24px; font-size:13px; color:var(--t-3); text-decoration:none;">&larr; Back to Sign Up</a>
+    </div>
+
   </div>
 
   <script>
@@ -381,11 +408,11 @@
         }
 
         if (!isLogin && authRes.data.session === null) {
-          // Supabase requires email confirmation
-          msgContainer.textContent = "Check your email for the confirmation link or OTP!";
-          msgContainer.style.display = 'block';
-          btn.textContent = 'Sign Up';
-          btn.style.opacity = '1';
+          // Supabase requires email confirmation (OTP)
+          document.getElementById('signupView').style.display = 'none';
+          document.getElementById('otpView').style.display = 'block';
+          document.getElementById('otpEmailDisplay').textContent = email;
+          startOtpCountdown();
           return;
         }
 
@@ -449,6 +476,96 @@
         }
       });
     }
+  </script>
+  <script>
+    // OTP Logic
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        for (let i = 0; i < Math.min(text.length, otpInputs.length); i++) {
+          otpInputs[i].value = text[i];
+        }
+        if (text.length > 0) otpInputs[Math.min(text.length, otpInputs.length) - 1].focus();
+      });
+    });
+
+    let countdownTimer = null;
+    function startOtpCountdown() {
+      let seconds = 60;
+      const resendBtn = document.getElementById('resendOtpBtn');
+      resendBtn.disabled = true;
+      resendBtn.textContent = `Resend Code (${seconds}s)`;
+      clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(countdownTimer);
+          resendBtn.disabled = false;
+          resendBtn.textContent = 'Resend Code';
+        } else {
+          resendBtn.textContent = `Resend Code (${seconds}s)`;
+        }
+      }, 1000);
+    }
+
+    document.getElementById('resendOtpBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      if (!email) return;
+      document.getElementById('resendOtpBtn').disabled = true;
+      const { error } = await supabaseClient.auth.resend({ type: 'signup', email });
+      if (error) {
+        alert("Error resending code: " + error.message);
+        document.getElementById('resendOtpBtn').disabled = false;
+      } else {
+        startOtpCountdown();
+      }
+    });
+
+    document.getElementById('backToSignupBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('otpView').style.display = 'none';
+      document.getElementById('signupView').style.display = 'block';
+      clearInterval(countdownTimer);
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Sign Up';
+      btn.style.opacity = '1';
+    });
+
+    document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('verifyOtpBtn');
+      const email = document.getElementById('email').value.trim();
+      const code = Array.from(otpInputs).map(i => i.value).join('');
+      
+      if (code.length < 6) return;
+      
+      btn.textContent = 'Verifying...';
+      btn.style.opacity = '0.7';
+
+      const { data, error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'signup' });
+      
+      if (error) {
+        alert(error.message);
+        btn.textContent = 'Verify Code';
+        btn.style.opacity = '1';
+        otpInputs.forEach(i => i.value = '');
+        otpInputs[0].focus();
+      } else {
+        const dest = promptText ? `workspace.html?prompt=${encodeURIComponent(promptText)}` : 'workspace.html';
+        window.location.href = dest;
+      }
+    });
   </script>
 </body>
 </html>
