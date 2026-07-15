@@ -276,14 +276,14 @@
     // Initialize Supabase
     const SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // Check if we are handling a password reset flow
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         const newPassword = prompt("What would you like your new password to be?");
         if (newPassword) {
-            const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+            const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
             if (data) alert("Password updated successfully!");
             if (error) alert("There was an error updating your password.");
         }
@@ -318,7 +318,7 @@
       errMsg.style.display = 'none';
       msgContainer.style.display = 'none';
       
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + window.location.pathname,
       });
 
@@ -359,9 +359,9 @@
       try {
         let authRes;
         if (isLogin) {
-          authRes = await supabase.auth.signInWithPassword({ email, password });
+          authRes = await supabaseClient.auth.signInWithPassword({ email, password });
         } else {
-          authRes = await supabase.auth.signUp({ 
+          authRes = await supabaseClient.auth.signUp({ 
             email, 
             password,
             options: {
@@ -404,7 +404,7 @@
     // Google Sign In (Google Identity Services -> Supabase)
     async function handleCredentialResponse(response) {
       try {
-        const { data, error } = await supabase.auth.signInWithIdToken({
+        const { data, error } = await supabaseClient.auth.signInWithIdToken({
           provider: 'google',
           token: response.credential,
         });

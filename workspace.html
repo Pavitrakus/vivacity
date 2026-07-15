@@ -568,12 +568,12 @@
   // Initialize Supabase
   const SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let sessionData = null;
 
   async function checkAuth() {
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await supabaseClient.auth.getSession();
     if (error || !data.session) {
       window.location.href = 'signup.html';
       return;
@@ -583,7 +583,7 @@
   checkAuth();
 
   // Listen for auth state changes (e.g. sign out)
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT') {
       window.location.href = 'signup.html';
     } else if (session) {
@@ -598,7 +598,7 @@
   async function apiFetch(endpoint, options = {}) {
     if (!sessionData) {
       // Wait briefly for auth state if not loaded
-      const { data } = await supabase.auth.getSession();
+      const { data } = await supabaseClient.auth.getSession();
       sessionData = data.session;
     }
     const backendUrl = getSetting('backendUrl', BASE_URL);
@@ -608,10 +608,14 @@
     };
     const res = await fetch(backendUrl + endpoint, options);
     if (res.status === 401) {
-      await supabase.auth.signOut();
-      window.location.href = 'signup.html';
+      await logout();
     }
     return res;
+  }
+
+  async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'signup.html';
   }
 
   const STEPS = ['scripting','audio','coding','rendering','stitching'];
