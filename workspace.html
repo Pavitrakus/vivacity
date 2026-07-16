@@ -288,8 +288,14 @@
       #workspace { display: flex; flex-direction: column; height: 100dvh; background: var(--bg); }
       .chat-panel { flex: 1; border: none; border-radius: 0; box-shadow: none; background: var(--bg); }
       .rp-header { padding: 10px 14px; }
-      .rp-input-area { padding: 8px 12px; padding-bottom: calc(env(safe-area-inset-bottom,0px) + 68px); background: var(--bg); }
-      .rp-textarea { font-size: 16px; }
+      .rp-input-area { padding: 8px 10px; padding-bottom: calc(env(safe-area-inset-bottom,0px) + 68px); background: var(--bg); }
+      .rp-textarea { font-size: 16px; min-height: 40px; }
+      .rp-input-box { border-radius: 22px; }
+      /* On mobile: hide model picker + voice button; keep + and send */
+      #model-picker-trigger, #model-picker, .plus-btn[title="Voice input"] { display: none !important; }
+      /* Make send button bigger and more tappable */
+      .rp-send { width: 38px; height: 38px; border-radius: 50%; }
+      .rp-input-bottom { padding: 4px 6px 6px; gap: 4px; }
       .mobile-nav { display: flex; }
       .render-pill-video { display: block !important; }
       .render-pill-arrow { display: none !important; }
@@ -402,6 +408,9 @@
               </div>
             </div>
             <button class="plus-btn" style="border:none; margin-right:4px;" title="Voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
+            <button class="rp-send" id="send-btn" onclick="sendMessage()" title="Send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -864,24 +873,29 @@
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const lines = decoder.decode(value).split('\n');
+        const lines = decoder.decode(value, { stream: true }).split('\n');
         for (const line of lines) {
           if (!line.startsWith('data: ')) continue;
           const data = line.slice(6).trim();
           if (data === '[DONE]') break;
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.token) {
-              fullText += parsed.token;
-              bubble.innerHTML = markdownToHtml(fullText);
-              scrollChat();
-            }
-            if (parsed.error) throw new Error(parsed.error);
-          } catch(_) {}
+          let parsed;
+          try { parsed = JSON.parse(data); } catch(_) { continue; }
+          if (parsed.error) throw new Error(parsed.error);
+          if (parsed.token) {
+            fullText += parsed.token;
+            bubble.innerHTML = markdownToHtml(fullText);
+            scrollChat();
+          }
         }
       }
-      bubble.removeAttribute('id');
-      chatHistory.push({ role: 'assistant', content: fullText });
+      if (fullText) {
+        bubble.removeAttribute('id');
+        chatHistory.push({ role: 'assistant', content: fullText });
+      } else {
+        // Stream finished with no content — backend error
+        msgEl.remove();
+        throw new Error('Viva returned an empty response. Backend may be down.');
+      }
     } catch (err) {
       thinkEl.style.display = 'none';
       addAiMessage('⚠️ ' + (err.message || 'Could not reach Viva. Check your backend.'), null, null);
