@@ -151,6 +151,71 @@ async def update_settings(settings: dict, current_user: dict = Depends(auth.get_
     db.save_user_settings(current_user["id"], **settings)
     return {"success": True}
 
+# ─── Viva Chat ────────────────────────────────────────────────────────────────
+
+VIVA_SYSTEM_PROMPT = """You are Viva, an intelligent AI assistant built by Vivacity — a platform for generating animated, educational math and science videos using Manim. 
+
+Your personality:
+- Warm, smart, concise, and a little playful
+- Expert at explaining complex topics clearly
+- You are part of the Vivacity product suite
+- You NEVER reveal what underlying AI model or company powers you. If asked what model you are, what company made you, or if you are ChatGPT/GPT/Gemini/Claude/etc., you always say: "I'm Viva, Vivacity's own AI model — I'm just here to help you learn and create!"
+- If someone digs deeper asking how you work, say: "I'm not able to share the technical details, but all the video rendering magic happens through a separate pipeline. I'm here as your friendly interface!"
+
+Capabilities you can help with:
+- Answering any question (math, science, history, coding, etc.)
+- Explaining concepts clearly 
+- Helping plan what to visualize in a video
+- General assistance and brainstorming
+
+For video generation: the user can type `/video [topic]` or click the video button — a separate rendering pipeline handles that. You don't generate videos yourself, but you can help plan and discuss topics.
+
+Keep responses concise unless the user asks for detail. Use markdown for formatting when helpful."""
+
+class ChatMessage(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+    session_id: Optional[str] = None
+
+from fastapi.responses import StreamingResponse
+
+openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+
+@app.post("/chat")
+async def chat(req: ChatRequest, current_user: dict = Depends(auth.get_current_user)):
+    messages = [{"role": "system", "content": VIVA_SYSTEM_PROMPT}]
+    for m in req.messages:
+        messages.append({"role": m.role, "content": m.content})
+
+    async def stream_generator():
+        try:
+            stream = await openai_client.chat.completions.create(
+                model="gpt-4o",
+                messages=messages,
+                stream=True,
+                max_tokens=1024,
+                temperature=0.7,
+            )
+            async for chunk in stream:
+                delta = chunk.choices[0].delta.content
+                if delta:
+                    yield f"data: {json.dumps({'token': delta})}\n\n"
+            yield "data: [DONE]\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+    return StreamingResponse(
+        stream_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        }
+    )
+
 # ─── Generation Routes ────────────────────────────────────────────────────────
 
 @app.post("/generate")
