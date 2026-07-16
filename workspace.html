@@ -368,7 +368,7 @@
       <!-- Input Area -->
       <div class="rp-input-area">
         <div class="rp-input-box">
-          <textarea class="rp-textarea" id="chat-input" placeholder="Ask Viva anything, or /video to render..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <textarea class="rp-textarea" id="chat-input" placeholder="Ask Viva anything, or /video to render..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResizeChat()" style="overflow-y:auto; min-height: 24px; box-sizing: content-box; resize: none;"></textarea>
           <div class="rp-input-bottom">
             <div style="position:relative;">
               <button class="plus-btn" id="plus-btn" onclick="togglePlusMenu(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -858,6 +858,12 @@
 
   function handleChatKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    setTimeout(autoResizeChat, 0);
+  }
+  function autoResizeChat() {
+    const el = document.getElementById('chat-input');
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
   }
   function triggerRender() { const t = document.getElementById('chat-input').value.trim(); if (t) sendMessage(); else toast('Type a prompt first.'); }
 
