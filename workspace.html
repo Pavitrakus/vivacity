@@ -670,7 +670,8 @@
       const { data } = await supabaseClient.auth.getSession();
       sessionData = data.session;
     }
-    const backendUrl = getSetting('backendUrl', BASE_URL);
+    let backendUrl = getSetting('backendUrl', BASE_URL);
+    if (backendUrl === 'RAILWAY_BACKEND_URL_PLACEHOLDER') backendUrl = BASE_URL;
     options.headers = {
       ...options.headers,
       'Authorization': `Bearer ${sessionData ? sessionData.access_token : ''}`
