@@ -297,43 +297,24 @@
     document.getElementById('authForm').insertBefore(errMsg, document.getElementById('submitBtn'));
 
     // Environment & Supabase Setup
-    let SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
-    let SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
-    let RAILWAY_URL = 'https://vivacity-production.up.railway.app';
+    const SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
+    const RAILWAY_URL = 'https://vivacity-production.up.railway.app';
     const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
-    let BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
+    const BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
 
-    let supabaseClient = null;
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function initAuth() {
-      try {
-        const res = await fetch('/api/env');
-        if (res.ok) {
-          const env = await res.json();
-          if (env.SUPABASE_URL) SUPABASE_URL = env.SUPABASE_URL;
-          if (env.SUPABASE_ANON_KEY) SUPABASE_ANON_KEY = env.SUPABASE_ANON_KEY;
-          if (env.BACKEND_URL) RAILWAY_URL = env.BACKEND_URL;
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        const newPassword = prompt("What would you like your new password to be?");
+        if (newPassword) {
+            const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
+            if (data) alert("Password updated successfully!");
+            if (error) alert("There was an error updating your password.");
         }
-      } catch (e) {
-        // Fallback to defaults
       }
-
-      BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-      supabaseClient.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'PASSWORD_RECOVERY') {
-          const newPassword = prompt("What would you like your new password to be?");
-          if (newPassword) {
-              const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
-              if (data) alert("Password updated successfully!");
-              if (error) alert("There was an error updating your password.");
-          }
-        }
-      });
-    }
-    
-    initAuth();
+    });
 
 
 

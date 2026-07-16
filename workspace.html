@@ -617,52 +617,34 @@
       return;
     }
     sessionData = data.session;
-  }
-  async function initApp() {
-    // 1. Fetch dynamic env vars from Vercel (if available)
-    try {
-      const res = await fetch('/api/env');
-      if (res.ok) {
-        const env = await res.json();
-        if (env.SUPABASE_URL) SUPABASE_URL = env.SUPABASE_URL;
-        if (env.SUPABASE_ANON_KEY) SUPABASE_ANON_KEY = env.SUPABASE_ANON_KEY;
-        if (env.BACKEND_URL) RAILWAY_URL = env.BACKEND_URL;
-      }
-    } catch (e) {
-      // Running locally without Vercel Serverless Functions, use fallbacks
+  // Environment & Supabase Setup
+  const SUPABASE_URL = 'https://ykojwrclyhyyqburnbyh.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrb2p3cmNseWh5eXFidXJuYnloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwNjU4NjgsImV4cCI6MjA5OTY0MTg2OH0.RpLfPVoGxPLkFDM05BatqbVNTs02Ci_hs8XOj6O1cMI';
+  const RAILWAY_URL = 'https://vivacity-production.up.railway.app';
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
+  const BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  let sessionData = null;
+
+  async function checkAuth() {
+    const { data, error } = await supabaseClient.auth.getSession();
+    if (error || !data.session) {
+      window.location.href = 'signup.html';
+      return;
     }
-
-    BASE_URL = window.__BACKEND_URL__ || (isLocal ? 'http://localhost:8000' : RAILWAY_URL);
-
-    // 2. Initialize Supabase
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    // Listen for auth state changes
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        window.location.href = 'signup.html';
-      } else if (session) {
-        sessionData = session;
-      }
-    });
-
-    // 3. Authenticate & Load
-    await checkAuth();
-    document.getElementById('greeting-time').textContent = nowTime();
-    loadSettings();
-    try {
-      const u = JSON.parse(sessionStorage.getItem('googleUser') || '{}');
-      const av = document.getElementById('topbar-avatar');
-      if (av && u.name) {
-        av.title = u.email || u.name;
-        if (u.picture) { av.style.backgroundImage = 'url(' + u.picture + ')'; av.style.backgroundSize = 'cover'; av.textContent = ''; } 
-        else av.textContent = u.name.charAt(0).toUpperCase();
-      }
-    } catch (_) {}
-    
-    const p = new URLSearchParams(location.search).get('prompt');
-    if (p) { document.getElementById('chat-input').value = p; sendMessage(); }
+    sessionData = data.session;
   }
+  checkAuth();
+
+  // Listen for auth state changes
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'signup.html';
+    } else if (session) {
+      sessionData = session;
+    }
+  });
 
   async function apiFetch(endpoint, options = {}) {
     if (!sessionData) {
@@ -1036,7 +1018,19 @@
   function copyLink(){if(currentVideoUrl){navigator.clipboard?.writeText(currentVideoUrl);toast('Video URL copied!');}else toast('No video yet.');}
   function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.opacity='0',3000);}
   window.addEventListener('DOMContentLoaded', () => {
-    initApp();
+    document.getElementById('greeting-time').textContent = nowTime();
+    loadSettings();
+    try {
+      const u = JSON.parse(sessionStorage.getItem('googleUser') || '{}');
+      const av = document.getElementById('topbar-avatar');
+      if (av && u.name) {
+        av.title = u.email || u.name;
+        if (u.picture) { av.style.backgroundImage = 'url(' + u.picture + ')'; av.style.backgroundSize = 'cover'; av.textContent = ''; } 
+        else av.textContent = u.name.charAt(0).toUpperCase();
+      }
+    } catch (_) {}
+    const p = new URLSearchParams(location.search).get('prompt');
+    if (p) { document.getElementById('chat-input').value = p; sendMessage(); }
   });
 </script>
 </body>
