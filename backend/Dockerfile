@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 WORKDIR /app
 
 # Copy backend source
-COPY main.py prompts.py ./
+COPY *.py ./
 
 # Output videos directory
 RUN mkdir -p outputs && chmod 777 outputs
