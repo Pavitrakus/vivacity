@@ -856,7 +856,8 @@
   // ─── Viva Streaming Chat ──────────────────────────────────────────────────────
   async function sendToViva() {
     const thinkEl = document.getElementById('thinking-msg');
-    document.getElementById('think-label-text').textContent = 'Viva is thinking...';
+    const thinkLabel = document.getElementById('think-label-text');
+    thinkLabel.textContent = 'Viva is thinking...';
     thinkEl.style.display = 'flex';
     scrollChat();
     const sendBtn = document.getElementById('send-btn');
@@ -867,15 +868,26 @@
     msgEl.className = 'msg ai';
     msgEl.innerHTML = `<div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div><div><div class="msg-bubble" id="viva-streaming-bubble"></div></div>`;
 
+    // Show a wakeup warning after 5 seconds if still waiting
+    const wakeupTimer = setTimeout(() => {
+      thinkLabel.textContent = '⏳ Server waking up (~30s)...';
+    }, 5000);
+
     try {
+      const controller = new AbortController();
+      const hardTimeout = setTimeout(() => controller.abort(), 90000); // 90s hard limit
+
       const res = await apiFetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory.slice(-20) }) // last 20 messages for context
+        body: JSON.stringify({ messages: chatHistory.slice(-20) }),
+        signal: controller.signal
       });
+      clearTimeout(hardTimeout);
 
       if (!res.ok) throw new Error('Status ' + res.status);
 
+      clearTimeout(wakeupTimer);
       thinkEl.style.display = 'none';
       document.getElementById('rp-msgs').appendChild(msgEl);
       scrollChat();
@@ -891,7 +903,7 @@
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-        buffer = lines.pop(); // Keep incomplete line in buffer
+        buffer = lines.pop();
         
         for (const line of lines) {
           if (!line.trim() || !line.startsWith('data: ')) continue;
@@ -911,13 +923,16 @@
         bubble.removeAttribute('id');
         chatHistory.push({ role: 'assistant', content: fullText });
       } else {
-        // Stream finished with no content — backend error
         msgEl.remove();
         throw new Error('Viva returned an empty response. Backend may be down.');
       }
     } catch (err) {
+      clearTimeout(wakeupTimer);
       thinkEl.style.display = 'none';
-      addAiMessage('⚠️ ' + (err.message || 'Could not reach Viva. Check your backend.'), null, null);
+      const isTimeout = err.name === 'AbortError';
+      addAiMessage(isTimeout
+        ? '⚠️ The server took too long to respond. It may still be waking up — please try again in a moment!'
+        : '⚠️ ' + (err.message || 'Could not reach Viva. Check your backend.'), null, null);
     } finally {
       sendBtn.disabled = false;
     }
