@@ -296,27 +296,24 @@ async def _pipeline(job_id: str, question: str, fmt: str, lang: str, user_id: st
         scene_py.write_text(code, encoding="utf-8")
         db.update_generation(job_id, manim_code=code)
 
-        # 4. Render all scenes in parallel
-        _set_job(job_id, "rendering", 42, f"Rendering {n} scenes in parallel...")
+        # 4. Render all scenes sequentially to stay under 512MB RAM (Render Free Tier)
+        _set_job(job_id, "rendering", 42, f"Rendering {n} scenes...")
         JOBS[job_id]["current_scene"] = 1
 
-        async def _render_with_progress(i: int) -> Path:
-            result = await _render_scene(work_dir, scene_py, f"Scene{i+1:02d}", fmt)
+        scene_videos = []
+        for i in range(n):
+            v = await _render_scene(work_dir, scene_py, f"Scene{i+1:02d}", fmt)
+            scene_videos.append(v)
             JOBS[job_id]["current_scene"] = i + 1
             pct = 42 + int(38 * (i + 1) / n)
-            _set_job(job_id, "rendering", pct, f"Scene {i+1}/{n} done ✓ (parallel)")
-            return result
+            _set_job(job_id, "rendering", pct, f"Scene {i+1}/{n} done ✓")
 
-        scene_videos = list(await asyncio.gather(
-            *[_render_with_progress(i) for i in range(n)]
-        ))
-
-        # 5. Merge AV per scene in parallel
+        # 5. Merge AV per scene sequentially
         _set_job(job_id, "stitching", 84, "Mixing audio...")
-        merged = list(await asyncio.gather(
-            *[_merge_av(work_dir, v, a, durations[i], i)
-              for i, (v, a) in enumerate(zip(scene_videos, audio_files))]
-        ))
+        merged = []
+        for i, (v, a) in enumerate(zip(scene_videos, audio_files)):
+            m = await _merge_av(work_dir, v, a, durations[i], i)
+            merged.append(m)
 
         # 6. Concat
         final = await _concat(work_dir, merged)
