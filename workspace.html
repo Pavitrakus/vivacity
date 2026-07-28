@@ -620,7 +620,8 @@
   async function checkAuth() {
     const { data, error } = await supabaseClient.auth.getSession();
     if (error || !data.session) {
-      window.location.href = 'signup.html';
+      alert("checkAuth failed: " + JSON.stringify(error) + " | data: " + JSON.stringify(data));
+      // window.location.href = 'signup.html';
       return;
     }
     sessionData = data.session;
@@ -649,7 +650,8 @@
   // Listen for auth state changes
   supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT') {
-      window.location.href = 'signup.html';
+      alert("onAuthStateChange emitted SIGNED_OUT");
+      // window.location.href = 'signup.html';
     } else if (session) {
       sessionData = session;
     }
@@ -669,7 +671,8 @@
     };
     const res = await fetch(backendUrl + endpoint, options);
     if (res.status === 401) {
-      await logout();
+      alert("apiFetch received 401 for " + endpoint);
+      // await logout();
     }
     return res;
   }
