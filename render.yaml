@@ -2,6 +2,7 @@ services:
   - type: web
     name: vivacity-backend
     env: docker
+    rootDir: backend
     plan: free
     region: oregon # or whichever is preferred
     healthCheckPath: /
