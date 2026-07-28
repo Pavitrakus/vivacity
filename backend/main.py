@@ -122,7 +122,7 @@ class GenerateRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return FileResponse("frontend/index.html")
+    return {"status": "ok", "service": "vivacity-backend"}
 
 # ─── API Routes ───────────────────────────────────────────────────────────────
 
