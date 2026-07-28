@@ -17,6 +17,8 @@ async def get_current_user(authorization: str = Header(None)) -> dict:
         user_id = res.user.id
     except Exception as e:
         print(f"Auth error: {e}")
+        if isinstance(e, RuntimeError):
+            raise HTTPException(status_code=500, detail="Server configuration error")
         raise HTTPException(status_code=401, detail="Could not validate credentials")
     
     # Get user profile from our public users table
