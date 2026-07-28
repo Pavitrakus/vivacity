@@ -79,11 +79,13 @@
     .msg.user { flex-direction: row-reverse; }
     .msg-avatar { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; background: var(--bg-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--t3); }
     .msg.user .msg-avatar { background: linear-gradient(135deg, #00c3ff, #0055ff); border-color: transparent; color: #000; }
-    .msg-bubble { max-width: calc(100% - 44px); padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.6; font-family: var(--font-sans); }
+    .msg-bubble { max-width: calc(100% - 44px); padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.6; font-family: var(--font-sans); word-break: break-word; overflow-wrap: anywhere; }
     .msg.ai .msg-bubble { background: var(--bg-2); border: 1px solid var(--border); color: var(--t2); border-radius: 4px 16px 16px 16px; }
+    .msg.ai .msg-bubble br + br { display: none; }
     .msg.user .msg-bubble { background: var(--accent); color: #000; font-weight: 500; border-radius: 16px 4px 16px 16px; box-shadow: 0 3px 10px rgba(0,195,255,0.18); }
     .msg-time { font-size: 9px; color: var(--t3); margin-top: 3px; font-family: var(--mono); }
     .msg.user .msg-time { text-align: right; }
+    .msg-meta { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .render-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; margin-top: 8px; cursor: pointer; transition: border-color 0.15s; }
     .render-pill:hover { border-color: var(--accent); }
     .render-pill-icon { width: 30px; height: 30px; border-radius: 6px; background: rgba(0,195,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
@@ -853,7 +855,7 @@
   }
   function triggerRender() { const t = document.getElementById('chat-input').value.trim(); if (t) sendMessage(); else toast('Type a prompt first.'); }
 
-  // ─── Viva Streaming Chat ──────────────────────────────────────────────────────
+  // ─── Viva Streaming Chat — hits /api/chat (Vercel Edge, always instant) ────────
   async function sendToViva() {
     const thinkEl = document.getElementById('thinking-msg');
     const thinkLabel = document.getElementById('think-label-text');
@@ -863,31 +865,27 @@
     const sendBtn = document.getElementById('send-btn');
     sendBtn.disabled = true;
 
-    // Create streaming AI bubble
+    // Build a streaming bubble immediately
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     const msgEl = document.createElement('div');
     msgEl.className = 'msg ai';
-    msgEl.innerHTML = `<div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div><div><div class="msg-bubble" id="viva-streaming-bubble"></div></div>`;
-
-    // Show a wakeup warning after 5 seconds if still waiting
-    const wakeupTimer = setTimeout(() => {
-      thinkLabel.textContent = '⏳ Server waking up (~30s)...';
-    }, 5000);
+    msgEl.innerHTML = `<div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div><div class="msg-meta"><div class="msg-bubble" id="viva-streaming-bubble"></div><div class="msg-time">${timeStr}</div></div>`;
 
     try {
-      const controller = new AbortController();
-      const hardTimeout = setTimeout(() => controller.abort(), 90000); // 90s hard limit
+      // /api/chat is a Vercel Edge Function — no Render, no cold start
+      const chatEndpoint = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        ? (BASE_URL + '/chat')   // local dev: hit FastAPI directly
+        : '/api/chat';           // production: Vercel Edge Function
 
-      const res = await apiFetch('/chat', {
+      const res = await fetch(chatEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory.slice(-20) }),
-        signal: controller.signal
+        body: JSON.stringify({ messages: chatHistory.slice(-20) })
       });
-      clearTimeout(hardTimeout);
 
       if (!res.ok) throw new Error('Status ' + res.status);
 
-      clearTimeout(wakeupTimer);
       thinkEl.style.display = 'none';
       document.getElementById('rp-msgs').appendChild(msgEl);
       scrollChat();
@@ -904,7 +902,6 @@
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop();
-        
         for (const line of lines) {
           if (!line.trim() || !line.startsWith('data: ')) continue;
           const data = line.slice(6).trim();
@@ -924,15 +921,11 @@
         chatHistory.push({ role: 'assistant', content: fullText });
       } else {
         msgEl.remove();
-        throw new Error('Viva returned an empty response. Backend may be down.');
+        throw new Error('No response from Viva.');
       }
     } catch (err) {
-      clearTimeout(wakeupTimer);
       thinkEl.style.display = 'none';
-      const isTimeout = err.name === 'AbortError';
-      addAiMessage(isTimeout
-        ? '⚠️ The server took too long to respond. It may still be waking up — please try again in a moment!'
-        : '⚠️ ' + (err.message || 'Could not reach Viva. Check your backend.'), null, null);
+      addAiMessage('⚠️ ' + (err.message || 'Could not reach Viva.'), null, null);
     } finally {
       sendBtn.disabled = false;
     }
