@@ -37,9 +37,9 @@ from prompts import (
 
 # ─── Config ───────────────────────────────────────────────────────────────────
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-OPENAI_API_KEY    = os.getenv("OPENAI_API_KEY")
-CLAUDE_MODEL      = os.getenv("CLAUDE_MODEL", "claude-opus-4-7")
+ANTHROPIC_API_KEY = (os.getenv("ANTHROPIC_API_KEY") or "").strip().strip('"').strip("'")
+OPENAI_API_KEY    = (os.getenv("OPENAI_API_KEY") or "").strip().strip('"').strip("'")
+CLAUDE_MODEL      = (os.getenv("CLAUDE_MODEL") or "claude-opus-4-7").strip().strip('"').strip("'")
 
 OUTPUT_DIR = Path("outputs")
 OUTPUT_DIR.mkdir(exist_ok=True)

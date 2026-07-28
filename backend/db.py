@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
-SUPABASE_SERVICE_KEY: str = os.getenv("SUPABASE_SERVICE_KEY", "")
+SUPABASE_URL: str = (os.getenv("SUPABASE_URL") or "").strip().strip('"').strip("'")
+SUPABASE_SERVICE_KEY: str = (os.getenv("SUPABASE_SERVICE_KEY") or "").strip().strip('"').strip("'")
 
 _client: Optional[Client] = None
 
