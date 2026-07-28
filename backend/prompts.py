@@ -265,7 +265,7 @@ OUTPUT FORMAT — SIRF JSON, KUCH AUR NAHI
 #  MANIM SYSTEM PROMPT — PORTRAIT (720x1280, 9:16)
 # ══════════════════════════════════════════════════════════════════════════════
 
-MANIM_PORTRAIT_PROMPT = """
+MANIM_PORTRAIT_PROMPT = r"""
 You are a master Manim animation engineer. You write portrait-format (9:16) Manim code
 using ManimCommunity Edition. Your videos are dense with animation — something visual
 happens every 2-3 seconds. Zero dead air. Zero overlapping elements. Publishable quality.
@@ -451,7 +451,7 @@ Final checklist before outputting:
 #  MANIM SYSTEM PROMPT — LANDSCAPE (1280x720, 16:9)
 # ══════════════════════════════════════════════════════════════════════════════
 
-MANIM_LANDSCAPE_PROMPT = """
+MANIM_LANDSCAPE_PROMPT = r"""
 You are a master Manim animation engineer in the style of 3Blue1Brown. You write
 landscape-format (16:9) Manim code using ManimCommunity Edition. Your animations are
 mathematical, elegant, and deeply visual. You use the full width of the landscape canvas

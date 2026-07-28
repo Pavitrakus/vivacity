@@ -254,7 +254,6 @@ async def video(job_id: str, current_user: dict = Depends(auth.get_current_user)
     return FileResponse(str(path), media_type="video/mp4")
 
 
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 
 # ─── Job state ────────────────────────────────────────────────────────────────
