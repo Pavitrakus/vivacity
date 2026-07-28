@@ -658,9 +658,8 @@
   });
 
   async function apiFetch(endpoint, options = {}) {
-    if (!sessionData) {
-      // Wait briefly for auth state if not loaded
-      const { data } = await supabaseClient.auth.getSession();
+    const { data } = await supabaseClient.auth.getSession();
+    if (data && data.session) {
       sessionData = data.session;
     }
     let backendUrl = getSetting('backendUrl', BASE_URL);
@@ -672,7 +671,6 @@
     const res = await fetch(backendUrl + endpoint, options);
     if (res.status === 401) {
       alert("apiFetch received 401 for " + endpoint);
-      // await logout();
     }
     return res;
   }

@@ -30,8 +30,13 @@ def get_user_by_email(email: str) -> Optional[dict]:
 
 
 def get_user_by_id(user_id: str) -> Optional[dict]:
-    res = get_supabase().table("users").select("*").eq("id", user_id).single().execute()
-    return res.data if res.data else None
+    try:
+        res = get_supabase().table("users").select("*").eq("id", user_id).execute()
+        if res.data and len(res.data) > 0:
+            return res.data[0]
+        return None
+    except Exception:
+        return None
 
 
 
