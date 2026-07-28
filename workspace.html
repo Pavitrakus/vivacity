@@ -627,6 +627,25 @@
   }
   checkAuth();
 
+  // ─── Chat History DB (Direct to Supabase, skips Render) ───────────
+  async function saveMessageToDB(role, content) {
+    if (!sessionData || !sessionData.user) return;
+    try {
+      if (!currentSessionId) {
+        const title = content.slice(0, 40) + (content.length > 40 ? '...' : '');
+        const { data, error } = await supabaseClient.from('sessions').insert({ user_id: sessionData.user.id, title }).select().single();
+        if (error) throw error;
+        if (data) currentSessionId = data.id;
+        loadHistory();
+      }
+      if (currentSessionId) {
+        await supabaseClient.from('messages').insert({ session_id: currentSessionId, role, content });
+      }
+    } catch (e) {
+      console.error("Failed to save history:", e);
+    }
+  }
+
   // Listen for auth state changes
   supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT') {
@@ -717,12 +736,12 @@
   async function loadHistory(){
     const c=document.getElementById('history-list'),e=document.getElementById('history-empty');
     if(!c)return;
+    if(!sessionData || !sessionData.user) return;
     try {
-      const res = await apiFetch('/sessions');
-      if (!res.ok) throw new Error();
-      const h = await res.json();
+      const { data: h, error } = await supabaseClient.from('sessions').select('*').eq('user_id', sessionData.user.id).order('created_at', { ascending: false });
+      if (error) throw error;
       
-      if(h.length===0){if(e)e.style.display='flex';return;}
+      if(!h || h.length===0){if(e)e.style.display='flex';return;}
       if(e)e.style.display='none';
       c.querySelectorAll('.history-item').forEach(el=>el.remove());
       h.forEach(item=>{
@@ -736,19 +755,23 @@
         c.appendChild(el);
       });
     } catch(err) {
+      console.error(err);
       if(e)e.style.display='flex';
     }
   }
 
   async function loadSessionMessages(sessionId) {
-    const res = await apiFetch(`/sessions/${sessionId}/messages`);
-    if(res.ok) {
-       const msgs = await res.json();
+    if(!sessionData) return;
+    const { data: msgs, error } = await supabaseClient.from('messages').select('*').eq('session_id', sessionId).order('created_at', { ascending: true });
+    if(!error && msgs) {
        document.getElementById('rp-msgs').innerHTML = '';
+       chatHistory = [];
        msgs.forEach(m => {
+         chatHistory.push({ role: m.role, content: m.content });
          if (m.role === 'user') addUserMessage(m.content, true);
          else addAiMessage(m.content, null, null, true);
        });
+       if(msgs.length > 0) currentSessionId = sessionId;
     }
   }
 
@@ -833,6 +856,7 @@
     inp.style.height = '38px';
     addUserMessage(text);
     chatHistory.push({ role: 'user', content: text });
+    saveMessageToDB('user', text); // Save immediately
     if (isVideoIntent(text)) {
       const cleanPrompt = text.replace(/^\/video\s*/i, '').trim() || text;
       startGeneration(cleanPrompt);
@@ -920,6 +944,7 @@
       if (fullText) {
         bubble.removeAttribute('id');
         chatHistory.push({ role: 'assistant', content: fullText });
+        saveMessageToDB('assistant', fullText); // Persist Viva's reply
       } else {
         msgEl.remove();
         throw new Error('No response from Viva.');
@@ -946,25 +971,31 @@
       .replace(/\n/g, '<br>');
   }
   async function startGeneration(question){
-    const thinkEl=document.getElementById('thinking-msg');document.getElementById('think-label-text').textContent='Connecting...';thinkEl.style.display='flex';scrollChat();
+    const thinkEl=document.getElementById('thinking-msg');document.getElementById('think-label-text').textContent='Preparing...';thinkEl.style.display='flex';scrollChat();
     const sendBtn=document.getElementById('send-btn');sendBtn.disabled=true;sendBtn.style.opacity='0.35';
     showProgressOverlay();document.getElementById('log-display').textContent='';appendLog('$ vivacity generate --format '+currentFormat+' --lang '+currentLang);appendLog('  [Prompt] '+question);
     currentManimCode=null;currentVideoUrl=null;
     
     try {
-      // Create session on first message
-      if (!currentSessionId) {
-        const sr = await apiFetch('/sessions?title=' + encodeURIComponent(question.slice(0,40)), {method: 'POST'});
-        if(sr.ok) { const sd = await sr.json(); currentSessionId = sd.id; }
+      // 1. Wake up / Cold Start Resiliency (Render free tier)
+      let backendReady = false;
+      const backendUrl = getSetting('backendUrl', BASE_URL);
+      try { const ping = await fetch(backendUrl + '/'); backendReady = ping.ok; } catch(e) {}
+      
+      if (!backendReady) {
+        appendLog('  [Info] Render engine is asleep. Waking it up (this takes ~50 seconds)...');
+        let attempts = 0;
+        while (attempts < 15 && !backendReady) {
+          attempts++;
+          document.getElementById('prog-msg').textContent = 'Waking up rendering engine... 🚀 (' + (attempts * 5) + 's)';
+          await new Promise(r => setTimeout(r, 5000));
+          try { const ping = await fetch(backendUrl + '/'); if (ping.ok) backendReady = true; } catch(e) {}
+        }
+        if (!backendReady) throw new Error("Rendering backend took too long to wake up. Please try again.");
       }
       
-      // Save user message to DB
-      if (currentSessionId) {
-        await apiFetch(`/sessions/${currentSessionId}/messages?role=user`, {
-          method: 'POST', headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(question)
-        });
-      }
+      document.getElementById('prog-msg').textContent = 'Starting generation...';
+      appendLog('  [Info] Engine ready. Sending generation request...');
 
       const res = await apiFetch('/generate',{
         method:'POST',
@@ -972,8 +1003,16 @@
         body:JSON.stringify({question,format:currentFormat,language:currentLang,session_id:currentSessionId})
       });
       if(!res.ok){const err=await res.text();throw new Error('Server '+res.status+': '+err);}
-      const{job_id}=await res.json();currentJobId=job_id;appendLog('  [Job] '+job_id);thinkEl.style.display='none';pollJob(job_id);}
-    catch(err){thinkEl.style.display='none';sendBtn.disabled=false;sendBtn.style.opacity='1';showError(err.message);addAiMessage('❌ Cannot reach backend. Go to <strong>Settings → Backend</strong> to configure the URL.',null,null);}
+      const{job_id}=await res.json();currentJobId=job_id;appendLog('  [Job] '+job_id);thinkEl.style.display='none';pollJob(job_id);
+    }
+    catch(err){
+      thinkEl.style.display='none';
+      sendBtn.disabled=false;
+      sendBtn.style.opacity='1';
+      showError(err.message);
+      saveMessageToDB('assistant', '❌ Generation failed: ' + err.message);
+      addAiMessage('❌ Cannot reach backend: ' + escHtml(err.message),null,null);
+    }
   }
   function pollJob(job_id){if(pollInterval)clearInterval(pollInterval);pollInterval=setInterval(async()=>{try{const res=await apiFetch('/status/'+job_id);if(!res.ok)return;const job=await res.json();updateProgress(job);if(job.status==='done'){clearInterval(pollInterval);pollInterval=null;onJobDone(job);}else if(job.status==='error'){clearInterval(pollInterval);pollInterval=null;onJobError(job);}}catch(_){}},1500);}
   function updateProgress(job){document.getElementById('prog-bar').style.width=(job.progress||0)+'%';document.getElementById('prog-pct').textContent=(job.progress||0)+'%';document.getElementById('prog-msg').textContent=job.message||'';appendLog('  ['+(job.status||'').toUpperCase()+'] '+(job.message||''));const idx=STEPS.indexOf(job.status);const imap={scripting:'✍',audio:'🎙',coding:'⚡',rendering:'🎬',stitching:'✂'};STEPS.forEach((s,i)=>{const el=document.getElementById('pstep-'+s);if(!el)return;const ic=el.querySelector('.prog-step-icon');ic.textContent=imap[s];el.className='prog-step';if(job.status==='done'){el.classList.add('done');ic.textContent='✓';}else if(i<idx){el.classList.add('done');ic.textContent='✓';}else if(i===idx){el.classList.add('active');ic.textContent='●';}});if(job.script_preview){const sp=job.script_preview;document.getElementById('script-preview').style.display='flex';document.getElementById('script-title').textContent=sp.title||'';const list=document.getElementById('scene-list');if(list.children.length!==(sp.scenes||[]).length){list.innerHTML='';(sp.scenes||[]).forEach((sc,i)=>{const d=document.createElement('div');d.className='scene-card';d.id='scard-'+i;d.innerHTML='<div class="scene-num" id="snum-'+i+'">'+(i+1)+'</div><div class="scene-body"><div class="scene-stitle">'+escHtml(sc.title)+'</div><div class="scene-narr">'+escHtml(sc.narration)+'</div></div>';list.appendChild(d);});}const cur=job.current_scene||0;(sp.scenes||[]).forEach((_,i)=>{const card=document.getElementById('scard-'+i),num=document.getElementById('snum-'+i);if(!card)return;card.classList.remove('sc-active','sc-done');if(job.status==='done'){card.classList.add('sc-done');num.textContent='✓';}else if(cur>0){if(i+1<cur){card.classList.add('sc-done');num.textContent='✓';}else if(i+1===cur){card.classList.add('sc-active');num.textContent=i+1;}}});}}
