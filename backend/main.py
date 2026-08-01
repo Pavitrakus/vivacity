@@ -112,7 +112,7 @@ app.add_middleware(
 app.include_router(auth.router)
 
 class GenerateRequest(BaseModel):
-    session_id: str
+    session_id: Optional[str] = None
     question: str
     format: str = "portrait"    # "portrait" | "landscape"
     language: str = "english"   # "english" | "hinglish"
