@@ -114,14 +114,16 @@
       text-align: center;
     }
 
-    /* BG video */
+    /* BG video — zoomed to crop black letterbox borders */
     .hero-bg-video {
       position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
+      inset: -5%;
+      width: 110%; height: 110%;
       object-fit: cover;
-      opacity: 0.28;
-      filter: saturate(0.6);
+      opacity: 0.32;
+      filter: saturate(0.7) brightness(0.9);
+      transform: scale(1.25);
+      transform-origin: center center;
       pointer-events: none;
       z-index: 0;
     }
@@ -131,8 +133,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,195,255,0.06) 0%, transparent 70%),
-        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.85) 100%);
+        radial-gradient(ellipse 70% 55% at 50% 50%, rgba(0,195,255,0.04) 0%, transparent 65%),
+        linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.9) 100%);
       z-index: 1;
     }
 
@@ -143,79 +145,94 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 28px;
       padding: 0 24px;
       max-width: 820px;
     }
 
-    /* Badge pill */
-    .hero-badge {
+    /* CTA credit badge — acts as a button */
+    .hero-cta-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
+      gap: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: 999px;
-      padding: 6px 16px 6px 8px;
+      padding: 8px 20px 8px 10px;
       font-family: var(--font-pixel);
-      font-size: 11px;
-      color: rgba(255,255,255,0.7);
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.04em;
       text-decoration: none;
-      transition: border-color 0.2s;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      will-change: transform;
     }
-    .hero-badge:hover { border-color: rgba(255,255,255,0.35); }
-    .hero-badge-dot {
-      width: 18px; height: 18px;
-      border-radius: 50%;
+    .hero-cta-badge:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.32);
+      transform: scale(1.05);
+      box-shadow: 0 6px 28px rgba(0,195,255,0.12);
+    }
+    .hero-cta-badge-tag {
       background: var(--accent);
-      display: flex; align-items: center; justify-content: center;
+      color: #000;
       font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 3px 9px;
     }
+    .hero-cta-badge-arrow {
+      opacity: 0.5;
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+    .hero-cta-badge:hover .hero-cta-badge-arrow { transform: translateX(3px); opacity: 1; }
 
     /* Headline */
     .hero-h1-big {
       font-family: var(--font-pixel);
-      font-size: clamp(52px, 9vw, 110px);
+      font-size: clamp(56px, 9.5vw, 115px);
       font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -0.04em;
+      line-height: 0.93;
+      letter-spacing: -0.045em;
       color: var(--white);
       margin: 0;
     }
     .hero-h1-big em {
       font-style: normal;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.28);
     }
 
     /* Subtext */
     .hero-sub-big {
       font-family: var(--font-pixel);
       font-size: 15px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.45);
       letter-spacing: 0.02em;
       line-height: 1.6;
       max-width: 480px;
     }
 
-    /* Input bar — Hera style */
+    /* Input bar */
     .hero-input-bar {
       display: flex;
       align-items: center;
       width: 100%;
-      max-width: 580px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 12px;
-      padding: 6px 6px 6px 20px;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 14px;
+      padding: 6px 6px 6px 22px;
       gap: 10px;
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .hero-input-bar:focus-within {
-      border-color: rgba(255,255,255,0.35);
-      box-shadow: 0 0 0 3px rgba(0,195,255,0.08);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 0 0 3px rgba(0,195,255,0.07);
     }
     .hero-input-bar input {
       flex: 1;
@@ -227,45 +244,44 @@
       color: var(--white);
       letter-spacing: 0.02em;
     }
-    .hero-input-bar input::placeholder { color: rgba(255,255,255,0.3); }
+    .hero-input-bar input::placeholder { color: rgba(255,255,255,0.25); }
     .hero-go-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px; height: 38px;
-      border-radius: 8px;
+      width: 40px; height: 40px;
+      border-radius: 10px;
       background: var(--white);
       border: none;
       cursor: pointer;
       flex-shrink: 0;
       transition: background 0.2s, transform 0.1s;
     }
-    .hero-go-btn:hover { background: rgba(255,255,255,0.85); transform: scale(0.96); }
+    .hero-go-btn:hover { background: rgba(255,255,255,0.88); transform: scale(0.95); }
     .hero-go-btn svg { display: block; }
 
-    /* Suggestion pills */
-    .hero-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-    }
-    .hero-pill {
+    /* Typewriter rotating prompts below input */
+    .hero-typewriter-wrap {
       font-family: var(--font-pixel);
-      font-size: 11px;
-      color: rgba(255,255,255,0.5);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 5px 14px;
-      cursor: pointer;
-      transition: all 0.15s;
-      letter-spacing: 0.03em;
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .hero-pill:hover {
-      color: var(--white);
-      border-color: rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.09);
+    .hero-tw-label { color: rgba(255,255,255,0.2); }
+    #heroTwText {
+      color: rgba(255,255,255,0.5);
+      border-right: 1.5px solid rgba(255,255,255,0.4);
+      padding-right: 2px;
+      min-width: 2px;
+      animation: caretBlink 0.85s step-end infinite;
+    }
+    @keyframes caretBlink {
+      0%,100% { border-color: rgba(255,255,255,0.4); }
+      50%      { border-color: transparent; }
     }
 
     /* Scroll hint */
@@ -282,20 +298,113 @@
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.2);
       animation: bobScroll 2.4s ease-in-out infinite;
     }
-    .hero-scroll-hint svg { opacity: 0.35; }
+    .hero-scroll-hint svg { opacity: 0.25; }
     @keyframes bobScroll {
       0%, 100% { transform: translateX(-50%) translateY(0); }
       50%       { transform: translateX(-50%) translateY(6px); }
     }
 
+    /* ─── VIDEO SECTION OVERHAUL ───────────────────── */
+    .video-section {
+      background: #000;
+      padding: 100px 0 80px;
+    }
+    .vs-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto 52px;
+      padding: 0 40px;
+    }
+    .vs-header h2 {
+      font-family: var(--font-pixel);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--white);
+    }
+    .vs-link {
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .vs-link:hover { color: var(--white); }
+
+    /* Masonry-ish clean grid */
+    .vs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .vs-card {
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .vs-card:hover {
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-3px);
+    }
+    .vs-card-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+    .vs-card:nth-child(1) .vs-card-video { aspect-ratio: 16/9; }
+    .vs-card.tall .vs-card-video { aspect-ratio: 9/16; max-height: 420px; }
+    .vs-card-footer {
+      padding: 14px 18px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .vs-card-prompt {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
+    .vs-card-tag {
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 900px) {
+      .vs-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .nav-burger { display: flex; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 6px; }
       .nav-burger span { display: block; width: 20px; height: 1.5px; background: rgba(255,255,255,0.7); border-radius: 2px; }
       .hero-h1-big { font-size: 48px; }
+      .vs-grid { grid-template-columns: 1fr; padding: 0 20px; }
+      .vs-header { padding: 0 20px; }
     }
   </style>
 </head>
@@ -335,8 +444,8 @@
   <!-- ══ HERO — FULLSCREEN VIDEO BG ═══════════ -->
   <section class="hero-fullscreen" id="hero">
 
-    <!-- Background video -->
-    <video class="hero-bg-video" src="assets/videos/demo-537.mp4"
+    <!-- Background video: divergence.mp4, zoomed to crop borders -->
+    <video class="hero-bg-video" src="assets/videos/divergence.mp4"
       autoplay muted loop playsinline preload="metadata"></video>
 
     <!-- Gradient overlay -->
@@ -345,10 +454,11 @@
     <!-- Center content -->
     <div class="hero-content-center">
 
-      <!-- Badge -->
-      <a href="signup.html" class="hero-badge">
-        <span class="hero-badge-dot">✦</span>
-        AI-generated · Manim renderer · Claude-powered
+      <!-- CTA credit badge / button -->
+      <a href="signup.html" class="hero-cta-badge" id="heroBadge">
+        <span class="hero-cta-badge-tag">Free</span>
+        Get $5 worth of credits — Sign up
+        <span class="hero-cta-badge-arrow">→</span>
       </a>
 
       <!-- Big headline -->
@@ -357,10 +467,9 @@
         <em>anything.</em>
       </h1>
 
-      <!-- Subline -->
+      <!-- Subline (one line only) -->
       <p class="hero-sub-big">
-        Type a concept. Get a beautiful animated video.<br>
-        No editing. No timeline. No friction.
+        Type a concept. Get a beautiful animated video.
       </p>
 
       <!-- Input bar -->
@@ -379,13 +488,10 @@
         </button>
       </div>
 
-      <!-- Suggestion pills -->
-      <div class="hero-pills">
-        <button class="hero-pill" onclick="fillPrompt(this)">Stokes' theorem proof</button>
-        <button class="hero-pill" onclick="fillPrompt(this)">Maxwell's equations</button>
-        <button class="hero-pill" onclick="fillPrompt(this)">Quantum superposition</button>
-        <button class="hero-pill" onclick="fillPrompt(this)">Eigenvalue decomposition</button>
-        <button class="hero-pill" onclick="fillPrompt(this)">Fourier transform</button>
+      <!-- Typewriter auto-rotating prompt hints -->
+      <div class="hero-typewriter-wrap">
+        <span class="hero-tw-label">try —</span>
+        <span id="heroTwText"></span>
       </div>
 
     </div>
@@ -459,153 +565,8 @@
     </div>
   </div>
 
-  <!-- ══ VIDEO SHOWCASE ════════════════════════ -->
+  <!-- ══ VIDEO SHOWCASE ════════════════════════════════ -->
   <section class="video-section" id="examples">
-    <div class="content-wrap">
-      <div class="section-header-row">
-        <div>
-          <h2 class="section-h2">Real outputs.</h2>
-          <div class="section-sub">GENERATED BY VIVACITY · NO HUMAN EDITING · NO POST-PRODUCTION</div>
-        </div>
-        <a href="https://youtube.com/@vivacity-paxus?si=_fRgvHPhwhag0_EQ" target="_blank" class="section-link">view more examples ↗</a>
-      </div>
-
-      <div class="video-grid">
-
-        <!-- Video 1 (Real) -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">featured</span>
-              <span class="vc-title">Complex analysis - Domain coloring</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">~50s render</span>
-            </div>
-          </div>
-          <div class="video-wrap">
-            <video class="vc-video" src="assets/videos/demo-537.mp4" autoplay muted loop playsinline preload="metadata"></video>
-            <div class="video-overlay">
-              <button class="vc-play-btn" data-video="v1" aria-label="Toggle play">
-                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
-                </svg>
-                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="video-card-bottom">
-            <span class="vc-prompt-label">prompt -</span>
-            <span class="vc-prompt">"Animate domain coloring for a complex function over the complex plane"</span>
-          </div>
-        </div>
-
-        <!-- Video 2 -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">geometry</span>
-              <span class="vc-title">Geometric Transformations</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">~40s render</span>
-            </div>
-          </div>
-          <div class="video-wrap">
-            <video class="vc-video" src="assets/videos/demo-vid1.mp4" autoplay muted loop playsinline preload="auto"></video>
-          </div>
-          <div class="video-card-bottom">
-            <span class="vc-prompt-label">prompt -</span>
-            <span class="vc-prompt">"Animate a rotating geometric structure in 3D"</span>
-          </div>
-        </div>
-
-        <!-- Video 3 -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">calculus</span>
-              <span class="vc-title">Derivative Visualized</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">~30s render</span>
-            </div>
-          </div>
-          <div class="video-wrap">
-            <video class="vc-video" src="assets/videos/demo-vid2.mp4" autoplay muted loop playsinline preload="auto"></video>
-          </div>
-          <div class="video-card-bottom">
-            <span class="vc-prompt-label">prompt -</span>
-            <span class="vc-prompt">"Visualize the derivative of a cubic function"</span>
-          </div>
-        </div>
-
-        <!-- Real Video: Divergence -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">vector calculus</span>
-              <span class="vc-title">Divergence Theorem</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">2:14</span>
-            </div>
-          </div>
-          <div class="video-wrap">
-            <video class="vc-video" src="assets/videos/divergence.mp4" autoplay muted loop playsinline preload="metadata"></video>
-            <div class="video-overlay">
-              <button class="vc-play-btn" data-video="v4" aria-label="Toggle play">
-                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
-                </svg>
-                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-                  <polygon points="5 3 19 12 5 21 5 3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="video-card-bottom">
-            <span class="vc-prompt-label">prompt -</span>
-            <span class="vc-prompt">"Visualize the divergence theorem with animated vector field"</span>
-          </div>
-        </div>
-
-        <!-- Real Video: Unit Circle -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">geometry</span>
-              <span class="vc-title">Unit Circle Trigonometry</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">1:15</span>
-            </div>
-          </div>
-          <div class="video-wrap">
-            <video class="vc-video" src="assets/videos/unit_circle.mp4" autoplay muted loop playsinline preload="auto"></video>
-          </div>
-          <div class="video-card-bottom">
-            <span class="vc-prompt-label">prompt -</span>
-            <span class="vc-prompt">"Show the geometric derivation of sine and cosine on the unit circle"</span>
-          </div>
-        </div>
-
-        <!-- Real Video: Matrix Multiplication -->
-        <div class="video-card">
-          <div class="video-card-top">
-            <div class="vc-meta">
-              <span class="vc-tag">algebra</span>
-              <span class="vc-title">Matrix Multiplication</span>
-            </div>
-            <div class="vc-status">
-              <span class="vc-dur">0:45</span>
-            </div>
-          </div>
-          <div class="video-wrap">
             <video class="vc-video" src="assets/videos/matrix.mp4" autoplay muted loop playsinline preload="auto"></video>
           </div>
           <div class="video-card-bottom">
@@ -957,22 +918,54 @@ video <span class="c-op">=</span> client<span class="c-op">.</span>generate(
 
   <script src="script.js"></script>
   <script>
-    // Hero input → redirect to workspace with prompt
+    // Hero input → redirect to signup with prompt
     function heroGo() {
       const val = document.getElementById('heroInput').value.trim();
       if (!val) return;
       window.location.href = 'signup.html?prompt=' + encodeURIComponent(val);
     }
-    function fillPrompt(btn) {
-      document.getElementById('heroInput').value = btn.textContent;
-      document.getElementById('heroInput').focus();
-    }
 
     // Nav background on scroll
-    const nav = document.getElementById('nav');
+    const navEl = document.getElementById('nav');
     window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
+      navEl.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
+
+    // Typewriter rotating prompts
+    const TW_PROMPTS = [
+      "Stokes' theorem visual proof",
+      "Maxwell's equations animated",
+      "Quantum superposition explained",
+      "Eigenvalue decomposition",
+      "Fourier transform visualized",
+      "Why does spacetime warp near black holes?",
+      "Divergence theorem with vector field",
+      "Euler's identity step by step",
+      "How does gradient descent work?",
+      "Bayes' theorem intuition",
+    ];
+    const twEl = document.getElementById('heroTwText');
+    let twIdx = 0, twChar = 0, twDir = 1, twWait = 0;
+    function twTick() {
+      if (twWait > 0) { twWait--; setTimeout(twTick, 60); return; }
+      const str = TW_PROMPTS[twIdx];
+      if (twDir === 1) {
+        twChar++;
+        twEl.textContent = str.slice(0, twChar);
+        if (twChar >= str.length) { twDir = -1; twWait = 28; }
+        setTimeout(twTick, 60 + Math.random() * 30);
+      } else {
+        twChar--;
+        twEl.textContent = str.slice(0, twChar);
+        if (twChar <= 0) {
+          twDir = 1;
+          twIdx = (twIdx + 1) % TW_PROMPTS.length;
+          twWait = 8;
+        }
+        setTimeout(twTick, 30);
+      }
+    }
+    twTick();
   </script>
 </body>
 
