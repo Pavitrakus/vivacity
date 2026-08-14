@@ -15,3 +15,11 @@ backend/__pycache__/
 backend/**/__pycache__/
 *.pyc
 backend/node_modules/
+# Nested clones / local junk
+cli-main/
+cli-main.zip
+backend/render_cli/
+ex of tp/
+api/.env
+braces.txt
+Screenshot*.png
