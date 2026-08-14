@@ -41,7 +41,7 @@ export const metadata: Metadata = {
       "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos. API-first.",
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: "/images/og-image.jpg?v=2",
         width: 1200,
         height: 630,
         alt: "vivacity — LLMs answer in text. We make it move. tryvivacity.com",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     title: "Vivacity — LLMs answer in text. We make it move.",
     description:
       "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos.",
-    images: ["/images/og-image.jpg"],
+    images: ["/images/og-image.jpg?v=2"],
   },
   alternates: {
     canonical: siteUrl,

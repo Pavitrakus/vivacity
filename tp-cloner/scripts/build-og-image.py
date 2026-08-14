@@ -11,7 +11,6 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 FRAME = ROOT / "public/images/_og-frame.jpg"
 VAR_FONT = ROOT / "public/fonts/GeistPixel-Regular-VariableFont_ELSH.ttf"
-OUT_PNG = ROOT / "public/images/og-image.png"
 OUT_JPG = ROOT / "public/images/og-image.jpg"
 
 W, H = 1200, 630
@@ -99,9 +98,8 @@ def main() -> None:
     center_text(od, "tryvivacity.com", H - 70, url, (255, 255, 255, 122))
 
     out = Image.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
-    out.save(OUT_PNG, format="PNG", optimize=True)
     out.save(OUT_JPG, format="JPEG", quality=86, optimize=True, progressive=True)
-    print(f"PNG {OUT_PNG.stat().st_size/1024:.0f}KB · JPG {OUT_JPG.stat().st_size/1024:.0f}KB")
+    print(f"JPG {OUT_JPG.stat().st_size/1024:.0f}KB")
 
 
 if __name__ == "__main__":
