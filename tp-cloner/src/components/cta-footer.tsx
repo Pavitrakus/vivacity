@@ -45,11 +45,14 @@ export function FinalCTA() {
           One call to see if Vivacity fits your product. EdTech, agents, or
           creator pipelines.
         </p>
-        <div className="relative mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <ShineButton href="mailto:pavitra@paxus.in?subject=Vivacity%20call">
+        <div className="relative mx-auto mt-8 grid max-w-md grid-cols-2 gap-2 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
+          <ShineButton
+            href="mailto:pavitra@paxus.in?subject=Vivacity%20call"
+            className="w-full sm:w-auto"
+          >
             Book a call
           </ShineButton>
-          <ShineButton href="/signin" variant="ghost">
+          <ShineButton href="/signin" variant="ghost" className="w-full sm:w-auto">
             Open workspace
           </ShineButton>
         </div>

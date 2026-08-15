@@ -44,12 +44,12 @@ export function Process() {
           <HighlightGrid
             rows={[
               [
-                { label: "01 Ingest" },
-                { label: "02 Scene IR" },
+                { label: "Ingest" },
+                { label: "Scene IR" },
               ],
               [
-                { label: "03 Voice" },
-                { label: "04 Motion" },
+                { label: "Voice" },
+                { label: "Motion" },
               ],
             ]}
           />

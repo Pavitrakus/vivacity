@@ -23,23 +23,29 @@ export function ShineButton({
   className,
   disabled,
 }: ShineButtonProps) {
-  const classes = cn(
-    "group relative inline-flex items-center justify-center overflow-hidden rounded-full px-5 py-2.5 font-pixel text-[12px] tracking-wide disabled:opacity-60",
+  const look = cn(
+    "group relative inline-flex h-11 w-full min-w-0 items-center justify-center overflow-hidden rounded-full px-3 font-pixel text-[11px] tracking-wide whitespace-nowrap disabled:opacity-60 sm:h-auto sm:px-5 sm:py-2.5 sm:text-[12px]",
     variant === "solid"
       ? "bg-white text-black"
-      : "border border-white/20 bg-black/40 text-white hover:border-white/45",
-    className
+      : "border border-white/20 bg-black/40 text-white hover:border-white/45"
   );
 
   const inner = (
     <>
-      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+      <span className="relative z-10 inline-flex items-center justify-center gap-2">
+        {children}
+      </span>
       <motion.span
         aria-hidden
         className="pointer-events-none absolute inset-0"
         initial={{ x: "-120%" }}
         animate={{ x: "140%" }}
-        transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 1.6, ease: "linear" }}
+        transition={{
+          duration: 1.4,
+          repeat: Infinity,
+          repeatDelay: 1.6,
+          ease: "linear",
+        }}
         style={{
           background:
             variant === "solid"
@@ -53,21 +59,33 @@ export function ShineButton({
   const motionProps = {
     whileHover: { scale: 1.02 },
     whileTap: { scale: 0.97 },
-    transition: { type: "spring" as const, stiffness: 500, damping: 30, mass: 0.5 },
+    transition: {
+      type: "spring" as const,
+      stiffness: 500,
+      damping: 30,
+      mass: 0.5,
+    },
   };
 
   if (href) {
     const external = href.startsWith("http") || href.startsWith("mailto:");
     if (external) {
       return (
-        <motion.a href={href} className={classes} {...motionProps}>
+        <motion.a
+          href={href}
+          className={cn(look, className)}
+          {...motionProps}
+        >
           {inner}
         </motion.a>
       );
     }
     return (
-      <motion.div {...motionProps} className="inline-flex">
-        <Link href={href} className={classes}>
+      <motion.div
+        {...motionProps}
+        className={cn("inline-flex min-w-0", className)}
+      >
+        <Link href={href} className={look}>
           {inner}
         </Link>
       </motion.div>
@@ -79,7 +97,7 @@ export function ShineButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={classes}
+      className={cn(look, className)}
       {...motionProps}
     >
       {inner}

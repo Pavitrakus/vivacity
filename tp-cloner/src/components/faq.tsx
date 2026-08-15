@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FAQS } from "@/lib/site";
 import { StaggerText } from "@/components/ui/stagger-text";
@@ -34,24 +33,18 @@ export function FAQ() {
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
                 className={cn(
-                  "flex w-full items-center gap-4 border-l-[6px] py-5 pr-4 pl-4 text-left transition-colors duration-300 md:border-l-[10px]",
+                  "flex w-full items-center gap-3 border-l-[5px] py-4 pr-3 pl-3 text-left transition-colors duration-300 sm:gap-4 sm:py-5 sm:pr-4 sm:pl-4 md:border-l-[10px]",
                   isOpen
                     ? "border-l-white text-white"
                     : "border-l-white/20 text-white/80 hover:border-l-white/50 hover:text-white"
                 )}
               >
-                <span className="w-5 shrink-0 font-pixel text-lg text-white/45">
+                <span className="w-4 shrink-0 font-pixel text-base text-white/45 sm:w-5 sm:text-lg">
                   {isOpen ? "−" : "+"}
                 </span>
-                <span className="flex-1 font-pixel text-sm tracking-tight sm:text-[15px]">
+                <span className="flex-1 font-pixel text-[13px] tracking-tight sm:text-[15px]">
                   {f.q}
                 </span>
-                <Plus
-                  className={cn(
-                    "h-4 w-4 shrink-0 text-white/35 transition-transform duration-300 ease-out",
-                    isOpen && "rotate-45"
-                  )}
-                />
               </button>
               <div
                 className={cn(
@@ -62,7 +55,7 @@ export function FAQ() {
                 )}
               >
                 <div className="overflow-hidden">
-                  <p className="pr-4 pb-5 pl-[3.25rem] text-sm leading-relaxed text-white/50 md:pl-16">
+                  <p className="pr-3 pb-4 pl-10 text-sm leading-relaxed text-white/50 sm:pr-4 sm:pb-5 sm:pl-[3.25rem] md:pl-16">
                     {f.a}
                   </p>
                 </div>

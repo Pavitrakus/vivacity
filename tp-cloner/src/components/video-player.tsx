@@ -77,11 +77,11 @@ export function VideoPlayer({
         </div>
       )}
 
-      <div className="absolute bottom-3 left-3 flex items-center gap-2 sm:bottom-4 sm:left-4">
+      <div className="absolute right-3 bottom-3 left-3 flex items-center gap-2 sm:right-auto sm:bottom-4 sm:left-4">
         <button
           type="button"
           onClick={togglePlay}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white backdrop-blur transition hover:bg-black/80"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white backdrop-blur transition hover:bg-black/80"
           aria-label={playing ? "Pause" : "Play"}
         >
           {playing ? (
@@ -93,10 +93,11 @@ export function VideoPlayer({
         <button
           type="button"
           onClick={toggleMute}
-          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/65 px-3 py-2 text-xs text-white backdrop-blur transition hover:bg-black/80"
+          className="inline-flex h-9 items-center gap-2 rounded-full border border-white/15 bg-black/65 px-3 text-xs text-white backdrop-blur transition hover:bg-black/80"
+          aria-label={muted ? "Unmute" : "Mute"}
         >
           {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-          {muted ? "Unmute" : "Mute"}
+          <span className="hidden sm:inline">{muted ? "Unmute" : "Mute"}</span>
         </button>
       </div>
     </div>

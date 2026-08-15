@@ -27,12 +27,12 @@ export function SplitFeature() {
       </div>
 
       <div>
-        <div className="mb-3 inline-flex rounded-full border border-white/12 bg-black/30 p-1 font-pixel text-[11px]">
+        <div className="mb-3 flex w-full rounded-full border border-white/12 bg-black/30 p-1 font-pixel text-[11px]">
           <button
             type="button"
             onClick={() => setMode("exact")}
             className={cn(
-              "rounded-full px-3.5 py-1.5 transition",
+              "min-w-0 flex-1 rounded-full px-2 py-1.5 text-center transition sm:px-3.5",
               mode === "exact"
                 ? "border border-white/25 bg-white/10 text-white"
                 : "text-white/45"
@@ -44,7 +44,7 @@ export function SplitFeature() {
             type="button"
             onClick={() => setMode("text")}
             className={cn(
-              "rounded-full px-3.5 py-1.5 transition",
+              "min-w-0 flex-1 rounded-full px-2 py-1.5 text-center transition sm:px-3.5",
               mode === "text"
                 ? "border border-white/25 bg-white/10 text-white"
                 : "text-white/45"

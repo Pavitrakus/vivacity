@@ -52,10 +52,13 @@ export function Work() {
 
       <div
         ref={scroller}
-        className="flex gap-5 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
-          <article key={item.title} className="w-[min(88vw,420px)] shrink-0 sm:w-[440px]">
+          <article
+            key={item.title}
+            className="w-[min(86vw,420px)] shrink-0 snap-start sm:w-[440px]"
+          >
             <VideoPlayer src={item.src} />
             <h3 className="mt-3 font-pixel text-sm tracking-tight">{item.title}</h3>
             <p className="text-sm text-white/40">{item.tag}</p>

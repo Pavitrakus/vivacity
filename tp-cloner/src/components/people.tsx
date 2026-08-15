@@ -46,14 +46,14 @@ export function People() {
           <VideoPlayer key={active.video} src={active.video} className="h-full" />
         </div>
         <div className="flex flex-col p-5 sm:p-7">
-          <div className="inline-flex w-fit rounded-full border border-white/12 p-1 font-pixel text-[11px]">
+          <div className="grid w-full grid-cols-3 gap-1 rounded-full border border-white/12 p-1 font-pixel text-[11px] sm:inline-flex sm:w-fit">
             {cases.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => setActive(c)}
                 className={cn(
-                  "rounded-full px-3 py-1.5 transition",
+                  "rounded-full px-2 py-1.5 transition sm:px-3",
                   active.id === c.id
                     ? "bg-white/12 text-white"
                     : "text-white/45 hover:text-white/75"

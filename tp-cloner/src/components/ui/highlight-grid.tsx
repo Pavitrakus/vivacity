@@ -123,6 +123,10 @@ export function HighlightGrid({
                   setActive(cell.gi);
                   moveTo(cell.gi, cell.color);
                 }}
+                onClick={() => {
+                  setActive(cell.gi);
+                  moveTo(cell.gi, cell.color);
+                }}
                 className={cn(
                   "flex flex-1 items-center justify-center px-2 py-3",
                   c < row.length - 1 && "border-r border-white/10"

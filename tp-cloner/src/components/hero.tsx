@@ -8,7 +8,7 @@ import { StaggerText } from "@/components/ui/stagger-text";
 
 export function Hero() {
   return (
-    <section className="relative mx-auto grid max-w-6xl gap-10 px-5 pt-28 pb-12 sm:gap-12 sm:pt-36 sm:pb-16 md:grid-cols-[1.05fr_1fr] md:items-center md:gap-14 md:px-8 lg:pt-40">
+    <section className="relative mx-auto grid max-w-6xl gap-10 px-5 pt-24 pb-12 sm:gap-12 sm:pt-36 sm:pb-16 md:grid-cols-[1.05fr_1fr] md:items-center md:gap-14 md:px-8 lg:pt-40">
       <AnimatedRays className="opacity-70" />
       <div className="relative">
         <a
@@ -33,9 +33,11 @@ export function Hero() {
           explainer videos. Coordinated. Narrated. Cheap enough to call from an
           agent.
         </p>
-        <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap">
-          <ShineButton href="#cta">Book a call</ShineButton>
-          <ShineButton href="#work" variant="ghost">
+        <div className="mt-7 grid max-w-md grid-cols-2 gap-2 sm:mt-9 sm:flex sm:max-w-none sm:flex-wrap sm:gap-3">
+          <ShineButton href="#cta" className="w-full sm:w-auto">
+            Book a call
+          </ShineButton>
+          <ShineButton href="#work" variant="ghost" className="w-full sm:w-auto">
             See our work
           </ShineButton>
         </div>
