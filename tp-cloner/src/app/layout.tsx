@@ -16,7 +16,7 @@ const siteUrl = "https://tryvivacity.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Vivacity — Video infrastructure for LLMs",
+  title: "Vivacity - Video infrastructure for LLMs",
   description:
     "Near-real-time video infrastructure for LLMs. Turn prompts, documents, and AI answers into mathematically exact explainer videos.",
   applicationName: "Vivacity",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "Vivacity",
-    title: "Vivacity — LLMs answer in text. We make it move.",
+    title: "Vivacity - LLMs answer in text. We make it move.",
     description:
       "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos. API-first.",
     images: [
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.jpg?v=2",
         width: 1200,
         height: 630,
-        alt: "vivacity — LLMs answer in text. We make it move. tryvivacity.com",
+        alt: "vivacity - LLMs answer in text. We make it move. tryvivacity.com",
         type: "image/jpeg",
       },
     ],
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vivacity — LLMs answer in text. We make it move.",
+    title: "Vivacity - LLMs answer in text. We make it move.",
     description:
       "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos.",
     images: ["/images/og-image.jpg?v=2"],

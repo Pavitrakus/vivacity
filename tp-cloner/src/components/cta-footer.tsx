@@ -1,10 +1,27 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const askAi = [
-  { name: "ChatGPT", src: "/images/logos/chatgpt.png" },
-  { name: "Claude", src: "/images/logos/claude.png" },
-  { name: "Perplexity", src: "/images/logos/perplexity.png" },
-  { name: "Gemini", src: "/images/logos/gemini.png" },
+  {
+    name: "ChatGPT",
+    src: "/images/logos/chatgpt.png",
+    href: "https://chatgpt.com/?q=What%20do%20you%20know%20about%20Vivacity%20video%20infrastructure%20for%20LLMs%20tryvivacity.com",
+  },
+  {
+    name: "Claude",
+    src: "/images/logos/claude.png",
+    href: "https://claude.ai/new?q=What%20do%20you%20know%20about%20Vivacity%20video%20infrastructure%20for%20LLMs%20tryvivacity.com",
+  },
+  {
+    name: "Perplexity",
+    src: "/images/logos/perplexity.png",
+    href: "https://www.perplexity.ai/search?q=Vivacity%20video%20infrastructure%20for%20LLMs%20tryvivacity.com",
+  },
+  {
+    name: "Gemini",
+    src: "/images/logos/gemini.png",
+    href: "https://www.google.com/search?q=Vivacity%20video%20infrastructure%20LLMs%20tryvivacity.com",
+  },
 ];
 
 export function FinalCTA() {
@@ -29,12 +46,12 @@ export function FinalCTA() {
           >
             Book a call
           </a>
-          <a
-            href="https://tryvivacity.com/workspace"
+          <Link
+            href="/signin"
             className="rounded-full border border-white/20 px-6 py-3 text-center font-pixel text-[12px] tracking-wide text-white transition hover:border-white/45"
           >
             Open workspace
-          </a>
+          </Link>
         </div>
       </div>
     </section>
@@ -46,9 +63,12 @@ export function SiteFooter() {
     <footer className="mt-4 border-t border-white/10 sm:mt-6">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:gap-12 sm:py-16 md:grid-cols-[1.25fr_1fr_1fr] md:px-8">
         <div>
-          <p className="font-pixel text-[16px] tracking-tight text-white">
+          <Link
+            href="/"
+            className="font-pixel text-[16px] tracking-tight text-white"
+          >
             vivacity
-          </p>
+          </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/45">
             Video infrastructure for LLMs. Mathematically exact explainers. Near
             real-time. API first.
@@ -68,20 +88,20 @@ export function SiteFooter() {
             </p>
             <div className="mt-4 grid gap-2.5 text-sm text-white/65">
               {[
-                ["#work", "Work"],
-                ["#process", "Process"],
-                ["#dashboard", "Product"],
-                ["#about", "FAQ"],
-                ["#newsletter", "Newsletter"],
-                ["#cta", "Contact"],
+                ["/#work", "Work"],
+                ["/#process", "Process"],
+                ["/#dashboard", "Product"],
+                ["/#about", "FAQ"],
+                ["/newsletter", "Newsletter"],
+                ["/contact", "Contact"],
               ].map(([href, label]) => (
-                <a
+                <Link
                   key={label}
                   href={href}
                   className="transition hover:text-white"
                 >
                   {label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -91,24 +111,26 @@ export function SiteFooter() {
               Resources
             </p>
             <div className="mt-4 space-y-2.5 text-sm text-white/65">
+              <Link href="/docs" className="block transition hover:text-white">
+                Docs
+              </Link>
+              <Link href="/signin" className="block transition hover:text-white">
+                Sign in
+              </Link>
               <a
                 href="https://pavitrakushwaha.dev"
                 className="block transition hover:text-white"
+                target="_blank"
+                rel="noreferrer"
               >
                 Founder
               </a>
-              <a
-                href="https://vivacity-five.vercel.app/privacy.html"
-                className="block transition hover:text-white"
-              >
+              <Link href="/privacy" className="block transition hover:text-white">
                 Privacy
-              </a>
-              <a
-                href="https://vivacity-five.vercel.app/terms.html"
-                className="block transition hover:text-white"
-              >
+              </Link>
+              <Link href="/terms" className="block transition hover:text-white">
                 Terms
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -126,10 +148,13 @@ export function SiteFooter() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {askAi.map((a) => (
-              <div
+              <a
                 key={a.name}
+                href={a.href}
+                target="_blank"
+                rel="noreferrer"
                 className="group flex flex-col items-center gap-1.5"
-                title={a.name}
+                title={`Ask ${a.name}`}
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/[0.1] bg-black/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition group-hover:border-white/25">
                   <Image
@@ -143,7 +168,7 @@ export function SiteFooter() {
                 <span className="font-pixel text-[9px] text-white/40 transition group-hover:text-white/65">
                   {a.name}
                 </span>
-              </div>
+              </a>
             ))}
           </div>
         </div>

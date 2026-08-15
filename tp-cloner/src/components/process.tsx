@@ -26,7 +26,7 @@ export function Process() {
             Auth, jobs, storage, and the Scene IR contract agents call into.
           </p>
           <a
-            href="#cta"
+            href="/docs#api"
             className="mt-6 inline-flex font-pixel text-[12px] text-white/75 hover:text-white"
           >
             View the API shape →
@@ -67,7 +67,7 @@ export function Process() {
       </div>
 
       <a
-        href="#cta"
+        href="/docs#arch"
         className="mt-8 inline-flex rounded-full border border-white/15 px-5 py-2.5 font-pixel text-[12px] text-white/80 transition hover:border-white/40"
       >
         See the full process →

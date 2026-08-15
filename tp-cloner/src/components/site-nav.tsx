@@ -6,10 +6,11 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "#work", label: "Work", chevron: true },
-  { href: "#process", label: "Process" },
-  { href: "#dashboard", label: "Product" },
-  { href: "#about", label: "About" },
+  { href: "/#work", label: "Work", chevron: true },
+  { href: "/#process", label: "Process" },
+  { href: "/#dashboard", label: "Product" },
+  { href: "/#about", label: "About" },
+  { href: "/docs", label: "Docs" },
 ];
 
 export function SiteNav() {
@@ -55,20 +56,29 @@ export function SiteNav() {
           )}
         >
           {links.map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               className="inline-flex items-center gap-1 font-pixel text-[12px] tracking-wide text-white/65 transition hover:text-white"
             >
               {l.label}
               {l.chevron ? <ChevronDown className="h-3 w-3 opacity-55" /> : null}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/signin"
+            className={cn(
+              "hidden rounded-full border border-white/20 font-pixel text-[11px] tracking-wide text-white transition hover:border-white/45 sm:inline-flex sm:text-[12px]",
+              scrolled ? "px-3 py-1.5" : "px-3.5 py-1.5 sm:px-4 sm:py-2"
+            )}
+          >
+            Sign in
+          </Link>
           <a
-            href="#cta"
+            href="/#cta"
             className={cn(
               "rounded-full bg-white font-pixel text-[11px] tracking-wide text-black transition hover:bg-white/90 sm:text-[12px]",
               scrolled ? "px-3 py-1.5" : "px-3.5 py-1.5 sm:px-4 sm:py-2"
@@ -90,7 +100,7 @@ export function SiteNav() {
         {open ? (
           <div className="absolute top-[calc(100%+10px)] left-0 right-0 overflow-hidden rounded-2xl border border-white/12 bg-black/92 p-2 shadow-2xl backdrop-blur-xl md:hidden">
             {links.map((l) => (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
@@ -100,8 +110,22 @@ export function SiteNav() {
                 {l.chevron ? (
                   <ChevronDown className="h-3.5 w-3.5 opacity-40" />
                 ) : null}
-              </a>
+              </Link>
             ))}
+            <Link
+              href="/signin"
+              onClick={() => setOpen(false)}
+              className="mt-1 flex items-center justify-between rounded-xl bg-white px-3.5 py-3 font-pixel text-[13px] text-black"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/newsletter"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+            >
+              Newsletter
+            </Link>
           </div>
         ) : null}
       </nav>

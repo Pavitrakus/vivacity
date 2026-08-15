@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { NEWSLETTERS } from "@/lib/newsletters";
+
 export function Newsletter() {
   return (
     <section id="newsletter" className="mx-auto max-w-6xl px-5 py-16 md:px-8">
@@ -12,11 +15,16 @@ export function Newsletter() {
         </h2>
         <form
           className="mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            window.location.href =
+              "mailto:pavitra@paxus.in?subject=Vivacity%20newsletter%20subscribe";
+          }}
         >
           <input
             type="email"
             required
+            name="email"
             placeholder="you@company.com"
             className="flex-1 rounded-full border border-white/12 bg-black/50 px-4 py-2.5 text-sm outline-none placeholder:text-white/30 focus:border-white/35"
           />
@@ -28,34 +36,28 @@ export function Newsletter() {
           </button>
         </form>
         <p className="mt-3 text-xs text-white/35">
-          Occasional notes, no spam. Unsubscribe anytime.
+          Occasional notes, no spam. Or browse the{" "}
+          <Link href="/newsletter" className="text-white/60 underline underline-offset-2">
+            archive
+          </Link>
+          .
         </p>
 
         <div className="mt-10 grid gap-3 border-t border-white/10 pt-8 sm:grid-cols-3">
-          {[
-            {
-              t: "Why exact motion beats doodles for STEM.",
-              d: "When the diagram is wrong, the lesson is wrong.",
-            },
-            {
-              t: "Video as a tool call for agents.",
-              d: "Text was the easy medium. That is changing.",
-            },
-            {
-              t: "Unit economics of explainer infra.",
-              d: "If it is not cheap, chatbots will never call it.",
-            },
-          ].map((c) => (
-            <article
-              key={c.t}
+          {NEWSLETTERS.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/newsletter/${c.slug}`}
               className="rounded-xl border border-white/10 bg-black/30 p-4 transition hover:border-white/20"
             >
-              <h3 className="font-pixel text-sm leading-snug tracking-tight">{c.t}</h3>
-              <p className="mt-2 text-xs text-white/40">{c.d}</p>
+              <h3 className="font-pixel text-sm leading-snug tracking-tight">
+                {c.title}
+              </h3>
+              <p className="mt-2 text-xs text-white/40">{c.blurb}</p>
               <span className="mt-4 inline-flex font-pixel text-[11px] text-white/55">
                 Read →
               </span>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
