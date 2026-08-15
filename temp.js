@@ -166,7 +166,7 @@
   function triggerFileUpload(){document.getElementById('plus-dropdown').classList.remove('open');document.getElementById('file-input').click();}
   function handleFileUpload(e){const f=e.target.files[0];if(!f)return;toast('📎 Attached: '+f.name);addUserMessage('[Attached: '+f.name+']');}
   function addToProject(){document.getElementById('plus-dropdown').classList.remove('open');toast('📁 Added to project');}
-  function switchTab(el,tab){document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-preview').style.display='none';document.getElementById('tab-code').classList.remove('visible');document.getElementById('tab-logs').classList.remove('visible');if(tab==='preview')document.getElementById('tab-preview').style.display='flex';else if(tab==='code'){document.getElementById('tab-code').classList.add('visible');document.getElementById('code-display').textContent=currentManimCode||'# No code yet — generate a video first.';}else document.getElementById('tab-logs').classList.add('visible');}
+  function switchTab(el,tab){document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-preview').style.display='none';document.getElementById('tab-code').classList.remove('visible');document.getElementById('tab-logs').classList.remove('visible');if(tab==='preview')document.getElementById('tab-preview').style.display='flex';else if(tab==='code'){document.getElementById('tab-code').classList.add('visible');document.getElementById('code-display').textContent=currentManimCode||'# No code yet - generate a video first.';}else document.getElementById('tab-logs').classList.add('visible');}
   // ─── Mode & Model ────────────────────────────────────────────────────────────
   let currentMode = 'viva'; // 'viva' | 'video'
   let chatHistory = []; // keep running context for Viva
@@ -224,7 +224,7 @@
     const inp = document.getElementById('chat-input');
     const text = inp.value.trim();
     if (!text) return;
-    if (pollInterval) { toast('⏳ Render in progress — wait for it to finish.'); return; }
+    if (pollInterval) { toast('⏳ Render in progress - wait for it to finish.'); return; }
     inp.value = '';
     // auto-resize
     inp.style.height = '38px';
@@ -303,7 +303,7 @@
         bubble.removeAttribute('id');
         chatHistory.push({ role: 'assistant', content: fullText });
       } else {
-        // Stream finished with no content — backend error
+        // Stream finished with no content - backend error
         msgEl.remove();
         throw new Error('Viva returned an empty response. Backend may be down.');
       }

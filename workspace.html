@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workspace – Vivacity</title>
+  <title>Workspace - Vivacity</title>
   <link rel="preload" href="fonts/GeistPixel-Regular-VariableFont_ELSH.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -102,7 +102,7 @@
     .think-dot:nth-child(3) { animation-delay: 0.36s; }
     @keyframes thinkBounce { 0%,60%,100%{opacity:0.25;transform:translateY(0)} 30%{opacity:1;transform:translateY(-4px)} }
     .think-label { font-size: 11px; color: var(--t3); font-family: var(--mono); letter-spacing: 0.02em; }
-    /* INPUT — Claude style */
+    /* INPUT - Claude style */
     .rp-input-area { padding: 10px 12px 12px; border-top: 1px solid var(--border); flex-shrink: 0; }
     .rp-input-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-md); overflow: visible; transition: border-color 0.2s, box-shadow 0.2s; }
     .rp-input-box:focus-within { border-color: rgba(0,195,255,0.35); box-shadow: 0 0 0 3px rgba(0,195,255,0.07); }
@@ -793,7 +793,7 @@
   function triggerFileUpload(){document.getElementById('plus-dropdown').classList.remove('open');document.getElementById('file-input').click();}
   function handleFileUpload(e){const f=e.target.files[0];if(!f)return;toast('📎 Attached: '+f.name);addUserMessage('[Attached: '+f.name+']');}
   function addToProject(){document.getElementById('plus-dropdown').classList.remove('open');toast('📁 Added to project');}
-  function switchTab(el,tab){document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-preview').style.display='none';document.getElementById('tab-code').classList.remove('visible');document.getElementById('tab-logs').classList.remove('visible');if(tab==='preview')document.getElementById('tab-preview').style.display='flex';else if(tab==='code'){document.getElementById('tab-code').classList.add('visible');document.getElementById('code-display').textContent=currentManimCode||'# No code yet — generate a video first.';}else document.getElementById('tab-logs').classList.add('visible');}
+  function switchTab(el,tab){document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-preview').style.display='none';document.getElementById('tab-code').classList.remove('visible');document.getElementById('tab-logs').classList.remove('visible');if(tab==='preview')document.getElementById('tab-preview').style.display='flex';else if(tab==='code'){document.getElementById('tab-code').classList.add('visible');document.getElementById('code-display').textContent=currentManimCode||'# No code yet - generate a video first.';}else document.getElementById('tab-logs').classList.add('visible');}
   // ─── Mode & Model ────────────────────────────────────────────────────────────
   let currentMode = 'viva'; // 'viva' | 'video'
   let chatHistory = []; // keep running context for Viva
@@ -851,7 +851,7 @@
     const inp = document.getElementById('chat-input');
     const text = inp.value.trim();
     if (!text) return;
-    if (pollInterval) { toast('⏳ Render in progress — wait for it to finish.'); return; }
+    if (pollInterval) { toast('⏳ Render in progress - wait for it to finish.'); return; }
     inp.value = '';
     // auto-resize
     inp.style.height = '38px';
@@ -881,7 +881,7 @@
   }
   function triggerRender() { const t = document.getElementById('chat-input').value.trim(); if (t) sendMessage(); else toast('Type a prompt first.'); }
 
-  // ─── Viva Streaming Chat — hits /api/chat (Vercel Edge, always instant) ────────
+  // ─── Viva Streaming Chat - hits /api/chat (Vercel Edge, always instant) ────────
   async function sendToViva() {
     const thinkEl = document.getElementById('thinking-msg');
     const thinkLabel = document.getElementById('think-label-text');
@@ -899,7 +899,7 @@
     msgEl.innerHTML = `<div class="msg-avatar" style="background:linear-gradient(135deg,#00c3ff22,#0055ff22);border-color:rgba(0,195,255,0.3);color:var(--accent);">V</div><div class="msg-body"><div class="msg-bubble" id="viva-streaming-bubble"></div><div class="msg-time">${timeStr}</div></div>`;
 
     try {
-      // /api/chat is a Vercel Edge Function — no Render, no cold start
+      // /api/chat is a Vercel Edge Function - no Render, no cold start
       const chatEndpoint = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
         ? (BASE_URL + '/chat')   // local dev: hit FastAPI directly
         : '/api/chat';           // production: Vercel Edge Function

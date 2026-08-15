@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
-  title: "Privacy - Vivacity",
+  title: "Privacy",
+  description:
+    "Vivacity privacy policy. How we collect, use, and safeguard information for the website and video generation API.",
+  alternates: { canonical: "https://tryvivacity.com/privacy" },
 };
 
 export default function PrivacyPage() {

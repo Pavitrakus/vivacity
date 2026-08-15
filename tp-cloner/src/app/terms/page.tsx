@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
-  title: "Terms - Vivacity",
+  title: "Terms",
+  description:
+    "Vivacity terms of use for the website, early beta access, and video generation API services.",
+  alternates: { canonical: "https://tryvivacity.com/terms" },
 };
 
 export default function TermsPage() {

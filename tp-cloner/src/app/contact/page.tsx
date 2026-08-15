@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
-  title: "Contact - Vivacity",
+  title: "Contact",
+  description:
+    "Contact Vivacity for early beta access, EdTech pilots, agent integrations, and partnerships. Email pavitra@paxus.in.",
+  alternates: { canonical: "https://tryvivacity.com/contact" },
 };
 
 export default function ContactPage() {

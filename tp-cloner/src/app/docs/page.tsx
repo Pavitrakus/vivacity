@@ -3,9 +3,16 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
-  title: "Docs - Vivacity",
+  title: "Docs",
   description:
-    "API shape, quick start, and architecture for Vivacity video infrastructure.",
+    "Vivacity API docs: quick start, pipeline architecture, authentication, POST /v1/jobs, and video_url polling for LLM explainer video infrastructure.",
+  alternates: { canonical: "https://tryvivacity.com/docs" },
+  openGraph: {
+    title: "Vivacity Docs - API & architecture",
+    description:
+      "Quick start, pipeline architecture, and REST API shape for Vivacity video infrastructure.",
+    url: "https://tryvivacity.com/docs",
+  },
 };
 
 export default function DocsPage() {

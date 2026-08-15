@@ -4,8 +4,10 @@ import { PageShell } from "@/components/page-shell";
 import { NEWSLETTERS } from "@/lib/newsletters";
 
 export const metadata: Metadata = {
-  title: "Newsletter - Vivacity",
-  description: "Notes on making video the default interface for AI.",
+  title: "Newsletter",
+  description:
+    "Vivacity newsletter archive: exact motion for STEM, video as an agent tool call, and unit economics of explainer infra.",
+  alternates: { canonical: "https://tryvivacity.com/newsletter" },
 };
 
 export default function NewsletterIndexPage() {

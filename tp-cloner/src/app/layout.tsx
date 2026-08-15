@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { JsonLd } from "@/components/json-ld";
+import { PageLoader } from "@/components/page-loader";
+import { SeoCrawl } from "@/components/seo-crawl";
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+} from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,39 +22,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://tryvivacity.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: "Vivacity - Video infrastructure for LLMs",
-  description:
-    "Near-real-time video infrastructure for LLMs. Turn prompts, documents, and AI answers into mathematically exact explainer videos.",
-  applicationName: "Vivacity",
-  keywords: [
-    "Vivacity",
-    "AI video",
-    "LLM",
-    "explainer video",
-    "Manim",
-    "EdTech",
-  ],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} - Video infrastructure for LLMs`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [...SITE_KEYWORDS],
+  authors: [{ name: "Pavitra Kushwaha", url: "https://pavitrakushwaha.dev" }],
+  creator: "Vivacity",
+  publisher: "Vivacity",
+  category: "technology",
+  referrer: "origin-when-cross-origin",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/apple-icon", type: "image/png" }],
   },
+  manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
-    url: siteUrl,
-    siteName: "Vivacity",
-    title: "Vivacity - LLMs answer in text. We make it move.",
-    description:
-      "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos. API-first.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: "/images/og-image.jpg?v=2",
         width: 1200,
         height: 630,
-        alt: "vivacity - LLMs answer in text. We make it move. tryvivacity.com",
+        alt: `${SITE_NAME} - ${SITE_TAGLINE}`,
         type: "image/jpeg",
       },
     ],
@@ -52,13 +60,23 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vivacity - LLMs answer in text. We make it move.",
-    description:
-      "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos.",
+    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
     images: ["/images/og-image.jpg?v=2"],
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
@@ -72,7 +90,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col font-sans">
+        <JsonLd />
+        <PageLoader />
+        <SeoCrawl />
+        {children}
+      </body>
     </html>
   );
 }

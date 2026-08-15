@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/hero";
 import { LogoStrip } from "@/components/logo-strip";
@@ -10,6 +11,15 @@ import { People } from "@/components/people";
 import { FAQ } from "@/components/faq";
 import { Newsletter } from "@/components/newsletter";
 import { FinalCTA, SiteFooter } from "@/components/cta-footer";
+import { SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: `Vivacity - ${SITE_TAGLINE}`,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+};
 
 export default function Home() {
   return (
@@ -19,7 +29,7 @@ export default function Home() {
         <div className="absolute right-[-10%] top-[10%] h-[40vh] w-[40vw] rounded-full bg-[radial-gradient(circle,rgba(150,170,210,0.08),transparent_65%)] blur-3xl" />
       </div>
       <SiteNav />
-      <main>
+      <main className="animate-fade-up">
         <Hero />
         <LogoStrip />
         <Work />

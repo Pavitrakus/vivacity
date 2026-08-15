@@ -14,9 +14,10 @@ export function PageShell({
       <SiteNav />
       <main
         className={
-          wide
+          (wide
             ? "mx-auto w-full max-w-6xl flex-1 px-5 pt-28 pb-16 md:px-8 md:pt-32"
-            : "mx-auto w-full max-w-3xl flex-1 px-5 pt-28 pb-16 md:px-8 md:pt-32"
+            : "mx-auto w-full max-w-3xl flex-1 px-5 pt-28 pb-16 md:px-8 md:pt-32") +
+          " animate-fade-up"
         }
       >
         {children}

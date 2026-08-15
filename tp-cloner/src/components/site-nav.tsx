@@ -16,6 +16,8 @@ const links = [
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
+  const [menuShown, setMenuShown] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -31,6 +33,17 @@ export function SiteNav() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (open) {
+      setMenuMounted(true);
+      const id = requestAnimationFrame(() => setMenuShown(true));
+      return () => cancelAnimationFrame(id);
+    }
+    setMenuShown(false);
+    const t = window.setTimeout(() => setMenuMounted(false), 320);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
   return (
     <header className="fixed inset-x-0 top-0 z-40 flex justify-center px-3 pt-3 sm:px-5 sm:pt-5">
       <nav
@@ -43,7 +56,7 @@ export function SiteNav() {
       >
         <Link
           href="/"
-          className="font-pixel text-[15px] tracking-tight text-white transition hover:text-white/85 sm:text-[16px]"
+          className="font-pixel text-[15px] tracking-tight text-white transition duration-300 hover:text-white/85 sm:text-[16px]"
           onClick={() => setOpen(false)}
         >
           vivacity
@@ -59,10 +72,12 @@ export function SiteNav() {
             <Link
               key={l.href}
               href={l.href}
-              className="inline-flex items-center gap-1 font-pixel text-[12px] tracking-wide text-white/65 transition hover:text-white"
+              className="inline-flex items-center gap-1 font-pixel text-[12px] tracking-wide text-white/65 transition duration-300 hover:text-white"
             >
               {l.label}
-              {l.chevron ? <ChevronDown className="h-3 w-3 opacity-55" /> : null}
+              {l.chevron ? (
+                <ChevronDown className="h-3 w-3 opacity-55 transition-transform duration-300" />
+              ) : null}
             </Link>
           ))}
         </div>
@@ -71,7 +86,7 @@ export function SiteNav() {
           <Link
             href="/signin"
             className={cn(
-              "hidden rounded-full border border-white/20 font-pixel text-[11px] tracking-wide text-white transition hover:border-white/45 sm:inline-flex sm:text-[12px]",
+              "hidden rounded-full border border-white/20 font-pixel text-[11px] tracking-wide text-white transition duration-300 hover:border-white/45 sm:inline-flex sm:text-[12px]",
               scrolled ? "px-3 py-1.5" : "px-3.5 py-1.5 sm:px-4 sm:py-2"
             )}
           >
@@ -80,7 +95,7 @@ export function SiteNav() {
           <a
             href="/#cta"
             className={cn(
-              "rounded-full bg-white font-pixel text-[11px] tracking-wide text-black transition hover:bg-white/90 sm:text-[12px]",
+              "rounded-full bg-white font-pixel text-[11px] tracking-wide text-black transition duration-300 hover:bg-white/90 sm:text-[12px]",
               scrolled ? "px-3 py-1.5" : "px-3.5 py-1.5 sm:px-4 sm:py-2"
             )}
           >
@@ -88,23 +103,44 @@ export function SiteNav() {
           </a>
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-white/80 md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-white/80 transition duration-300 hover:border-white/30 md:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            <span
+              className={cn(
+                "transition-transform duration-300 ease-out",
+                open && "rotate-90"
+              )}
+            >
+              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </span>
           </button>
         </div>
 
-        {open ? (
-          <div className="absolute top-[calc(100%+10px)] left-0 right-0 overflow-hidden rounded-2xl border border-white/12 bg-black/92 p-2 shadow-2xl backdrop-blur-xl md:hidden">
-            {links.map((l) => (
+        {menuMounted ? (
+          <div
+            className={cn(
+              "absolute top-[calc(100%+10px)] left-0 right-0 origin-top overflow-hidden rounded-2xl border border-white/12 bg-black/92 p-2 shadow-2xl backdrop-blur-xl md:hidden",
+              "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              menuShown
+                ? "translate-y-0 scale-y-100 opacity-100"
+                : "-translate-y-2 scale-y-95 opacity-0"
+            )}
+          >
+            {links.map((l, i) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+                style={{ transitionDelay: menuShown ? `${40 + i * 35}ms` : "0ms" }}
+                className={cn(
+                  "flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition-all duration-300 hover:bg-white/[0.06] hover:text-white",
+                  menuShown
+                    ? "translate-y-0 opacity-100"
+                    : "-translate-y-1 opacity-0"
+                )}
               >
                 {l.label}
                 {l.chevron ? (
@@ -115,14 +151,26 @@ export function SiteNav() {
             <Link
               href="/signin"
               onClick={() => setOpen(false)}
-              className="mt-1 flex items-center justify-between rounded-xl bg-white px-3.5 py-3 font-pixel text-[13px] text-black"
+              style={{ transitionDelay: menuShown ? "220ms" : "0ms" }}
+              className={cn(
+                "mt-1 flex items-center justify-between rounded-xl bg-white px-3.5 py-3 font-pixel text-[13px] text-black transition-all duration-300",
+                menuShown
+                  ? "translate-y-0 opacity-100"
+                  : "-translate-y-1 opacity-0"
+              )}
             >
               Sign in
             </Link>
             <Link
               href="/newsletter"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition hover:bg-white/[0.06] hover:text-white"
+              style={{ transitionDelay: menuShown ? "255ms" : "0ms" }}
+              className={cn(
+                "flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition-all duration-300 hover:bg-white/[0.06] hover:text-white",
+                menuShown
+                  ? "translate-y-0 opacity-100"
+                  : "-translate-y-1 opacity-0"
+              )}
             >
               Newsletter
             </Link>

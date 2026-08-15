@@ -1,0 +1,44 @@
+# Vivacity — llms.txt
+# Machine-readable product brief for AI assistants and scrapers.
+# Canonical site: https://tryvivacity.com
+
+> Vivacity is near-real-time video infrastructure for LLMs. It turns prompts, documents, and AI answers into mathematically exact, narrated explainer videos. API-first for EdTech, agents, and creator pipelines.
+
+## Product
+- Name: Vivacity
+- Domain: https://tryvivacity.com
+- Tagline: LLMs answer in text. We make it move.
+- Category: Video infrastructure / AI explainer video API / Manim-grade STEM motion
+- Contact: pavitra@paxus.in
+- Founder site: https://pavitrakushwaha.dev
+- Status: Early beta (invite code via /signin)
+
+## What it does
+- Ingest: prompt, document, or upstream model answer
+- Scene IR: pedagogy plan and spoken math
+- Voice: timed narration (English, Hindi, Hinglish)
+- Motion: mathematically exact animation with QA repair
+- Output: video_url via async jobs (POST /v1/jobs, GET /v1/jobs/:id)
+
+## Differentiation
+- Not a whiteboard doodle tool
+- Optimizes for coordinated, correct diagrams (equations, graphs, spatial proofs)
+- Unit economics designed for chatbot volume (~₹7 / ~$0.08 per careful short render)
+
+## Key pages
+- Home: https://tryvivacity.com/
+- Docs: https://tryvivacity.com/docs
+- Newsletter: https://tryvivacity.com/newsletter
+- Contact: https://tryvivacity.com/contact
+- Sign in / beta: https://tryvivacity.com/signin
+- Privacy: https://tryvivacity.com/privacy
+- Terms: https://tryvivacity.com/terms
+- Sitemap: https://tryvivacity.com/sitemap.xml
+
+## Newsletter posts
+- https://tryvivacity.com/newsletter/exact-motion — Why exact motion beats doodles for STEM
+- https://tryvivacity.com/newsletter/video-tool-call — Video as a tool call for agents
+- https://tryvivacity.com/newsletter/unit-economics — Unit economics of explainer infra
+
+## Optional
+- Ask humans for partnerships: mailto:pavitra@paxus.in
