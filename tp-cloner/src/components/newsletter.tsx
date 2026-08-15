@@ -30,7 +30,7 @@ export function Newsletter() {
           />
           <button
             type="submit"
-            className="rounded-full bg-white px-5 py-2.5 font-pixel text-[12px] tracking-wide text-black transition hover:bg-white/90"
+            className="relative overflow-hidden rounded-full bg-white px-5 py-2.5 font-pixel text-[12px] tracking-wide text-black transition hover:bg-white/90"
           >
             Subscribe
           </button>
@@ -48,7 +48,7 @@ export function Newsletter() {
             <Link
               key={c.slug}
               href={`/newsletter/${c.slug}`}
-              className="rounded-xl border border-white/10 bg-black/30 p-4 transition hover:border-white/20"
+              className="rounded-xl border border-white/10 bg-black/30 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-white/25"
             >
               <h3 className="font-pixel text-sm leading-snug tracking-tight">
                 {c.title}

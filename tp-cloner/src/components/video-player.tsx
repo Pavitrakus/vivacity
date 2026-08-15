@@ -46,7 +46,7 @@ export function VideoPlayer({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]",
+        "group relative overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)] transition duration-500 hover:-translate-y-0.5 hover:border-white/20",
         className
       )}
     >

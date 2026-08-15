@@ -25,8 +25,8 @@ export default function Home() {
   return (
     <div className="grain min-h-screen">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-24 -top-32 h-[70vh] w-[70vw] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.12),transparent_60%)] blur-3xl" />
-        <div className="absolute right-[-10%] top-[10%] h-[40vh] w-[40vw] rounded-full bg-[radial-gradient(circle,rgba(150,170,210,0.08),transparent_65%)] blur-3xl" />
+        <div className="absolute -top-32 -left-24 h-[70vh] w-[70vw] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.12),transparent_60%)] blur-3xl" />
+        <div className="absolute top-[10%] right-[-10%] h-[40vh] w-[40vw] rounded-full bg-[radial-gradient(circle,rgba(150,170,210,0.08),transparent_65%)] blur-3xl" />
       </div>
       <SiteNav />
       <main className="animate-fade-up">

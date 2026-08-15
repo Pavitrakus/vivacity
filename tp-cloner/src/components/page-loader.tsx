@@ -8,12 +8,13 @@ export function PageLoader() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
+  const letters = "vivacity".split("");
 
   useEffect(() => {
     setVisible(true);
     setExiting(false);
-    const ready = window.setTimeout(() => setExiting(true), 420);
-    const hide = window.setTimeout(() => setVisible(false), 780);
+    const ready = window.setTimeout(() => setExiting(true), 900);
+    const hide = window.setTimeout(() => setVisible(false), 1280);
     return () => {
       window.clearTimeout(ready);
       window.clearTimeout(hide);
@@ -30,12 +31,20 @@ export function PageLoader() {
       )}
       aria-hidden
     >
-      <div className="flex flex-col items-center gap-3">
-        <p className="font-pixel text-2xl tracking-tight text-white animate-[pulseSoft_1.1s_ease-in-out_infinite]">
-          vivacity
+      <div className="flex flex-col items-center gap-4">
+        <p className="flex font-pixel text-3xl tracking-tight text-white sm:text-4xl">
+          {letters.map((ch, i) => (
+            <span
+              key={`${ch}-${i}`}
+              className="inline-block origin-bottom animate-[letterStretch_1.05s_ease-in-out_infinite]"
+              style={{ animationDelay: `${i * 70}ms` }}
+            >
+              {ch}
+            </span>
+          ))}
         </p>
-        <div className="h-px w-16 overflow-hidden bg-white/10">
-          <div className="h-full w-full origin-left animate-[loadBar_0.7s_ease-out_forwards] bg-white/70" />
+        <div className="h-px w-20 overflow-hidden bg-white/10">
+          <div className="h-full w-full origin-left animate-[loadBar_0.9s_ease-out_forwards] bg-white/70" />
         </div>
       </div>
     </div>

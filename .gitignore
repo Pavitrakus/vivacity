@@ -23,6 +23,7 @@ ex of tp/
 api/.env
 braces.txt
 Screenshot*.png
+.tmp-vengeance-ui/
 
 .vercel
 .env*

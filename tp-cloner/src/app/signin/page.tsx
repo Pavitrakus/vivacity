@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
+import { ShineButton } from "@/components/ui/shine-button";
+import { StaggerText } from "@/components/ui/stagger-text";
 
 const BETA_CODE = "VIVACITYBETAV1";
 const STORAGE_KEY = "vivacity_beta_unlocked";
@@ -71,19 +73,20 @@ export default function SignInPage() {
           Access
         </p>
         <h1 className="mt-4 font-pixel text-[2.35rem] leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
-          This is in early beta testing.
+          <StaggerText>This is in early beta testing.</StaggerText>
         </h1>
         <p className="mt-5 text-[16px] leading-relaxed text-white/55 sm:text-lg">
           Email the team to get access. If you already have a code, put it here.
           After the code unlocks, Google and email sign in appear below.
         </p>
 
-        <a
+        <ShineButton
           href="mailto:pavitra@paxus.in?subject=Vivacity%20beta%20access"
-          className="mt-6 inline-flex w-fit rounded-full border border-white/20 px-5 py-2.5 font-pixel text-[12px] text-white transition hover:border-white/45"
+          variant="ghost"
+          className="mt-6"
         >
           Email the team for access
-        </a>
+        </ShineButton>
 
         {!unlocked ? (
           <form
@@ -107,12 +110,9 @@ export default function SignInPage() {
             {codeError ? (
               <p className="text-sm text-red-300/80">{codeError}</p>
             ) : null}
-            <button
-              type="submit"
-              className="w-full rounded-full bg-white py-3 font-pixel text-[12px] tracking-wide text-black transition hover:bg-white/90"
-            >
+            <ShineButton type="submit" className="w-full py-3">
               Unlock sign in
-            </button>
+            </ShineButton>
           </form>
         ) : (
           <div className="mt-10">
@@ -144,16 +144,17 @@ export default function SignInPage() {
               ))}
             </div>
 
-            <button
+            <ShineButton
               type="button"
+              variant="ghost"
               onClick={enterWorkspace}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] py-3 font-pixel text-[12px] text-white transition hover:border-white/35"
+              className="mt-5 w-full gap-2 py-3"
             >
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-[11px] font-bold text-black">
                 G
               </span>
               Continue with Google
-            </button>
+            </ShineButton>
 
             <div className="my-5 flex items-center gap-3 text-[11px] text-white/30">
               <span className="h-px flex-1 bg-white/10" />
@@ -181,13 +182,13 @@ export default function SignInPage() {
               {authError ? (
                 <p className="text-sm text-red-300/80">{authError}</p>
               ) : null}
-              <button
+              <ShineButton
                 type="submit"
                 disabled={busy}
-                className="w-full rounded-full bg-white py-3 font-pixel text-[12px] tracking-wide text-black transition hover:bg-white/90 disabled:opacity-60"
+                className="w-full py-3"
               >
                 {mode === "signin" ? "Sign in to workspace" : "Create account"}
-              </button>
+              </ShineButton>
             </form>
           </div>
         )}

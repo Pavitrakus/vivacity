@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/#work", label: "Work", chevron: true },
+  { href: "/#work", label: "Work" },
   { href: "/#process", label: "Process" },
   { href: "/#dashboard", label: "Product" },
   { href: "/#about", label: "About" },
@@ -18,6 +18,8 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const [menuShown, setMenuShown] = useState(false);
+  const [hoverX, setHoverX] = useState<number | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -63,20 +65,35 @@ export function SiteNav() {
         </Link>
 
         <div
+          ref={listRef}
+          onMouseMove={(e) => {
+            const rect = listRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            setHoverX(e.clientX - rect.left);
+          }}
+          onMouseLeave={() => setHoverX(null)}
           className={cn(
-            "hidden items-center transition-all duration-500 md:flex",
-            scrolled ? "gap-5" : "gap-7"
+            "relative hidden items-center transition-all duration-500 md:flex",
+            scrolled ? "gap-1" : "gap-1.5"
           )}
         >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300"
+            style={{
+              opacity: hoverX === null ? 0 : 1,
+              background: `radial-gradient(90px circle at ${hoverX ?? 0}px 100%, rgba(255,255,255,0.16), transparent 58%)`,
+            }}
+          />
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="inline-flex items-center gap-1 font-pixel text-[12px] tracking-wide text-white/65 transition duration-300 hover:text-white"
+              className="relative z-[1] inline-flex items-center gap-1 rounded-full px-3 py-1.5 font-pixel text-[12px] tracking-wide text-white/65 transition duration-300 hover:text-white"
             >
               {l.label}
-              {l.chevron ? (
-                <ChevronDown className="h-3 w-3 opacity-55 transition-transform duration-300" />
+              {l.href === "/#work" ? (
+                <ChevronDown className="h-3 w-3 opacity-55" />
               ) : null}
             </Link>
           ))}
@@ -122,7 +139,7 @@ export function SiteNav() {
         {menuMounted ? (
           <div
             className={cn(
-              "absolute top-[calc(100%+10px)] left-0 right-0 origin-top overflow-hidden rounded-2xl border border-white/12 bg-black/92 p-2 shadow-2xl backdrop-blur-xl md:hidden",
+              "absolute top-[calc(100%+10px)] right-0 left-0 origin-top overflow-hidden rounded-2xl border border-white/12 bg-black/92 p-2 shadow-2xl backdrop-blur-xl md:hidden",
               "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
               menuShown
                 ? "translate-y-0 scale-y-100 opacity-100"
@@ -134,7 +151,9 @@ export function SiteNav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                style={{ transitionDelay: menuShown ? `${40 + i * 35}ms` : "0ms" }}
+                style={{
+                  transitionDelay: menuShown ? `${40 + i * 35}ms` : "0ms",
+                }}
                 className={cn(
                   "flex items-center justify-between rounded-xl px-3.5 py-3 font-pixel text-[13px] text-white/75 transition-all duration-300 hover:bg-white/[0.06] hover:text-white",
                   menuShown
@@ -143,9 +162,6 @@ export function SiteNav() {
                 )}
               >
                 {l.label}
-                {l.chevron ? (
-                  <ChevronDown className="h-3.5 w-3.5 opacity-40" />
-                ) : null}
               </Link>
             ))}
             <Link
