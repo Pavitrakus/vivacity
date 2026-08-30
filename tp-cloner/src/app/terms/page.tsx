@@ -1,73 +1,55 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
+import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms",
-  description:
-    "Vivacity terms of use for the website, early beta access, and video generation API services.",
+  description: "Vivacity terms of use for the website and design-partner discussions.",
   alternates: { canonical: "https://tryvivacity.com/terms" },
 };
 
 export default function TermsPage() {
   return (
     <PageShell>
-      <p className="font-pixel text-[11px] tracking-[0.16em] text-white/40 uppercase">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
         Legal
       </p>
-      <h1 className="mt-3 font-pixel text-3xl tracking-tight text-white sm:text-4xl">
+      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2]">
         Terms of Service
       </h1>
-      <p className="mt-2 text-sm text-white/40">Last updated: July 2026</p>
-
-      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-white/65">
+      <p className="mt-2 text-sm text-white/40">Last updated: August 2026</p>
+      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-white/58">
         <section>
-          <h2 className="font-pixel text-[12px] tracking-[0.14em] text-white/80 uppercase">
-            1. Agreement to terms
-          </h2>
+          <h2 className="text-[#eeeae2]">1. The site</h2>
           <p className="mt-3">
-            By accessing or using the Vivacity API and website, you agree to be bound
-            by these Terms of Service. If you disagree with any part of the terms, you
-            do not have permission to access the Service.
+            The public site describes a simulation runtime and lets you request
+            a demo. It is not a production API and it does not grant a license
+            to any runtime software.
           </p>
         </section>
         <section>
-          <h2 className="font-pixel text-[12px] tracking-[0.14em] text-white/80 uppercase">
-            2. Intellectual property
-          </h2>
+          <h2 className="text-[#eeeae2]">2. Design partners</h2>
           <p className="mt-3">
-            Other than content you own (such as prompts you input), Vivacity and/or
-            its licensors own the intellectual property rights and materials contained
-            in this website and service.
+            Any later access to software, schemas, or backends will be under a
+            separate agreement. Materials on this site are conceptual unless a
+            written contract says otherwise.
           </p>
         </section>
         <section>
-          <h2 className="font-pixel text-[12px] tracking-[0.14em] text-white/80 uppercase">
-            3. Acceptable use
-          </h2>
+          <h2 className="text-[#eeeae2]">3. Acceptable use</h2>
           <p className="mt-3">
-            You agree not to use Vivacity to generate inappropriate, illegal, or
-            harmful content, and to use the service in compliance with applicable laws.
+            Do not use the site to attack, scrape in a way that degrades
+            service, or submit unlawful content.
           </p>
         </section>
         <section>
-          <h2 className="font-pixel text-[12px] tracking-[0.14em] text-white/80 uppercase">
-            4. Beta access
-          </h2>
-          <p className="mt-3">
-            Early beta features may change, break, or be withdrawn. Access codes are
-            personal and non-transferable without permission from the team.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-pixel text-[12px] tracking-[0.14em] text-white/80 uppercase">
-            5. Contact
-          </h2>
+          <h2 className="text-[#eeeae2]">4. Contact</h2>
           <p className="mt-3">
             <a
-              href="mailto:pavitra@paxus.in"
-              className="text-white underline underline-offset-4"
+              href={`mailto:${SITE_EMAIL}`}
+              className="text-[#eeeae2] underline underline-offset-4"
             >
-              pavitra@paxus.in
+              {SITE_EMAIL}
             </a>
           </p>
         </section>

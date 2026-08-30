@@ -1,7 +1,5 @@
-import { FAQS, SITE_DESCRIPTION, SITE_TAGLINE } from "@/lib/site";
-import { NEWSLETTERS } from "@/lib/newsletters";
+import { FAQS, SITE_DESCRIPTION, SITE_EMAIL, SITE_TAGLINE } from "@/lib/site";
 
-/** Plain HTML product facts for crawlers and AI scrapers. Visually hidden, still in DOM. */
 export function SeoCrawl() {
   return (
     <aside
@@ -14,26 +12,26 @@ export function SeoCrawl() {
       <h3>Product facts</h3>
       <ul>
         <li>
-          Vivacity generates mathematically exact explainer videos from prompts,
-          documents, or upstream LLM answers.
+          Vivacity is an executable simulation runtime for AI agents, not a
+          world-model lab and not a consumer video product.
         </li>
         <li>
-          Primary use cases: EdTech tutoring bots, LLM apps, agent tool calls,
-          creator pipelines, STEM education.
+          Interface verbs: create, observe, act, simulate, fork, rollback,
+          verify, commit, render.
         </li>
         <li>
-          Pipeline stages: ingest, scene IR, voice narration, exact motion render,
-          QA repair, mux to video_url.
+          State is what is true. Observation is what somebody sees. Rendering
+          is optional and late.
         </li>
         <li>
-          Narration languages: English, Hindi, Hinglish. API-first job interface.
+          The execution router selects exact physics, scientific solvers,
+          learned world models, robotics simulators, game engines, or private
+          backends.
         </li>
         <li>
-          Unit economics target careful short renders around seven Indian rupees
-          (about eight US cents).
+          There is no self-serve signup. Design partners book a demo at
+          /demo. Contact: {SITE_EMAIL}
         </li>
-        <li>Website: https://tryvivacity.com Contact: pavitra@paxus.in</li>
-        <li>Early beta. Invite code access via /signin.</li>
       </ul>
       <h3>Frequently asked questions</h3>
       {FAQS.map((f) => (
@@ -42,25 +40,13 @@ export function SeoCrawl() {
           <p>{f.a}</p>
         </div>
       ))}
-      <h3>Newsletter archive</h3>
-      <ul>
-        {NEWSLETTERS.map((n) => (
-          <li key={n.slug}>
-            <a href={`/newsletter/${n.slug}`}>
-              {n.title} - {n.blurb}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <h3>Site map links</h3>
       <nav>
         <a href="/">Home</a>
         <a href="/docs">Docs</a>
-        <a href="/newsletter">Newsletter</a>
+        <a href="/demo">Book a demo</a>
         <a href="/contact">Contact</a>
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
-        <a href="/signin">Sign in</a>
         <a href="/llms.txt">llms.txt</a>
       </nav>
     </aside>

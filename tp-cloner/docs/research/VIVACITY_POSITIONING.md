@@ -1,16 +1,23 @@
-# Vivacity positioning (site overhaul)
+# Vivacity positioning (runtime site)
 
 ## Category
-Near-real-time **video infrastructure for LLMs** — not a consumer “AI video toy.”
-
-## Wedge vs whiteboard infra (Lamina/Simi)
-They optimize speed of drawn explainers. Vivacity optimizes **mathematically exact, coordinated motion** (Manim-grade diagrams, equation morphs, spatial precision) for when the visual must be correct.
+**Simulation runtime for AI agents** — developer infrastructure, not a consumer education app and not a world-model lab.
 
 ## One-liner
-Prompts, documents, and AI answers → narrated, mathematically exact explainer videos. Near real-time. API-first. Low unit cost.
+Executable simulation runtime for AI agents.
 
-## Audience
-EdTech / agents / LLM apps that currently dump text; creators who need precise math/science motion.
+## Two-liner
+Developer infrastructure for AI agents that need to reason about the physical world.
 
-## Proof points to show on site
-Demo Manim clips, API sketch, cost (~₹7 / short), languages EN/HI/Hinglish, pipeline stages (script → voice → animation → QA → URL).
+## Thesis
+Reasoning models plan. World models generate. Simulators execute. Agents act. Developers still need stateful infrastructure connecting those pieces: domain schemas, actions, routing, branching, traces, and verification.
+
+## Honesty
+- Do not claim a finished universal runtime.
+- Do not claim a custom foundation world model.
+- Do not say generative video is simulation.
+- Do not invent customer logos, runtime prices, or reconciled fundraising numbers on the site.
+- Education engine = evidence. General runtime = the company being built.
+
+## Conversion
+No signup / signin. Book a demo only.

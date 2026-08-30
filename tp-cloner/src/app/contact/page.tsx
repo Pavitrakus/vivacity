@@ -1,49 +1,40 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
+import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Contact Vivacity for early beta access, EdTech pilots, agent integrations, and partnerships. Email pavitra@paxus.in.",
+  description: `Contact Vivacity for a design-partner demo. ${SITE_EMAIL}`,
   alternates: { canonical: "https://tryvivacity.com/contact" },
 };
 
 export default function ContactPage() {
   return (
     <PageShell>
-      <p className="font-pixel text-[11px] tracking-[0.16em] text-white/40 uppercase">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
         Contact
       </p>
-      <h1 className="mt-3 font-pixel text-3xl tracking-tight text-white sm:text-4xl">
+      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2] sm:text-5xl">
         Talk to the team.
       </h1>
-      <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/60">
-        Early beta, partnerships, EdTech pilots, or agent integrations. One email is
-        enough.
+      <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/55">
+        Design-partner conversations, research collaborations, and press. No
+        account required.
       </p>
-
-      <div className="mt-10 space-y-4">
-        <a
-          href="mailto:pavitra@paxus.in?subject=Vivacity%20call"
-          className="inline-flex rounded-full bg-white px-6 py-3 font-pixel text-[12px] text-black transition hover:bg-white/90"
+      <div className="mt-10 flex flex-col gap-3">
+        <Link
+          href="/demo"
+          className="inline-flex h-11 w-fit items-center rounded-full bg-[#eeeae2] px-6 text-[14px] text-[#0a0b0d] hover:bg-white"
         >
-          Book a call
+          Book a demo
+        </Link>
+        <a
+          href={`mailto:${SITE_EMAIL}`}
+          className="text-sm text-white/50 underline underline-offset-4 hover:text-white"
+        >
+          {SITE_EMAIL}
         </a>
-        <p className="text-sm text-white/45">
-          Or write{" "}
-          <a
-            href="mailto:pavitra@paxus.in"
-            className="text-white underline underline-offset-4"
-          >
-            pavitra@paxus.in
-          </a>
-        </p>
-        <p className="text-sm text-white/45">
-          Need workspace access?{" "}
-          <a href="/signin" className="text-white underline underline-offset-4">
-            Request beta / enter code
-          </a>
-        </p>
       </div>
     </PageShell>
   );

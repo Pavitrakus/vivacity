@@ -13,16 +13,14 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#050505",
-          color: "#f4f4f4",
-          fontSize: 18,
+          background: "#08090b",
+          color: "#eeeae2",
+          fontSize: 16,
           fontWeight: 600,
           letterSpacing: "-0.04em",
-          fontFamily:
-            "ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif",
         }}
       >
-        V.
+        V
       </div>
     ),
     { ...size }

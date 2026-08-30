@@ -2,13 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@font-face {
-  font-family: "Geist Pixel";
-  src: url("/fonts/GeistPixel-Regular-VariableFont_ELSH.ttf") format("truetype");
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -16,31 +9,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-pixel: "Geist Pixel", var(--font-geist-sans), monospace;
-  --font-heading: var(--font-pixel);
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-card: var(--card);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
-  --radius-2xl: 1.5rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.4rem;
+  --radius-lg: 0.6rem;
+  --radius-xl: 0.8rem;
 }
 
 :root {
-  --background: #020202;
-  --foreground: #f4f4f4;
-  --muted: #101010;
-  --muted-foreground: #9a9a9a;
-  --border: rgba(255, 255, 255, 0.1);
-  --card: #0b0b0b;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --radius: 0.85rem;
+  --background: #08090b;
+  --foreground: #eeeae2;
+  --muted: #12141a;
+  --muted-foreground: #8b8d86;
+  --border: rgba(238, 234, 226, 0.1);
+  --card: #0c0e12;
+  --primary: #eeeae2;
+  --primary-foreground: #0a0b0d;
+  --radius: 0.4rem;
 }
 
 @layer base {
@@ -54,28 +45,20 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    background-color: #020202;
+    background-color: #08090b;
     background-image:
-      radial-gradient(ellipse 90% 70% at 0% -5%, rgba(255, 255, 255, 0.16), transparent 52%),
-      linear-gradient(115deg, rgba(255, 255, 255, 0.045) 0%, transparent 42%),
-      radial-gradient(ellipse 45% 35% at 100% 10%, rgba(140, 160, 200, 0.07), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 70% 90%, rgba(255, 255, 255, 0.025), transparent 60%);
-  }
-
-  @media (min-width: 768px) {
-    body {
-      background-attachment: fixed;
-    }
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(238, 234, 226, 0.06), transparent 55%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 28%);
   }
 
   ::selection {
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(238, 234, 226, 0.2);
   }
 
   a,
   button {
-    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
-    transition-duration: 280ms;
+    transition-property: color, background-color, border-color, opacity, transform;
+    transition-duration: 180ms;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -94,110 +77,21 @@
   }
 }
 
-@keyframes loadBar {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes pulseSoft {
-  0%,
-  100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes glowSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes auroraShift {
-  0% {
-    background-position: 50% 50%, 50% 50%;
-  }
-  100% {
-    background-position: 350% 50%, 350% 50%;
-  }
-}
-
-@keyframes letterStretch {
-  0%,
-  100% {
-    transform: translateY(0) scaleY(1);
-  }
-  35% {
-    transform: translateY(-4px) scaleY(1.18);
-  }
-  55% {
-    transform: translateY(2px) scaleY(0.86);
-  }
-}
-
 @layer utilities {
-  .font-pixel {
-    font-family: var(--font-pixel);
+  .font-serif {
+    font-family: var(--font-serif);
   }
 
-  .animate-fade-up {
-    animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
-  .grain {
-    position: relative;
-  }
-
-  .grain::before {
-    content: "";
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    opacity: 0.03;
-    z-index: 1;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  .hairline {
+    border-color: rgba(238, 234, 226, 0.1);
   }
 
   .text-balance {
     text-wrap: balance;
   }
 
-  .soft-card {
-    border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 30px 80px -50px rgba(0, 0, 0, 0.9);
+  .panel {
+    border: 1px solid rgba(238, 234, 226, 0.1);
+    background: rgba(12, 14, 18, 0.72);
   }
 }

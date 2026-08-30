@@ -1,4 +1,4 @@
-import { FAQS, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { FAQS, SITE_DESCRIPTION, SITE_EMAIL, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 export function JsonLd() {
   const organization = {
@@ -8,12 +8,11 @@ export function JsonLd() {
     legalName: "Vivacity",
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.svg`,
-    email: "pavitra@paxus.in",
+    email: SITE_EMAIL,
     description: SITE_DESCRIPTION,
-    sameAs: ["https://pavitrakushwaha.dev"],
     foundingLocation: {
       "@type": "Place",
-      name: "Kanpur, India",
+      name: "India",
     },
   };
 
@@ -24,11 +23,6 @@ export function JsonLd() {
     url: SITE_URL,
     description: SITE_DESCRIPTION,
     publisher: { "@type": "Organization", name: SITE_NAME },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE_URL}/docs?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   };
 
   const software = {
@@ -44,14 +38,14 @@ export function JsonLd() {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
-      description: "Early beta access by invite",
+      description: "Design partner access by demo",
     },
     featureList: [
-      "Near-real-time explainer video generation",
-      "Mathematically exact Manim-grade motion",
-      "API job submit and poll for video_url",
-      "English, Hindi, and Hinglish narration",
-      "Built for EdTech chatbots and LLM agents",
+      "Simulation runtime for AI agents",
+      "Persistent world state and actions",
+      "Fork, simulate, verify, commit",
+      "Execution routing across simulators and world models",
+      "Domain schemas rather than a universal world object",
     ],
   };
 
@@ -74,18 +68,8 @@ export function JsonLd() {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
       { "@type": "ListItem", position: 2, name: "Docs", item: `${SITE_URL}/docs` },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: "Newsletter",
-        item: `${SITE_URL}/newsletter`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: "Contact",
-        item: `${SITE_URL}/contact`,
-      },
+      { "@type": "ListItem", position: 3, name: "Book a demo", item: `${SITE_URL}/demo` },
+      { "@type": "ListItem", position: 4, name: "Contact", item: `${SITE_URL}/contact` },
     ],
   };
 

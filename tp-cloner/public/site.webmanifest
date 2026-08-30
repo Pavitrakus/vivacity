@@ -1,11 +1,11 @@
 {
   "name": "Vivacity",
   "short_name": "Vivacity",
-  "description": "Near-real-time video infrastructure for LLMs. Mathematically exact explainer videos.",
+  "description": "Simulation runtime for AI agents.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#020202",
-  "theme_color": "#020202",
+  "background_color": "#08090b",
+  "theme_color": "#08090b",
   "lang": "en",
   "icons": [
     {

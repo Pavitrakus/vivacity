@@ -1,192 +1,161 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
+import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Docs",
   description:
-    "Vivacity API docs: quick start, pipeline architecture, authentication, POST /v1/jobs, and video_url polling for LLM explainer video infrastructure.",
+    "Vivacity runtime interface: create, observe, act, simulate, fork, verify, commit. Conceptual contract for design partners.",
   alternates: { canonical: "https://tryvivacity.com/docs" },
-  openGraph: {
-    title: "Vivacity Docs - API & architecture",
-    description:
-      "Quick start, pipeline architecture, and REST API shape for Vivacity video infrastructure.",
-    url: "https://tryvivacity.com/docs",
-  },
 };
 
 export default function DocsPage() {
   return (
     <PageShell wide>
-      <div className="grid gap-10 lg:grid-cols-[220px_1fr]">
-        <aside className="h-fit rounded-2xl border border-white/10 bg-white/[0.02] p-4 lg:sticky lg:top-28">
-          <p className="font-pixel text-[10px] tracking-[0.14em] text-white/35 uppercase">
-            Getting started
+      <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
+        <aside className="h-fit border border-white/10 p-4 lg:sticky lg:top-20">
+          <p className="font-mono text-[10px] tracking-[0.14em] text-white/35 uppercase">
+            Runtime
           </p>
-          <nav className="mt-3 space-y-1 text-sm text-white/60">
-            <a
-              href="#intro"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              Introduction
-            </a>
-            <a
-              href="#quickstart"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              Quick start
-            </a>
-            <a
-              href="#arch"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              Architecture
-            </a>
-            <a
-              href="#api"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              API shape
-            </a>
-          </nav>
-          <p className="mt-6 font-pixel text-[10px] tracking-[0.14em] text-white/35 uppercase">
-            Access
-          </p>
-          <nav className="mt-3 space-y-1 text-sm text-white/60">
-            <Link
-              href="/signin"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              Sign in / beta code
-            </Link>
-            <Link
-              href="/contact"
-              className="block rounded-lg px-2 py-1.5 hover:bg-white/[0.05] hover:text-white"
-            >
-              Contact
-            </Link>
+          <nav className="mt-3 space-y-1 text-sm text-white/55">
+            {[
+              ["#intro", "Introduction"],
+              ["#status", "Status"],
+              ["#verbs", "Verbs"],
+              ["#schemas", "Schemas"],
+              ["#router", "Router"],
+              ["#access", "Access"],
+            ].map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                className="block rounded px-2 py-1.5 hover:bg-white/[0.04] hover:text-white"
+              >
+                {label}
+              </a>
+            ))}
           </nav>
         </aside>
 
-        <article className="space-y-10 text-[15px] leading-relaxed text-white/65">
+        <article className="max-w-2xl space-y-12 text-[15px] leading-relaxed text-white/58">
           <div>
-            <p className="font-pixel text-[11px] tracking-[0.16em] text-white/40 uppercase">
-              Docs · v0.1
+            <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
+              Docs · conceptual
             </p>
             <h1
               id="intro"
-              className="mt-3 font-pixel text-3xl tracking-tight text-white sm:text-4xl"
+              className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2] sm:text-5xl"
             >
-              Introduction
+              Simulation runtime
             </h1>
-            <p className="mt-4">
-              Vivacity is near-real-time video infrastructure for LLMs. It turns a
-              prompt, document, or model answer into a narrated, mathematically exact
-              explainer video you can call from an app or agent.
+            <p className="mt-5">
+              Vivacity is a common interface through which an agent can create a
+              world, inspect state, change it, simulate alternatives, verify
+              outcomes, and render observations using the appropriate simulator
+              or world model.
             </p>
             <p className="mt-3">
-              It is not a slide deck tool. The output is a video URL. Math and science
-              are where precision shows most.
+              It is not a video API. It is not a foundation world model. The
+              education engine we shipped is evidence that structured, checkable
+              execution was the right first environment. The company is the
+              layer that work revealed.
             </p>
-            <h3 className="mt-8 font-pixel text-[12px] tracking-[0.12em] text-white/50 uppercase">
-              Who it is for
-            </h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5">
-              <li>Researchers who need to visualize a proof or derivation</li>
-              <li>Educators preparing concept explanations</li>
-              <li>Platforms integrating AI-generated educational content via API</li>
+          </div>
+
+          <div>
+            <h2 id="status" className="font-serif text-3xl text-[#eeeae2]">
+              Status
+            </h2>
+            <p className="mt-4">
+              Treat this document as the contract we are implementing with
+              design partners. Domain schemas and WorldState primitives exist as
+              prototypes extracted from the earlier engine. General routing,
+              branching, and verification across arbitrary backends are being
+              built. We will not pretend they are finished.
+            </p>
+          </div>
+
+          <div>
+            <h2 id="verbs" className="font-serif text-3xl text-[#eeeae2]">
+              Verbs
+            </h2>
+            <pre className="mt-4 overflow-x-auto border border-white/10 bg-[#07080b] p-4 font-mono text-[12px] leading-6 text-[#d8d3c8]">
+{`world = create(spec)
+world.observe(view?)
+world.act(action)
+trace = world.simulate(horizon)
+branch = world.fork()
+report = branch.verify(constraints)
+world.commit(branch)
+world.rollback(branch)
+world.render(view)`}
+            </pre>
+            <ul className="mt-5 space-y-3">
+              <li>
+                <strong className="text-white/80">create</strong> compiles a
+                high-level spec into a domain schema: objects, constraints,
+                variables, relationships.
+              </li>
+              <li>
+                <strong className="text-white/80">observe</strong> returns O_t =
+                R(S_t, V_t). Agents may act without a full render.
+              </li>
+              <li>
+                <strong className="text-white/80">act / simulate</strong> apply
+                A_t and step S_&#123;t+1&#125; = T(S_t, A_t, C) on a chosen
+                backend.
+              </li>
+              <li>
+                <strong className="text-white/80">fork / commit / rollback</strong>{" "}
+                keep alternatives addressable without destroying the parent
+                world.
+              </li>
+              <li>
+                <strong className="text-white/80">verify</strong> is numerical:
+                conservation, clearance, units, constraints. A plausible frame
+                is not a pass.
+              </li>
             </ul>
           </div>
 
           <div>
-            <h2
-              id="quickstart"
-              className="font-pixel text-2xl tracking-tight text-white"
-            >
-              Quick start
+            <h2 id="schemas" className="font-serif text-3xl text-[#eeeae2]">
+              Schemas
             </h2>
-            <p className="mt-3">
-              During early beta, access is invite-only. Request access from the team,
-              then open the workspace with your beta code.
-            </p>
-            <pre className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-black/50 p-4 font-mono text-[12px] text-emerald-100/80">
-{`# conceptual flow
-POST /v1/jobs  { "prompt": "Explain eigenvectors" }
-GET  /v1/jobs/:id
-→ { "status": "ready", "video_url": "..." }`}
-            </pre>
-            <p className="mt-3">
-              Official SDKs and full auth docs ship with broader beta. Until then, use
-              the workspace UI at{" "}
-              <Link
-                href="/signin"
-                className="text-white underline underline-offset-4"
-              >
-                /signin
-              </Link>
-              .
+            <p className="mt-4">
+              We do not believe one magical state object can represent all
+              reality. Orbital mechanics needs positions and masses. Circuits
+              need nodes and currents. Chemistry needs a different description.
+              The runtime is shared. The schemas are not.
             </p>
           </div>
 
           <div>
-            <h2 id="arch" className="font-pixel text-2xl tracking-tight text-white">
-              Pipeline architecture
+            <h2 id="router" className="font-serif text-3xl text-[#eeeae2]">
+              Router
             </h2>
-            <p className="mt-3">Four stages run per request:</p>
-            <ol className="mt-3 list-decimal space-y-2 pl-5">
-              <li>
-                <strong className="text-white/85">Prompt interpretation:</strong>{" "}
-                extract mathematical intent and map it to a scene plan.
-              </li>
-              <li>
-                <strong className="text-white/85">Code generation:</strong> turn the
-                plan into executable motion code, with critique and repair.
-              </li>
-              <li>
-                <strong className="text-white/85">Rendering:</strong> exact animation
-                frames for the lesson.
-              </li>
-              <li>
-                <strong className="text-white/85">Audio sync:</strong> align narration
-                to animation keyframes.
-              </li>
-            </ol>
+            <p className="mt-4">
+              The router selects a backend for a branch: exact physics, a
+              scientific solver, a robotics simulator, a game engine, a learned
+              world model, or a private company system. Correctness, latency,
+              and cost differ. That is the point of routing instead of betting
+              the company on one generator.
+            </p>
           </div>
 
           <div>
-            <h2 id="api" className="font-pixel text-2xl tracking-tight text-white">
-              REST API shape
+            <h2 id="access" className="font-serif text-3xl text-[#eeeae2]">
+              Access
             </h2>
-            <p className="mt-3">
-              Authentication will use API keys scoped to a workspace. Jobs are
-              asynchronous. Poll status or subscribe to webhooks when available.
+            <p className="mt-4">
+              There is no public signup and no self-serve key. If you want this
+              in your agent loop,{" "}
+              <Link href="/demo" className="text-[#eeeae2] underline underline-offset-4">
+                book a demo
+              </Link>{" "}
+              or write {SITE_EMAIL}.
             </p>
-            <h3 className="mt-6 font-pixel text-[12px] tracking-[0.12em] text-white/50 uppercase">
-              Authentication
-            </h3>
-            <pre className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-black/50 p-4 font-mono text-[12px] text-white/70">
-{`Authorization: Bearer viv_live_xxx
-Content-Type: application/json`}
-            </pre>
-            <h3 className="mt-6 font-pixel text-[12px] tracking-[0.12em] text-white/50 uppercase">
-              Create a job
-            </h3>
-            <pre className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-black/50 p-4 font-mono text-[12px] text-white/70">
-{`POST /v1/jobs
-{
-  "prompt": "Explain the chain rule",
-  "resolution": "1080p"
-}
-
-→ { "id": "job_…", "status": "queued" }`}
-            </pre>
-            <h3 className="mt-6 font-pixel text-[12px] tracking-[0.12em] text-white/50 uppercase">
-              Poll status
-            </h3>
-            <pre className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-black/50 p-4 font-mono text-[12px] text-white/70">
-{`GET /v1/jobs/:id
-→ { "status": "ready", "video_url": "https://…" }`}
-            </pre>
           </div>
         </article>
       </div>
