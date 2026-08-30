@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FAQS, SITE_DESCRIPTION, SITE_EMAIL, SITE_TAGLINE } from "@/lib/site";
 
 export function SeoCrawl() {
@@ -41,12 +42,12 @@ export function SeoCrawl() {
         </div>
       ))}
       <nav>
-        <a href="/">Home</a>
-        <a href="/docs">Docs</a>
-        <a href="/demo">Book a demo</a>
-        <a href="/contact">Contact</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
+        <Link href="/">Home</Link>
+        <Link href="/docs">Docs</Link>
+        <Link href="/demo">Book a demo</Link>
+        <Link href="/contact">Contact</Link>
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/terms">Terms</Link>
         <a href="/llms.txt">llms.txt</a>
       </nav>
     </aside>
