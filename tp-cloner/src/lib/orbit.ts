@@ -130,6 +130,7 @@ export function propagate(
 export function formatNum(value: number, digits = 3): string {
   if (!Number.isFinite(value)) return "∞";
   const abs = Math.abs(value);
-  if (abs !== 0 && (abs < 1e-3 || abs >= 1e4)) return value.toExponential(2);
+  if (abs >= 1e4) return value.toExponential(2);
+  if (abs !== 0 && abs < 10 ** -digits) return (0).toFixed(digits);
   return value.toFixed(digits);
 }
