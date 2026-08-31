@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function DemoPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--paper)]">
       <SiteNav />
       <main className="pt-10">
         <BookDemo heading="page" />

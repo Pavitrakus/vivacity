@@ -4,8 +4,8 @@
   "description": "Simulation runtime for AI agents.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#08090b",
-  "theme_color": "#08090b",
+  "background_color": "#f2eee6",
+  "theme_color": "#f2eee6",
   "lang": "en",
   "icons": [
     {

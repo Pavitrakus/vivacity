@@ -1,23 +1,20 @@
-import type { ReactNode } from "react";
-import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { SiteNav } from "@/components/site-nav";
 
 export function PageShell({
   children,
-  wide = false,
+  wide,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   wide?: boolean;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
       <SiteNav />
       <main
-        className={
-          (wide
-            ? "mx-auto w-full max-w-6xl flex-1 px-5 pt-28 pb-16 md:px-8 md:pt-32"
-            : "mx-auto w-full max-w-3xl flex-1 px-5 pt-28 pb-16 md:px-8 md:pt-32")
-        }
+        className={`mx-auto px-5 pt-28 pb-20 sm:px-8 lg:px-12 ${
+          wide ? "max-w-[1400px]" : "max-w-3xl"
+        }`}
       >
         {children}
       </main>

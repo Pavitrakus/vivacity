@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageShell } from "@/components/page-shell";
+import { DocsShell } from "@/components/docs-shell";
 import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,40 +12,15 @@ export const metadata: Metadata = {
 
 export default function DocsPage() {
   return (
-    <PageShell wide>
-      <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
-        <aside className="h-fit border border-white/10 p-4 lg:sticky lg:top-20">
-          <p className="font-mono text-[10px] tracking-[0.14em] text-white/35 uppercase">
-            Runtime
-          </p>
-          <nav className="mt-3 space-y-1 text-sm text-white/55">
-            {[
-              ["#intro", "Introduction"],
-              ["#status", "Status"],
-              ["#verbs", "Verbs"],
-              ["#schemas", "Schemas"],
-              ["#router", "Router"],
-              ["#access", "Access"],
-            ].map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                className="block rounded px-2 py-1.5 hover:bg-white/[0.04] hover:text-white"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </aside>
-
-        <article className="max-w-2xl space-y-12 text-[15px] leading-relaxed text-white/58">
+    <DocsShell active="/docs">
+      <div className="space-y-14">
           <div>
-            <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
+            <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--mute)] uppercase">
               Docs · conceptual
             </p>
             <h1
               id="intro"
-              className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2] sm:text-5xl"
+              className="mt-3 font-serif text-4xl tracking-tight text-[var(--ink)] sm:text-5xl"
             >
               Simulation runtime
             </h1>
@@ -57,30 +32,29 @@ export default function DocsPage() {
             </p>
             <p className="mt-3">
               It is not a video API. It is not a foundation world model. The
-              education engine we shipped is evidence that structured, checkable
-              execution was the right first environment. The company is the
-              layer that work revealed.
+              pixels an agent sees are an observation of a world that already
+              exists as state.
             </p>
           </div>
 
           <div>
-            <h2 id="status" className="font-serif text-3xl text-[#eeeae2]">
+            <h2 id="status" className="font-serif text-3xl text-[var(--ink)]">
               Status
             </h2>
             <p className="mt-4">
               Treat this document as the contract we are implementing with
               design partners. Domain schemas and WorldState primitives exist as
-              prototypes extracted from the earlier engine. General routing,
-              branching, and verification across arbitrary backends are being
-              built. We will not pretend they are finished.
+              prototypes. General routing, branching, and verification across
+              arbitrary backends are being built. We will not pretend they are
+              finished.
             </p>
           </div>
 
           <div>
-            <h2 id="verbs" className="font-serif text-3xl text-[#eeeae2]">
+            <h2 id="verbs" className="font-serif text-3xl text-[var(--ink)]">
               Verbs
             </h2>
-            <pre className="mt-4 overflow-x-auto border border-white/10 bg-[#07080b] p-4 font-mono text-[12px] leading-6 text-[#d8d3c8]">
+            <pre className="plate mt-4 overflow-x-auto rounded-[2px] p-5 font-mono text-[12px] leading-6 text-[#efe8dc]">
 {`world = create(spec)
 world.observe(view?)
 world.act(action)
@@ -93,26 +67,27 @@ world.render(view)`}
             </pre>
             <ul className="mt-5 space-y-3">
               <li>
-                <strong className="text-white/80">create</strong> compiles a
+                <strong className="text-[var(--ink)]">create</strong> compiles a
                 high-level spec into a domain schema: objects, constraints,
                 variables, relationships.
               </li>
               <li>
-                <strong className="text-white/80">observe</strong> returns O_t =
-                R(S_t, V_t). Agents may act without a full render.
+                <strong className="text-[var(--ink)]">observe</strong> returns
+                O<sub>t</sub> = R(S<sub>t</sub>, V<sub>t</sub>). Agents may act
+                without a full render.
               </li>
               <li>
-                <strong className="text-white/80">act / simulate</strong> apply
-                A_t and step S_&#123;t+1&#125; = T(S_t, A_t, C) on a chosen
-                backend.
+                <strong className="text-[var(--ink)]">act / simulate</strong>{" "}
+                apply A<sub>t</sub> and step S<sub>t+1</sub> = T(S<sub>t</sub>,
+                A<sub>t</sub>, C) on a chosen backend.
               </li>
               <li>
-                <strong className="text-white/80">fork / commit / rollback</strong>{" "}
+                <strong className="text-[var(--ink)]">fork / commit / rollback</strong>{" "}
                 keep alternatives addressable without destroying the parent
                 world.
               </li>
               <li>
-                <strong className="text-white/80">verify</strong> is numerical:
+                <strong className="text-[var(--ink)]">verify</strong> is numerical:
                 conservation, clearance, units, constraints. A plausible frame
                 is not a pass.
               </li>
@@ -120,7 +95,19 @@ world.render(view)`}
           </div>
 
           <div>
-            <h2 id="schemas" className="font-serif text-3xl text-[#eeeae2]">
+            <h2 id="state" className="font-serif text-3xl text-[var(--ink)]">
+              State
+            </h2>
+            <p className="mt-4">
+              S<sub>t</sub> is the world. O<sub>t</sub> is a view. A<sub>t</sub>{" "}
+              is an action. The runtime stores S, not a reel of frames. Forks
+              copy addressable state. Rollback restores it. Commit promotes a
+              branch that passed verification.
+            </p>
+          </div>
+
+          <div>
+            <h2 id="schemas" className="font-serif text-3xl text-[var(--ink)]">
               Schemas
             </h2>
             <p className="mt-4">
@@ -132,7 +119,7 @@ world.render(view)`}
           </div>
 
           <div>
-            <h2 id="router" className="font-serif text-3xl text-[#eeeae2]">
+            <h2 id="router" className="font-serif text-3xl text-[var(--ink)]">
               Router
             </h2>
             <p className="mt-4">
@@ -145,20 +132,35 @@ world.render(view)`}
           </div>
 
           <div>
-            <h2 id="access" className="font-serif text-3xl text-[#eeeae2]">
+            <h2 id="verify" className="font-serif text-3xl text-[var(--ink)]">
+              Verify
+            </h2>
+            <p className="mt-4">
+              Verification is not a caption model saying the scene looks right.
+              It is a report: energy drift, eccentricity, periapsis, constraint
+              residuals, unit consistency. Backends that cannot produce those
+              numbers are marked as such. Learned models can still be used;
+              they are not allowed to pretend they conserved anything.
+            </p>
+          </div>
+
+          <div>
+            <h2 id="access" className="font-serif text-3xl text-[var(--ink)]">
               Access
             </h2>
             <p className="mt-4">
               There is no public signup and no self-serve key. If you want this
               in your agent loop,{" "}
-              <Link href="/demo" className="text-[#eeeae2] underline underline-offset-4">
+              <Link
+                href="/demo"
+                className="text-[var(--ink)] underline underline-offset-4"
+              >
                 book a demo
               </Link>{" "}
               or write {SITE_EMAIL}.
             </p>
           </div>
-        </article>
       </div>
-    </PageShell>
+    </DocsShell>
   );
 }

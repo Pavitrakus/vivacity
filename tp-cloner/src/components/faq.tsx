@@ -1,43 +1,23 @@
-"use client";
-
-import { useState } from "react";
-import { FAQS } from "@/lib/site";
+import { faqs } from "@/lib/site";
 
 export function FAQ() {
-  const [open, setOpen] = useState<number | null>(0);
-
   return (
-    <section id="faq" className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-      <p className="font-mono text-[11px] tracking-[0.16em] text-white/38 uppercase">
-        09 — Questions
-      </p>
-      <h2 className="mt-3 font-serif text-3xl tracking-tight text-[#eeeae2] sm:text-5xl">
-        Straight answers.
-      </h2>
-      <div className="mt-10 divide-y divide-white/8 border-y border-white/8">
-        {FAQS.map((item, i) => {
-          const expanded = open === i;
-          return (
-            <div key={item.q}>
-              <button
-                type="button"
-                className="flex w-full items-start justify-between gap-6 py-5 text-left"
-                aria-expanded={expanded}
-                onClick={() => setOpen(expanded ? null : i)}
-              >
-                <span className="text-[16px] text-[#eeeae2]">{item.q}</span>
-                <span className="font-mono text-[12px] text-white/35">
-                  {expanded ? "–" : "+"}
-                </span>
-              </button>
-              {expanded ? (
-                <p className="max-w-3xl pb-6 text-sm leading-relaxed text-white/52">
-                  {item.a}
-                </p>
-              ) : null}
+    <section id="faq" className="border-t border-[var(--line)] bg-[var(--paper)]">
+      <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+        <p className="font-mono text-[11px] tracking-[0.22em] text-[var(--mute)] uppercase">
+          FAQ
+        </p>
+        <h2 className="mt-4 font-serif text-[clamp(1.75rem,3.2vw,2.6rem)] leading-[1.12] tracking-[-0.03em] text-[var(--ink)]">
+          Direct answers.
+        </h2>
+        <dl className="mt-12 divide-y divide-[var(--line)] border-t border-[var(--line)]">
+          {faqs.map((f) => (
+            <div key={f.q} className="grid gap-3 py-7 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-16">
+              <dt className="text-[16px] leading-6 text-[var(--ink)]">{f.q}</dt>
+              <dd className="text-[14.5px] leading-7 text-[var(--mute)]">{f.a}</dd>
             </div>
-          );
-        })}
+          ))}
+        </dl>
       </div>
     </section>
   );

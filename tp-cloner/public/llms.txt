@@ -1,7 +1,7 @@
 # Vivacity
 # https://tryvivacity.com
 
-> Vivacity is an executable simulation runtime for AI agents. A common interface to instantiate a world, inspect its state, take actions, fork alternatives, route each branch to the appropriate simulator or world model, verify outcomes, and render observations.
+> Vivacity is a simulation runtime for AI agents. A common interface to instantiate a world, inspect its state, take actions, fork alternatives, route each branch to the appropriate simulator or world model, verify outcomes, and render observations.
 
 ## Product
 - Name: Vivacity
@@ -22,9 +22,6 @@
 - A consumer education or explainer-video product
 - A claim that generative video is physical simulation
 - A finished universal environment already in production
-
-## Origin
-Vivacity began as a structured scientific execution engine. Shipping that system showed that interactivity requires persistent, branchable state underneath the render. The company is now that runtime.
 
 ## Pages
 - https://tryvivacity.com/

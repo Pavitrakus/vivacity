@@ -12,16 +12,16 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <PageShell>
-      <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--mute)] uppercase">
         Legal
       </p>
-      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2]">
+      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[var(--ink)]">
         Privacy Policy
       </h1>
-      <p className="mt-2 text-sm text-white/40">Last updated: August 2026</p>
-      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-white/58">
+      <p className="mt-2 text-sm text-[var(--mute)]">Last updated: August 2026</p>
+      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-[var(--mute)]">
         <section>
-          <h2 className="text-[#eeeae2]">1. What this covers</h2>
+          <h2 className="text-[var(--ink)]">What this covers</h2>
           <p className="mt-3">
             This policy applies to tryvivacity.com and to notes you send when
             you book a demo. There is no public account system and no
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">2. Information we collect</h2>
+          <h2 className="text-[var(--ink)]">Information we collect</h2>
           <p className="mt-3">
             If you request a demo we receive the name, email, company, role,
             and project description you submit. The site may also collect
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">3. How we use it</h2>
+          <h2 className="text-[var(--ink)]">How we use it</h2>
           <p className="mt-3">
             We use that information to reply, to decide whether a
             design-partner engagement makes sense, and to operate the website.
@@ -45,12 +45,12 @@ export default function PrivacyPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">4. Contact</h2>
+          <h2 className="text-[var(--ink)]">Contact</h2>
           <p className="mt-3">
             Questions:{" "}
             <a
               href={`mailto:${SITE_EMAIL}`}
-              className="text-[#eeeae2] underline underline-offset-4"
+              className="text-[var(--ink)] underline underline-offset-4"
             >
               {SITE_EMAIL}
             </a>

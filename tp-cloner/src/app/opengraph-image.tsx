@@ -13,10 +13,10 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#08090b",
-          color: "#eeeae2",
+          background: "#f2eee6",
+          color: "#161410",
           padding: "72px 80px",
-          fontFamily: "ui-sans-serif, system-ui, sans-serif",
+          fontFamily: "Georgia, ui-serif, serif",
         }}
       >
         <div
@@ -24,32 +24,43 @@ export default function OpenGraphImage() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontSize: 22,
-            letterSpacing: "0.16em",
+            fontFamily: "ui-monospace, monospace",
+            fontSize: 18,
+            letterSpacing: "0.18em",
             textTransform: "uppercase",
-            opacity: 0.55,
+            color: "#6e675b",
           }}
         >
-          <span>Vivacity</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: 99,
+                background: "#c45a24",
+              }}
+            />
+            Vivacity
+          </span>
           <span>tryvivacity.com</span>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div
             style={{
-              fontSize: 72,
+              fontSize: 68,
               lineHeight: 1.02,
               letterSpacing: "-0.04em",
-              maxWidth: 920,
+              maxWidth: 940,
             }}
           >
             Simulation runtime for AI agents.
           </div>
           <div
             style={{
-              fontSize: 26,
-              lineHeight: 1.4,
-              opacity: 0.62,
-              maxWidth: 760,
+              fontFamily: "ui-monospace, monospace",
+              fontSize: 20,
+              color: "#6e675b",
+              letterSpacing: "0.04em",
             }}
           >
             create · observe · act · fork · simulate · verify · commit

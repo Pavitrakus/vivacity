@@ -11,16 +11,16 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <PageShell>
-      <p className="font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--mute)] uppercase">
         Legal
       </p>
-      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[#eeeae2]">
+      <h1 className="mt-3 font-serif text-4xl tracking-tight text-[var(--ink)]">
         Terms of Service
       </h1>
-      <p className="mt-2 text-sm text-white/40">Last updated: August 2026</p>
-      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-white/58">
+      <p className="mt-2 text-sm text-[var(--mute)]">Last updated: August 2026</p>
+      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-[var(--mute)]">
         <section>
-          <h2 className="text-[#eeeae2]">1. The site</h2>
+          <h2 className="text-[var(--ink)]">The site</h2>
           <p className="mt-3">
             The public site describes a simulation runtime and lets you request
             a demo. It is not a production API and it does not grant a license
@@ -28,7 +28,7 @@ export default function TermsPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">2. Design partners</h2>
+          <h2 className="text-[var(--ink)]">Design partners</h2>
           <p className="mt-3">
             Any later access to software, schemas, or backends will be under a
             separate agreement. Materials on this site are conceptual unless a
@@ -36,18 +36,18 @@ export default function TermsPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">3. Acceptable use</h2>
+          <h2 className="text-[var(--ink)]">Acceptable use</h2>
           <p className="mt-3">
             Do not use the site to attack, scrape in a way that degrades
             service, or submit unlawful content.
           </p>
         </section>
         <section>
-          <h2 className="text-[#eeeae2]">4. Contact</h2>
+          <h2 className="text-[var(--ink)]">Contact</h2>
           <p className="mt-3">
             <a
               href={`mailto:${SITE_EMAIL}`}
-              className="text-[#eeeae2] underline underline-offset-4"
+              className="text-[var(--ink)] underline underline-offset-4"
             >
               {SITE_EMAIL}
             </a>

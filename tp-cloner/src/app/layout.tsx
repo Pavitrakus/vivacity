@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 import { JsonLd } from "@/components/json-ld";
 import { SeoCrawl } from "@/components/seo-crawl";
@@ -12,20 +12,22 @@ import {
   SITE_URL,
 } from "@/lib/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
 });
 
@@ -42,7 +44,6 @@ export const metadata: Metadata = {
   creator: "Vivacity",
   publisher: "Vivacity",
   category: "technology",
-  referrer: "origin-when-cross-origin",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/apple-icon", type: "image/png" }],
@@ -61,9 +62,7 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
   },
-  alternates: {
-    canonical: SITE_URL,
-  },
+  alternates: { canonical: SITE_URL },
   robots: {
     index: true,
     follow: true,
@@ -75,9 +74,11 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  other: {
-    "contact:email": SITE_EMAIL,
-  },
+  other: { "contact:email": SITE_EMAIL },
+};
+
+export const viewport = {
+  themeColor: "#f2eee6",
 };
 
 export default function RootLayout({
@@ -88,7 +89,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrument.variable} dark h-full antialiased`}
+      className={`${plexSans.variable} ${plexMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
         <JsonLd />

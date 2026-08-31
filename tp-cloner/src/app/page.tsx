@@ -1,42 +1,34 @@
 import type { Metadata } from "next";
-import { Architecture } from "@/components/architecture";
 import { BookDemo } from "@/components/book-demo";
+import { CodePlate } from "@/components/code-plate";
+import { Contract } from "@/components/contract";
 import { FAQ } from "@/components/faq";
-import { Hero } from "@/components/hero";
-import { OrbitLab } from "@/components/orbit-lab";
-import { Positioning } from "@/components/positioning";
-import { Primitive } from "@/components/primitive";
-import { Problem } from "@/components/problem";
-import { RuntimeApi } from "@/components/runtime-api";
+import { InterfaceStrip } from "@/components/interface-strip";
+import { Position } from "@/components/position";
+import { QuoteStrip } from "@/components/quote-strip";
+import { RuntimeConsole } from "@/components/runtime-console";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { Team } from "@/components/team";
-import { Thesis } from "@/components/thesis";
-import { UseCases } from "@/components/use-cases";
 import { SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: {
-    absolute: `Vivacity — ${SITE_TAGLINE}`,
-  },
+  title: { absolute: `Vivacity — ${SITE_TAGLINE}` },
   description: SITE_DESCRIPTION,
   alternates: { canonical: SITE_URL },
 };
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--paper)]">
       <SiteNav />
       <main>
-        <Hero />
-        <Thesis />
-        <OrbitLab />
-        <Problem />
-        <Primitive />
-        <RuntimeApi />
-        <Architecture />
-        <Positioning />
-        <UseCases />
+        <RuntimeConsole />
+        <QuoteStrip />
+        <Contract />
+        <CodePlate />
+        <InterfaceStrip />
+        <Position />
         <Team />
         <FAQ />
         <BookDemo />

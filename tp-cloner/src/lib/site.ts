@@ -3,28 +3,100 @@ export const SITE_NAME = "Vivacity";
 export const SITE_EMAIL = "help@tryvivacity.com";
 export const SITE_TAGLINE = "Simulation runtime for AI agents.";
 export const SITE_DESCRIPTION =
-  "Vivacity is an executable simulation runtime for AI agents. A common interface to instantiate a world, inspect its state, take actions, fork alternatives, route each branch to the appropriate simulator or world model, verify outcomes, and render observations. We do not train a foundation world model. We make many simulators and world models usable as one system.";
+  "Vivacity is a simulation runtime for AI agents. One interface to instantiate a world, inspect state, take actions, fork alternatives, route each branch to the right simulator or world model, verify outcomes, and render observations.";
+
+export const site = {
+  name: SITE_NAME,
+  email: SITE_EMAIL,
+  url: SITE_URL,
+  tagline: SITE_TAGLINE,
+};
 
 export const SITE_KEYWORDS = [
   "Vivacity",
-  "tryvivacity",
   "simulation runtime",
   "AI agents",
   "world state",
+  "fork simulate verify",
   "agent infrastructure",
-  "fork simulate rollback",
   "execution layer",
-  "physics simulation API",
-  "world model interface",
-  "developer infrastructure",
-  "Y Combinator",
+] as const;
+
+export const VERBS = [
+  {
+    name: "create",
+    blurb: "Compile a spec into a domain schema and a live world.",
+  },
+  {
+    name: "observe",
+    blurb: "Read state, or a view of it. Pixels are optional.",
+  },
+  {
+    name: "act",
+    blurb: "Apply an action to the current world. The next state is computed, not guessed.",
+  },
+  {
+    name: "simulate",
+    blurb: "Step a horizon on a chosen backend. Cheap when exact. Honest when learned.",
+  },
+  {
+    name: "fork",
+    blurb: "Open addressable alternatives without destroying the parent.",
+  },
+  {
+    name: "rollback",
+    blurb: "Return to a prior world. Memory is a feature of the runtime.",
+  },
+  {
+    name: "verify",
+    blurb: "Numerical checks: conservation, clearance, units, constraints.",
+  },
+  {
+    name: "commit",
+    blurb: "Promote a branch that passed. The live world moves.",
+  },
+  {
+    name: "render",
+    blurb: "Produce an observation. Never a substitute for state.",
+  },
+  {
+    name: "route",
+    blurb: "Send the step to physics, a solver, a robot sim, or a world model.",
+  },
+] as const;
+
+export const BACKENDS = [
+  {
+    name: "Exact physics",
+    note: "Conserved quantities. Orbits, rigid bodies, circuits — where the law is known.",
+  },
+  {
+    name: "Scientific solvers",
+    note: "Domain codes that already exist. Chemistry, fluids, materials, finite elements.",
+  },
+  {
+    name: "Robotics sims",
+    note: "Contact, kinematics, sensors. Isaac, MuJoCo, and the rest of that shelf.",
+  },
+  {
+    name: "World models",
+    note: "Genie, Cosmos, World Labs, Decart — when the scene is visual and the law is not.",
+  },
+  {
+    name: "Game engines",
+    note: "Interactive geometry at interactive rates. Not a physics paper. Still a world.",
+  },
+  {
+    name: "Private backends",
+    note: "The plant model, the warehouse, the proprietary solver you will not put on the internet.",
+  },
 ] as const;
 
 export const TEAM = [
   {
     name: "Aditya Bhatia",
     role: "CEO · Systems",
-    note: "IIT Kanpur. Cryptography research, CUDA systems work, runtime architecture.",
+    note: "IIT Kanpur. Cryptography research, CUDA systems, runtime architecture.",
   },
   {
     name: "Tanish Anand",
@@ -34,41 +106,52 @@ export const TEAM = [
   {
     name: "Pavitra Kushwaha",
     role: "CPO · Pipelines",
-    note: "IIT Kanpur. Production pipelines, product systems, MPC research.",
+    note: "IIT Kanpur. Production systems, pipelines, MPC research.",
   },
 ] as const;
 
 export const FAQS = [
   {
     q: "What is Vivacity?",
-    a: "A simulation runtime for AI agents. One interface to create a world, inspect state, act, fork alternatives, route those branches to the right simulator or world model, verify what happened, and render an observation if someone needs to see it.",
+    a: "A simulation runtime for AI agents. create, observe, act, simulate, fork, verify, commit. Domain schemas underneath. Exact simulators and learned world models behind a router.",
   },
   {
-    q: "Are you a world-model company?",
-    a: "No. World Labs, Genie, Cosmos and others attack generation and physical modelling. Vivacity sits around those systems. Production agents will not use one world model for every problem. Different worlds need different correctness, latency, and cost. We provide the state and action layer that routes each execution.",
+    q: "Do you train a world model?",
+    a: "No. World Labs, Decart, Genie, Cosmos and domain solvers already exist. Agents will not use one of them for every problem. Vivacity is the state and action layer that routes each execution.",
   },
   {
-    q: "Is the general runtime already in production?",
-    a: "Not as a universal platform. We shipped a structured scientific execution engine far enough to run demos and customer integrations. That work exposed the missing abstraction: persistent, branchable state underneath the render. The runtime is what we are building with design partners now.",
-  },
-  {
-    q: "How is this different from generating another video or world?",
-    a: "Generation answers “what might this look like?” Execution answers “what happens if this variable changes?” If increasing a satellite’s velocity by 10% requires regenerating an output from scratch, there was no world underneath the pixels. State is what is true. Observation is what somebody sees.",
+    q: "How is this different from a code sandbox?",
+    a: "A sandbox runs a program. A runtime holds a world: persistent state, actions, forks, and checks. Agents that plan in environments need the second thing.",
   },
   {
     q: "Who is this for?",
-    a: "Teams building agents, robotics systems, scientific tools, autonomous stacks, and other products where a model needs somewhere to act, test outcomes, and keep persistent state. Early users are more likely to be AI-native startups than hyperscalers.",
+    a: "Teams building agents, robotics, scientific tools, and autonomy — anyone whose model needs a world it can act on, fork, and check.",
   },
   {
-    q: "Can I sign up or get an API key?",
-    a: "Not yet. There is no self-serve product. If this layer belongs in your stack, book a demo and we will decide together whether a design-partner engagement makes sense.",
-  },
-  {
-    q: "What does the interface look like?",
-    a: "create, observe, act, simulate, fork, rollback, verify, commit, render. Domain schemas and backend adapters sit underneath. Orbital mechanics, circuits, and chemistry do not share one giant state object. They share a branchable transition.",
-  },
-  {
-    q: "What should I not expect?",
-    a: "Do not expect a custom foundation world model, a claim that generative video is physics, or a finished universal environment. Those are not the company.",
+    q: "Is there self-serve access?",
+    a: "Not yet. Book a demo. We take a small number of design-partner conversations.",
   },
 ] as const;
+
+export const POSITION = [
+  {
+    they: "World models",
+    theyNote: "Generate the next frame. Useful when the scene is visual and the law is unknown.",
+    we: "Vivacity holds the world those frames are about.",
+  },
+  {
+    they: "Code sandboxes",
+    theyNote: "Execute a program in isolation. Necessary. Not a substitute for environment state.",
+    we: "Vivacity is the environment the program is acting on.",
+  },
+  {
+    they: "Game engines",
+    theyNote: "Interactive geometry. Excellent backends. Poor as the only contract an agent sees.",
+    we: "Vivacity sits in front and routes the step.",
+  },
+] as const;
+
+export const verbs = VERBS;
+export const backends = BACKENDS;
+export const team = TEAM;
+export const faqs = FAQS;
