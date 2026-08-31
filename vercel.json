@@ -1,4 +1,11 @@
 {
   "name": "vivacity",
-  "version": 2
+  "version": 2,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://tryvivacity.com/:path*",
+      "permanent": false
+    }
+  ]
 }
