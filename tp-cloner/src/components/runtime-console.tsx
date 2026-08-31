@@ -56,14 +56,15 @@ export function RuntimeConsole() {
     const loop = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      if (!stateRef.current) return;
-      stateRef.current = tick(stateRef.current, 1);
-      view.tick(dt);
-      view.draw(stateRef.current);
-      uiClock += dt;
-      if (uiClock > 0.12) {
-        uiClock = 0;
-        setUi({ ...stateRef.current });
+      if (stateRef.current) {
+        stateRef.current = tick(stateRef.current, 1);
+        view.tick(dt);
+        view.draw(stateRef.current);
+        uiClock += dt;
+        if (uiClock > 0.12) {
+          uiClock = 0;
+          setUi({ ...stateRef.current });
+        }
       }
       raf = requestAnimationFrame(loop);
     };

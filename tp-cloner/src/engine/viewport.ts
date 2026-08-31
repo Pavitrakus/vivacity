@@ -59,12 +59,19 @@ export class Viewport {
   private auto = true;
   private onDrag?: (v: boolean) => void;
 
+  private ro?: ResizeObserver;
+
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) throw new Error("canvas");
     this.ctx = ctx;
     this.bind();
+    if (typeof ResizeObserver !== "undefined") {
+      this.ro = new ResizeObserver(() => this.resize());
+      const parent = canvas.parentElement;
+      if (parent) this.ro.observe(parent);
+    }
   }
 
   setDragHandler(fn: (v: boolean) => void) {
@@ -72,6 +79,7 @@ export class Viewport {
   }
 
   destroy() {
+    this.ro?.disconnect();
     this.canvas.onpointerdown = null;
     this.canvas.onpointermove = null;
     this.canvas.onpointerup = null;
@@ -114,9 +122,12 @@ export class Viewport {
   resize() {
     const parent = this.canvas.parentElement;
     if (!parent) return;
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
+    if (w < 2 || h < 2) return;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.w = parent.clientWidth;
-    this.h = parent.clientHeight;
+    this.w = w;
+    this.h = h;
     this.canvas.width = Math.floor(this.w * this.dpr);
     this.canvas.height = Math.floor(this.h * this.dpr);
     this.canvas.style.width = `${this.w}px`;
